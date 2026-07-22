@@ -1,6 +1,6 @@
 # 财包视频理解与时间轴交互架构
 
-状态：P0 垂直切片已实现，真实内容发布仍阻塞  
+状态：P0 垂直切片已实现，V2.3 为待评审目标；真实内容发布仍阻塞  
 代码：`refer/douyin` 分支 `feat/caibao-analysis-pipeline`
 
 ## 系统分层
@@ -22,25 +22,56 @@ flowchart LR
   L --> N["OCRNormal"]
   M --> O["证据融合"]
   N --> O
-  L --> P["MiniMax / 豆包多模态"]
-  O --> P
-  P --> Q["Zod Schema"]
-  Q --> R["确定性 Cue Planner"]
-  R --> S["DraftExperience"]
+  L --> P1["语义抽取 emit_semantic_graph"]
+  O --> P1
+  P1 --> P2["确定性校验 + 证据引用"]
+  P2 --> P3["可选语义评审 emit_critique"]
+  P3 --> P4["定向修复环 ≤2 轮"]
+  P4 --> P5["评分 cue-scorer + 确定性 Planner"]
+  P5 --> P6["方向规则引擎 direction-rules"]
+  P6 --> P7["payload 授权 payload-author ≤2 轮"]
+  P7 --> Q["Zod Schema + 终检禁词"]
+  Q --> S["DraftExperience"]
+  Q --> CR["CoverageReport / 查漏补缺清单"]
   S --> T["人工审核（待建设）"]
+  CR --> T
   T --> U["ApprovedExperience"]
   U --> V["VideoExtensionHost"]
   V --> W["CuePill / 48vh HalfSheet / LearningTrace"]
 ```
+
+> 生成管线的多阶段循环见 `docs/GENERATION_PIPELINE_DESIGN.md` 与
+> `docs/ADR/0003-agentic-generation-pipeline.md`。上图 P1–P7 已在代码提交
+> `50b96560` 实现，`CoverageReport` 已作为按内容版本生成的确定性审核门产物。
+> 当前结论只由离线 fake client 测试和静态 fixture 证明；真实授权媒体、真实供应商、
+> 人工审核与发布链路仍未验证。
 
 ## 关键不变量
 
 1. 来源元数据不等于媒体资产；没有权利明确的媒体文件，不启动分析。
 2. ASR/OCR/关键帧是证据，模型输出是候选；模型不能发布。
 3. ASR 时间码优先于模型猜测；未知 evidenceId 会被管线拒绝。
-4. Planner 固定最多 6 个、最小 45 秒、单次最多 12 秒，并扫描投资建议措辞。
+4. 内容节点最多 6 个；V2.3 自动邀请最多 4 次、最小 45 秒、单次最多 12 秒，并扫描投资建议措辞。当前 `ApprovedExperience` 契约仍允许 6 次自动邀请，是待收紧差异。
 5. 播放时不实时请求模型决定弹点；前端只消费已批准、版本化内容包。
 6. 展开触点不暂停、静音或 seek 视频；无蒙层，面板不超过 48vh。
+7. 媒体、作者头像/昵称、来源 URL、字幕和内容包版本必须一致；财包不得替换作者身份。
+
+## PM 内容包迁移边界
+
+`refer/moneybaby` 固定在 `7db765b`，只作为内容与 UI 取证来源。迁移链路固定为：
+
+```text
+PM VideoContentPackage (draft)
+→ adapter + media/author/version validation
+→ DraftExperience + CoverageReport
+→ human review
+→ ApprovedExperience
+```
+
+- 可迁移：视频元数据、章节、字幕候选、六节点学习意图、证据窗口、复述/报告信息结构。
+- 不迁移：React/Vinext 页面、Cloudflare 运行栈、自动暂停/seek、全屏 shade、88%–94% Sheet、财包占作者头像位、二选一与静态能力印章。
+- PM 视频仍缺公开分发授权，概念与因果边均未审核；Schema 适配成功不改变其 `draft` 状态。
+- 首包主题以美元外溢、全球资本、本国周期和相对利差为准，不向报告注入视频未覆盖的股票/黄金能力。
 
 ## P0 代码责任
 
@@ -50,10 +81,11 @@ flowchart LR
 | `src/features/finance-cues` | 前端内容 schema、Cue 状态机、组件、足迹和 fixture |
 | `server/src/sources` | 抖音 URL 规范化、匿名探测、授权作品元数据分页 |
 | `server/src/media` | 受限导入目录、FFmpeg/FFprobe、指纹、音轨和帧 |
-| `server/src/providers` | OpenAI-compatible tool 输出、豆包 ASR、火山 OCR 与原生 V4 签名 |
-| `server/src/pipeline` | 证据引用检查与确定性触点规划 |
-| `server/src/jobs` | P0 内存任务；进程重启后丢失是已知限制 |
-| `server/src/app.ts` | readiness、来源探测、分析任务与草稿 API |
+| `server/src/providers` | OpenAI-compatible tool 输出、语义抽取/评审/修复、豆包 ASR、火山 OCR 与原生 V4 签名 |
+| `server/src/pipeline` | 语义时间轴、有界修复、评分与 Planner、方向规则、payload 成稿、CoverageReport |
+| `server/src/jobs` | P0 内存任务与 draft/CoverageReport；进程重启后丢失是已知限制 |
+| `server/src/app.ts` | readiness、来源探测、分析任务、草稿与 coverage API |
+| `refer/moneybaby/.../app/content` | PM 参考内容结构；不得成为运行时第二内容仓 |
 
 ## Provider 选择
 

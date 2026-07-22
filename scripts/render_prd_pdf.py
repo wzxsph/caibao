@@ -47,6 +47,14 @@ DEFAULT_OUTPUT = ROOT / "output" / "pdf" / "财经推演室_PRD_V2.0.pdf"
 AGENT_IMAGE = ROOT / "形象参考" / "Weixin Image_20260722153424_220_2954.png"
 ASSET_DIR = ROOT / "assets" / "prd-v2"
 
+# Populated from the selected Markdown in ``render`` so the same renderer can
+# produce the canonical V2.0 PDF and later review candidates without stale
+# cover/header metadata.
+DOC_VERSION = "V2.0"
+DOC_DATE = "2026-07-22"
+DOC_REVIEW_LABEL = "唯一权威产品口径"
+DOC_FOOTER_LABEL = "团队实施基线"
+
 PAPER = colors.HexColor("#F5EFDF")
 PAPER_LIGHT = colors.HexColor("#FFFDF7")
 INK = colors.HexColor("#181815")
@@ -215,7 +223,7 @@ class NumberedCanvas(canvas.Canvas):
         self.line(LEFT, 12 * mm, PAGE_W - RIGHT, 12 * mm)
         self.setFont(FONT_REG, 7.2)
         self.setFillColor(MUTED)
-        self.drawString(LEFT, 7.8 * mm, "财经推演室 · PRD V2.0 · 团队实施基线")
+        self.drawString(LEFT, 7.8 * mm, f"财经推演室 · PRD {DOC_VERSION} · {DOC_FOOTER_LABEL}")
         self.drawRightString(PAGE_W - RIGHT, 7.8 * mm, f"{page_num} / {page_count}")
         self.restoreState()
 
@@ -229,7 +237,7 @@ class PRDDocTemplate(BaseDocTemplate):
             rightMargin=RIGHT,
             topMargin=TOP,
             bottomMargin=BOTTOM,
-            title="财经推演室 PRD V2.0",
+            title=f"财经推演室 PRD {DOC_VERSION}",
             author="财经推演室产品团队",
             subject="视频时间轴知识触点与过程学习总结的唯一权威产品需求文档",
         )
@@ -271,7 +279,7 @@ def draw_cover(canv: canvas.Canvas, doc: BaseDocTemplate) -> None:
 
     canv.setFillColor(colors.HexColor("#97711A"))
     canv.setFont(FONT_BOLD, 9)
-    canv.drawString(25 * mm, PAGE_H - 29 * mm, "PRODUCT REQUIREMENTS DOCUMENT · V2.0")
+    canv.drawString(25 * mm, PAGE_H - 29 * mm, f"PRODUCT REQUIREMENTS DOCUMENT · {DOC_VERSION}")
     canv.setFillColor(INK)
     canv.setFont(FONT_BOLD, 35)
     canv.drawString(25 * mm, PAGE_H - 55 * mm, "财经推演室")
@@ -293,7 +301,7 @@ def draw_cover(canv: canvas.Canvas, doc: BaseDocTemplate) -> None:
     canv.roundRect(25 * mm, 72 * mm, 108 * mm, 34 * mm, 4 * mm, stroke=0, fill=1)
     canv.setFillColor(YELLOW)
     canv.setFont(FONT_BOLD, 9)
-    canv.drawString(32 * mm, 96 * mm, "唯一权威产品口径")
+    canv.drawString(32 * mm, 96 * mm, DOC_REVIEW_LABEL)
     canv.setFillColor(colors.white)
     canv.setFont(FONT_REG, 8.8)
     canv.drawString(32 * mm, 87 * mm, "参赛 V1 + 生产化演进")
@@ -309,8 +317,8 @@ def draw_cover(canv: canvas.Canvas, doc: BaseDocTemplate) -> None:
 
     canv.setFillColor(colors.HexColor("#BDB8AE"))
     canv.setFont(FONT_REG, 8)
-    canv.drawString(25 * mm, 10 * mm, "版本 V2.0 · 2026-07-22")
-    canv.drawRightString(PAGE_W - 18 * mm, 10 * mm, "团队实施基线")
+    canv.drawString(25 * mm, 10 * mm, f"版本 {DOC_VERSION} · {DOC_DATE}")
+    canv.drawRightString(PAGE_W - 18 * mm, 10 * mm, DOC_FOOTER_LABEL)
     canv.restoreState()
 
 
@@ -322,7 +330,7 @@ def draw_body_header(canv: canvas.Canvas, doc: BaseDocTemplate) -> None:
     canv.rect(0, PAGE_H - 5 * mm, PAGE_W, 5 * mm, stroke=0, fill=1)
     canv.setFont(FONT_BOLD, 7.5)
     canv.setFillColor(colors.HexColor("#8E6A1B"))
-    canv.drawString(LEFT, PAGE_H - 13 * mm, "财经推演室 · PRD V2.0")
+    canv.drawString(LEFT, PAGE_H - 13 * mm, f"财经推演室 · PRD {DOC_VERSION}")
     canv.setFont(FONT_REG, 7.5)
     canv.setFillColor(MUTED)
     canv.drawRightString(PAGE_W - RIGHT, PAGE_H - 13 * mm, "事实、决策、约束、接口与测试统一基线")
@@ -676,8 +684,20 @@ def build_story(markdown: str, source_dir: Path, styles: dict[str, ParagraphStyl
 
 
 def render(markdown_path: Path, output_path: Path) -> None:
+    global DOC_VERSION, DOC_DATE, DOC_REVIEW_LABEL, DOC_FOOTER_LABEL
     register_fonts()
     text = markdown_path.read_text(encoding="utf-8")
+    version_match = re.search(r"PRD[_ ](V\d+\.\d+)", markdown_path.name, re.IGNORECASE)
+    if not version_match:
+        version_match = re.search(r"PRD\s+(V\d+\.\d+)", text[:1000], re.IGNORECASE)
+    if version_match:
+        DOC_VERSION = version_match.group(1).upper()
+    date_match = re.search(r"(?:日期|更新日期)：\s*(\d{4}-\d{2}-\d{2})", text[:1500])
+    if date_match:
+        DOC_DATE = date_match.group(1)
+    is_review_candidate = bool(re.search(r"状态：[^\n]*待.*评审", text[:1500]))
+    DOC_REVIEW_LABEL = "待评审产品口径" if is_review_candidate else "唯一权威产品口径"
+    DOC_FOOTER_LABEL = "联合评审候选" if is_review_candidate else "团队实施基线"
     styles = make_styles()
     story = build_story(text, markdown_path.parent, styles)
     output_path.parent.mkdir(parents=True, exist_ok=True)
