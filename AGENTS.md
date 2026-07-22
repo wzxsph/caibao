@@ -2,9 +2,9 @@
 
 本文件是所有新 Agent 的入口。详细现状以 `docs/AGENT_HANDOFF.md` 为准。当前产品争议仍以
 `财经推演室_PRD_V2.0.md` 裁决；其中“不自动暂停”条款已被用户 2026-07-23 最新指令覆盖。
-`财经推演室_PRD_V2.5.md` 是最新 Review Candidate，V2.3/V2.4 只读保留为历史候选。不得把候选稿、
-PM 原型或 draft 内容写成已批准/已上线事实；但进入财包自动暂停是用户直接裁决，不得继续沿用
-V2.4 的不停播实现口径。
+`财经推演室_PRD_V2.6.md` 是最新 Review Candidate，V2.3/V2.4/V2.5 只读保留为历史候选。不得把候选稿、
+PM 原型或 draft 内容写成已批准/已上线事实；但进入财包自动暂停、POI 微入口、manifest-only 推荐和
+取消自动触点独立数量上限是用户直接裁决，不得继续沿用旧入口、旧视频池或旧数量截断。
 
 ## 5 分钟接手
 
@@ -12,7 +12,7 @@ V2.4 的不停播实现口径。
 2. 只按当前任务再读 `docs/ARCHITECTURE.md`、`docs/TDD_TEST_PLAN.md` 或
    `docs/RESEARCH_SOURCES_AND_PROVIDERS.md`，不要一开始重读全部历史材料。
    涉及内容版本或发布时还必须读 `docs/VERSION_GOVERNANCE.md` 与
-   `docs/reviews/PRD_V2.5_REVIEW.md`。
+   `docs/reviews/PRD_V2.6_REVIEW.md`。
 3. 在三个仓分别检查工作树，任何未提交内容先视为用户资产：
 
 ```bash
@@ -36,10 +36,11 @@ git rev-parse HEAD
 
 - 产品仓：`/home/samsong/Desktop/maybe/caibao`，分支 `main`。跟踪 PRD、PDF、配图、研究、
   ADR、计划与交接；旧版材料和 `demoUI/` 只作取证。
-- 代码仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`。稳定引用为
-  `feat/caibao-analysis-pipeline@b8ced09d` 和未 push 的
-  `refactor/moneybaby-v2.4-foundation@4b34da1f`；后者含回环绑定修复。共享工作树正被外部 Agent
-  使用，检出分支与未提交媒体/fixture 状态可能变化，接手必须以实时 `git status`/HEAD 为准。
+- 代码仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`。历史稳定引用为
+  `feat/caibao-analysis-pipeline@b8ced09d`；当前实现引用为未 push 的
+  `refactor/moneybaby-v2.4-foundation@b51e0a50`（5 个本轮提交）。该 HEAD 已通过 client 40/40、
+  server 127/127、Playwright 9/9、两套 type-check、build、production audit 与 diff-check。
+  共享工作树仍可能变化，接手必须以实时 `git status`/HEAD 为准。
 - PM 参考仓：`/home/samsong/Desktop/maybe/caibao/refer/moneybaby`，固定
   `7db765bab9efe1064321f03d992df42e62413a7c`，只用于取证和选择性迁移。
 - 父仓忽略两个 `refer/` 子仓。不得删除任一 `.git`，不得把子仓作为父仓普通目录提交。
@@ -48,10 +49,26 @@ git rev-parse HEAD
 
 ## 产品红线
 
+- 关键点入口是 44px 高、最大约 216px 的财包 POI 微入口；4—6 秒收起、单行省略，主动作与“稍后”
+  命中区均不小于 44×44px。它是页内按钮，不是外链或路由，可从时间轴重访。
 - 财包在视频时间轴上多次轻量出现；邀请曝光不暂停。用户点击进入后在当前位置自动暂停；完成、
   跳过或关闭时仅在进入前正在播放的情况下从原位置恢复。不得自动 seek、静音、改音量或倍速。
+- 普通首页、财经 Demo 和长视频推荐只允许读取
+  `refer/douyin/media-import/authorized-douyin/download-manifest.json` 与固定四个财经 videoId 的有效交集。
+  服务兼容 manifest schema v1/v2；当前 v2 的另外 21 条必须 `UNMAPPED`，schema/条目变化不得扩大白名单。
+  任何校验失败都 fail closed，不得回退 `posts6.json`、`videos.md`、旧 URL 或其他 fixture。
+- 固定 4 条媒体与估算触点只允许本地 `internal_poc`，授权声明至 2026-08-22；四条 H.264 派生仅在
+  ignored `.analysis-work`，不得提交媒体、
+  上传 GitHub Pages 或包装为 production approved。到期未续期时推荐为空，媒体请求为 410。
+- `b51e0a50` 已验证 Catalog/Range、三个推荐入口 fail closed、明确空态、POI 暂停恢复和四目标视口；
+  不得继续把这些写成待实现。该 9 项 Playwright 主要验证 FIFA/当前三类运行交互，不等于六类交互
+  已在四条真实媒体上全部通过。
 - 半屏最高 48vh、无蒙层；作者头像与财包身份始终分离。
-- 内容节点最多 6 个；自动邀请最多 4 次、间隔至少 45 秒、同时最多 1 个；忽略只记“未观察”。
+- 内容节点总数最多 6 个；自动邀请不设独立数量上限，但相邻间隔至少 45 秒、同时最多 1 个；
+  不得把符合条件的第 5、6 个自动节点截断。忽略只记“未观察”。
+- 当前四套内容中 FIFA/AI 资本各 4 个、AI 电力/自动驾驶各 5 个节点均为 `automatic`；
+  `aipower-compare-grid-dc` 与 `autopilot-judgment-l4` 不得沿用旧数量截断降级。`timeline_only`
+  类型只保留给未来显式内容编排。
 - 作者头像不被财包替换；总结无总分、无虚假精度、无投资建议。
 - 完整沙盘、两阶段反例和复述在片尾；播放中只做预计不超过 12 秒的单一动作。
 - 模型输出永远是候选。只有 evidenceId、schema、权利声明和人工审核齐全才能 approved。

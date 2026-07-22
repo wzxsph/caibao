@@ -3,28 +3,31 @@
 > 让财经视频从“看过”变成“能讲清因果、条件与反例”。
 
 财包是面向财经长视频的移动 Web / PWA 学习陪练。它先用 ASR、OCR 与多模态模型理解视频，
-再把需要补背景、判断条件或验证因果的时刻编排成轻量时间轴触点。邀请出现时不打断观看；
+再把需要补背景、判断条件或验证因果的时刻编排成 44px 高的财包 POI 微入口。邀请出现时不打断观看；
 用户主动进入财包后视频自动暂停，退出时按进入前状态恢复。看完后可以继续做条件沙盘、
 反例挑战和复述，得到一份有证据、无总分的理解报告。
 
-[体验工程 Demo](https://wzxsph.github.io/douyin/?demo=finance-fed#/home) ·
-[阅读 PRD V2.5](财经推演室_PRD_V2.5.md) ·
-[查看评审 PDF](output/pdf/财经推演室_PRD_V2.5.pdf) ·
+[历史静态工程 Demo（不代表 V2.6 媒体验收）](https://wzxsph.github.io/douyin/?demo=finance-fed#/home) ·
+[阅读 PRD V2.6](财经推演室_PRD_V2.6.md) ·
+[查看评审 PDF](output/pdf/财经推演室_PRD_V2.6.pdf) ·
 [5 分钟接手](docs/AGENT_HANDOFF.md)
 
-> V2.5 目前仍是 Review Candidate；在联合评审完成前，[PRD V2.0](财经推演室_PRD_V2.0.md)
-> 仍是已批准基线，但其中“不自动暂停”条款已被用户 2026-07-23 最新指令覆盖。
+> V2.6 目前仍是 Review Candidate；V2.5 已转为历史候选。在联合评审完成前，[PRD V2.0](财经推演室_PRD_V2.0.md)
+> 仍是已批准基线，但用户 2026-07-23 对进入暂停、POI 微入口、manifest-only 推荐和取消自动数量上限的直接裁决覆盖旧文档相反条款。
 
 ## 产品形态
 
 观看中，财包只做轻量、可忽略的小动作：
 
-- 在关键时间点出现 4–6 秒轻提示，错过后仍可从时间轴回看；
+- 在关键时间点出现 44px 高、最大约 216px 的 POI 微入口，4–6 秒后收起，错过后仍可从时间轴回看；
 - 点击进入后视频在当前位置自动暂停；展开后无蒙层、最多占 48vh；
 - 完成、跳过或关闭时，进入前正在播放才从原位置续播；进入前已暂停则保持暂停；
-- 自动邀请最多 4 次、间隔至少 45 秒，同时只处理一个触点；
+- 内容节点总数最多 6 个；自动邀请不设独立数量上限，但间隔至少 45 秒、同时只处理一个触点；
+- 当前四套内容中 FIFA/AI 资本各 4 个、AI 电力/自动驾驶各 5 个现有节点均自动出现；`timeline_only` 只保留给未来显式编排；
 - 支持背景卡、快速判断、因果拼接、条件滑杆、反例翻转和概念辨析；
 - 不替换作者头像，不显示虚假分数，不提供买卖、仓位或目标价建议。
+
+推荐媒体只有一个来源：`refer/douyin/media-import/authorized-douyin/download-manifest.json`。服务兼容 schema v1/v2，但推荐资格始终是清单有效条目与固定四个财经 videoId/Experience 映射的交集；当前 v2 共 25 条，其余 21 条均 `UNMAPPED`，新增条目不能扩大白名单。四条映射媒体及估算触点仅供本地 `internal_poc`，授权声明至 2026-08-22，不上传 GitHub Pages。
 
 片尾再承载完整逻辑图、显式运行的条件沙盘、两阶段反例、三句话复述与证据报告。
 
@@ -42,12 +45,13 @@
 
 | 模块 | 当前状态 |
 |---|---|
-| 产品口径 | V2.5 候选稿已统一“邀请不停播、进入自动暂停、退出按原状态恢复”，尚待真实联合签字 |
-| 视频运行时 | 已有 Vue/Vite 抖音式 Feed、播放器、财包轻提示、无蒙层半屏和学习足迹；暂停状态机尚待按 V2.5 重构 |
+| 产品口径 | V2.6 候选锁定 POI 微入口、进入暂停和 manifest-only 推荐，尚待真实联合签字 |
+| 视频运行时 | 未 push 的 `refactor/moneybaby-v2.4-foundation@b51e0a50` 已完成 POI 微入口、进入暂停/退出恢复、Catalog-only 推荐、Range、空态和四视口 E2E |
 | 交互类型 | 前端六类渲染器及服务端六类 Payload 已有离线测试；公开 Demo 仍以工程 Fixture 为主 |
 | 生成管线 | 已有 FFmpeg、ASR/OCR Provider、语义图、修复、Planner、规则方向和 CoverageReport 垂直切片 |
 | 发布链路 | 模型只生成 Draft；人工审核、Approved API、持久发布指针和回滚仍待实现 |
-| 真实内容 | 授权、作者一致性、最终字幕/时间码、财经审核和真实 Provider 全链路仍是发布阻塞项 |
+| 本地媒体 | manifest v2 有 25 条但仅固定 4 条可推荐；四条派生、Catalog/Range、推荐空态及 FIFA 核心交互 E2E 已验证；完整六类×四媒体、内容审核和公网分发仍阻塞 |
+| 工程门禁 | `b51e0a50`：client 40/40、server 127/127、Playwright 9/9、两套 type-check、build、production audit 与 diff-check 全绿 |
 
 最新可执行状态、分支和测试数字以 [Agent 交接](docs/AGENT_HANDOFF.md) 为准，README 不固定容易过期的
 工作树状态。
@@ -66,7 +70,7 @@
 ```text
 caibao/
 ├── README.md                         # 项目首页
-├── 财经推演室_PRD_V2.5.md             # 最新评审候选
+├── 财经推演室_PRD_V2.6.md             # 最新评审候选
 ├── docs/
 │   ├── AGENT_HANDOFF.md              # 当前事实、阻塞和接手顺序
 │   ├── ARCHITECTURE.md               # 产品与技术架构
@@ -84,9 +88,9 @@ caibao/
 
 建议按以下顺序阅读：
 
-1. [PRD V2.5](财经推演室_PRD_V2.5.md)
-2. [V2.4 → V2.5 差异](docs/PRD_V2.4_TO_V2.5_DIFF.md)
-3. [V2.5 评审表](docs/reviews/PRD_V2.5_REVIEW.md)
+1. [PRD V2.6](财经推演室_PRD_V2.6.md)
+2. [V2.5 → V2.6 差异](docs/PRD_V2.5_TO_V2.6_DIFF.md)
+3. [V2.6 评审表](docs/reviews/PRD_V2.6_REVIEW.md)
 4. [技术架构](docs/ARCHITECTURE.md)
 5. [实施计划](docs/IMPLEMENTATION_PLAN.md)
 
@@ -121,7 +125,7 @@ pnpm exec vite --host 127.0.0.1 --port 3001 --strictPort
 ## 文档权威与交付规则
 
 - Markdown 是 PRD 唯一内容源，PDF 只用于评审分发；
-- V2.5 获批前保持 Review Candidate，不创建 `prd-v2.5-approved` 标签；
+- V2.6 获批前保持 Review Candidate，不创建 `prd-v2.6-approved` 标签；
 - PRD、内容包、Schema、规则、Prompt、媒体指纹与应用提交分别版本化；
 - 模型不能直接发布内容，也不能改变确定性方向规则；
 - 所有内容结论必须能追溯到 evidenceId、媒体版本和真实审核记录。
@@ -129,7 +133,7 @@ pnpm exec vite --host 127.0.0.1 --port 3001 --strictPort
 ## 合规说明
 
 本项目用于财经知识理解与学习反馈，不构成投资建议。公开视频可访问不等于拥有下载、加工或再发布权；
-任何真实视频进入分析或发布链路前，都必须完成授权、作者、媒体指纹与内容审核。
+任何真实视频进入分析或发布链路前，都必须完成授权、作者、媒体指纹与内容审核。当前 manifest 的权利声明只覆盖本地内部 PoC，不覆盖 GitHub Pages、CDN 或其他公网分发。
 
 本仓目前未提供开源许可证；公开可见不代表获得复制、修改、分发或商业使用授权。抖音仿真底座的
 上游许可与非商业限制也需要在商业化前单独完成审查。
