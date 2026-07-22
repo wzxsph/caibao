@@ -7,6 +7,10 @@
 # The runnable application keeps the upstream simulator history in its own repo.
 /refer/douyin/
 
+# Reference/scraped third-party videos used for analysis. Not ours to redistribute;
+# per AGENTS.md this material must never enter Git.
+/真实财经科普视频/
+
 # Generated and local-only artifacts.
 **/node_modules/
 **/dist/
