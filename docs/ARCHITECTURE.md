@@ -1,9 +1,9 @@
 # 财包视频理解与时间轴交互架构
 
 状态：P0 垂直切片已实现，V2.4 为 Review Candidate；V2.0 仍是当前权威，真实内容发布仍阻塞  
-代码 checkpoint / 当前检出：`refer/douyin` 的 `feat/caibao-analysis-pipeline@b8ced09d`
+代码 checkpoint：`refer/douyin` 的 `feat/caibao-analysis-pipeline@b8ced09d`
 （Planner 4/45 + 六类成稿）。未 push 的 `refactor/moneybaby-v2.4-foundation@4b34da1f`
-含默认前端回环绑定，但当前未检出，不属于本架构事实基线。
+在其上增加默认前端回环绑定。共享工作树由外部 Agent 使用，当前检出状态不是稳定架构事实。
 
 > 产品候选：`财经推演室_PRD_V2.4.md`。V2.4 新增独立版本向量、ReviewManifest 与受控
 > draft PATCH、ReviewManifest、job publish（物化 approved）与 content publish/retire（运行指针）

@@ -35,10 +35,10 @@ git rev-parse HEAD
 
 - 产品仓：`/home/samsong/Desktop/maybe/caibao`，分支 `main`。跟踪 PRD、PDF、配图、研究、
   ADR、计划与交接；旧版材料和 `demoUI/` 只作取证。
-- 代码仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`，当前检出
-  `feat/caibao-analysis-pipeline@b8ced09d`；另有未 push 的
-  `refactor/moneybaby-v2.4-foundation@4b34da1f` 含回环绑定修复，但当前未检出。代码仓有独立
-  `.git`，接手仍以实际 `git status`/HEAD 为准。
+- 代码仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`。稳定引用为
+  `feat/caibao-analysis-pipeline@b8ced09d` 和未 push 的
+  `refactor/moneybaby-v2.4-foundation@4b34da1f`；后者含回环绑定修复。共享工作树正被外部 Agent
+  使用，检出分支与未提交媒体/fixture 状态可能变化，接手必须以实时 `git status`/HEAD 为准。
 - PM 参考仓：`/home/samsong/Desktop/maybe/caibao/refer/moneybaby`，固定
   `7db765bab9efe1064321f03d992df42e62413a7c`，只用于取证和选择性迁移。
 - 父仓忽略两个 `refer/` 子仓。不得删除任一 `.git`，不得把子仓作为父仓普通目录提交。

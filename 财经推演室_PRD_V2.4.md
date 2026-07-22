@@ -82,7 +82,7 @@ V2.4 只有同时满足以下条件才成为权威：
 | 仓库 | 固定角色 | 当前核验基线 | 边界 |
 |---|---|---|---|
 | 产品仓 `/caibao` | PRD、PDF、图、研究、ADR、计划与交接 | V2.4 分支基于 `720a5ff` | 不把嵌套代码仓当普通目录提交 |
-| 应用仓 `refer/douyin` | Vue/Vite/Express 唯一实现 | 当前检出 `feat/caibao-analysis-pipeline@b8ced09d`；另有未 push foundation 分支 `4b34da1f` 含回环修复 | 不向公共 upstream push，不覆盖外部未提交媒体/fixture 工作树 |
+| 应用仓 `refer/douyin` | Vue/Vite/Express 唯一实现 | 稳定 checkpoint `b8ced09d`；未 push foundation `4b34da1f` 含回环修复；共享工作树检出状态易变 | 不向公共 upstream push，不覆盖外部未提交媒体/fixture 工作树；接手实时复核 |
 | PM 仓 `refer/moneybaby` | 内容结构、真实测试资产和 UI 取证 | 固定 `7db765b` | 只读选择性迁移，不继续产品开发 |
 
 [现状事实] V2.3、配套图片、PDF、PM 差异评审、架构、生成管线和交接已提交在产品仓 `720a5ff`；该提交在本轮开始时尚未成为批准标签。
@@ -91,7 +91,7 @@ V2.4 只有同时满足以下条件才成为权威：
 
 [现状事实] `refer/douyin` 已有视频 Feed、播放器、PWA、Media Range、财包 CuePill、最高 48vh 的无蒙层 HalfSheet、时间轴状态、localStorage 学习足迹、六类前端渲染器，以及 Express 内容分析垂直切片。
 
-[现状事实] `b8ced09d` 的完整离线回归为 20 个前端 Vitest、102 个服务端 Vitest和 6 个 Playwright，类型检查、构建和生产依赖审计通过。未 push 的 foundation 分支提交 `4b34da1f` 增加默认前端回环绑定及 3 个静态断言；它当前未检出，不属于 `b8ced09d` 基线。上述事实只证明 fixture/fake-client 下的契约和编排，不证明真实 Provider、真实内容、授权或发布质量。
+[现状事实] `b8ced09d` 的完整离线回归为 20 个前端 Vitest、102 个服务端 Vitest和 6 个 Playwright，类型检查、构建和生产依赖审计通过。未 push 的 foundation 分支提交 `4b34da1f` 在其上增加默认前端回环绑定及 3 个静态断言；两者是不同可审计基线，不以共享工作树当下检出分支判定能力。上述事实只证明 fixture/fake-client 下的契约和编排，不证明真实 Provider、真实内容、授权或发布质量。
 
 [现状事实] 当前 Planner 的自动邀请默认值和硬上限已收紧为 4、最小间隔为 45 秒；server 六类 payload 均可成稿，前端六类均可渲染并有离线测试。当前运行 Demo/E2E 仍只绑定三类触点，真实 Provider、完整六类真实时间轴和有权媒体 E2E 未验证；并发媒体替换也不能提前写成完成。
 

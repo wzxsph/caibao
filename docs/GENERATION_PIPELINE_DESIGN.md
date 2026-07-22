@@ -5,8 +5,9 @@
 当前产品裁决：`财经推演室_PRD_V2.0.md`
 候选产品口径：`财经推演室_PRD_V2.4.md`（未批准前不能作为 approved 内容 baseline）
 配套决策记录：`docs/ADR/0003-agentic-generation-pipeline.md`
-落点代码仓：核心 `50b96560`；Planner/六类 checkpoint 与当前检出 `b8ced09d`。
-未 push 的 foundation 分支 `4b34da1f` 只含后续回环修复，当前未检出且不改变本管线事实。
+落点代码仓：核心 `50b96560`；Planner/六类 checkpoint `b8ced09d`。
+未 push 的 foundation 分支 `4b34da1f` 在其上增加回环修复，不改变本管线事实；共享工作树
+检出状态由并发任务改变，接手时实时确认。
 
 > 本文件是「离线内容生成管线」的规格，回答四个问题：如何判断时间轴、何时补全信息/弹出提问、tool call 与 loop 如何工程化、最终产出什么。核心落点已于 2026-07-22 在 `refer/douyin` 提交 `50b96560` 实现；本文同时作为实现边界与后续验证清单。
 
