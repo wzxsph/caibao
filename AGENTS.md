@@ -1,14 +1,17 @@
 # 财经推演室｜Agent 工作约定
 
 本文件是所有新 Agent 的入口。详细现状以 `docs/AGENT_HANDOFF.md` 为准。当前产品争议仍以
-`财经推演室_PRD_V2.0.md` 裁决；`财经推演室_产品功能PRD_V2.3.md` 是已完成源码、线上与测试
-取证后的新候选基线，联合评审通过后才替代 V2.0/V2.2。不得把候选稿或 PM 原型写成已上线事实。
+`财经推演室_PRD_V2.0.md` 裁决；`财经推演室_PRD_V2.4.md` 是加入版本治理、审核与发布门禁后的
+Review Candidate，联合评审通过后才替代 V2.0。V2.3 保留为历史候选与取证快照。不得把候选稿、
+PM 原型或 draft 内容写成已批准/已上线事实。
 
 ## 5 分钟接手
 
 1. 先读 `docs/AGENT_HANDOFF.md` 的“5 分钟摘要”和“唯一第一任务”。
 2. 只按当前任务再读 `docs/ARCHITECTURE.md`、`docs/TDD_TEST_PLAN.md` 或
    `docs/RESEARCH_SOURCES_AND_PROVIDERS.md`，不要一开始重读全部历史材料。
+   涉及内容版本或发布时还必须读 `docs/VERSION_GOVERNANCE.md` 与
+   `docs/reviews/PRD_V2.4_REVIEW.md`。
 3. 在三个仓分别检查工作树，任何未提交内容先视为用户资产：
 
 ```bash
@@ -47,6 +50,8 @@ git rev-parse HEAD
 - 作者头像不被财包替换；总结无总分、无虚假精度、无投资建议。
 - 完整沙盘、两阶段反例和复述在片尾；播放中只做预计不超过 12 秒的单一动作。
 - 模型输出永远是候选。只有 evidenceId、schema、权利声明和人工审核齐全才能 approved。
+- Review Candidate 只能指导探索和 draft；approved 内容必须引用已批准 PRD tag，并固化内容、
+  Schema、规则、权重、Prompt、应用提交和媒体指纹等独立版本。
 - 不绕过抖音登录、验证码、签名或风控；公开可见不代表有权下载或再处理。
 
 ## 密钥与隐私
@@ -70,5 +75,7 @@ pnpm audit --prod
 git diff --check
 ```
 
-涉及 PRD 时，以 Markdown 为唯一内容源重建 PDF，并渲染逐页检查。任何因密钥、媒体、FFmpeg、
-授权或人工审核未执行的验证，都必须在交接文档写成阻塞项，不能写成已通过。
+涉及 PRD 时，以 Markdown 为唯一内容源重建 PDF。按用户 2026-07-23 的最新指令，当前及后续
+默认只做 `pdfinfo`、文本抽取、文件可打开、页数和关键标题一致性等非视觉机器校验；不执行逐页
+PNG、截图或肉眼视觉验收，且必须明确写“视觉未验收”，不得声称版式通过。任何因密钥、媒体、
+FFmpeg、授权或人工审核未执行的验证，都必须在交接文档写成阻塞项，不能写成已通过。

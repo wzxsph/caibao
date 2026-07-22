@@ -1,7 +1,10 @@
 # 财包视频理解与时间轴交互架构
 
-状态：P0 垂直切片已实现，V2.3 为待评审目标；真实内容发布仍阻塞  
+状态：P0 垂直切片已实现，V2.4 为 Review Candidate；V2.0 仍是当前权威，真实内容发布仍阻塞  
 代码：`refer/douyin` 分支 `feat/caibao-analysis-pipeline`
+
+> 产品候选：`财经推演室_PRD_V2.4.md`。V2.4 新增独立版本向量、ReviewManifest 与受控
+> approve/publish/retire 门禁；这些是目标架构，不能因文档存在描述为代码已实现。
 
 ## 系统分层
 
@@ -33,10 +36,12 @@ flowchart LR
   P7 --> Q["Zod Schema + 终检禁词"]
   Q --> S["DraftExperience"]
   Q --> CR["CoverageReport / 查漏补缺清单"]
-  S --> T["人工审核（待建设）"]
+  S --> T["ReviewManifest / 人工审核（待建设）"]
   CR --> T
-  T --> U["ApprovedExperience"]
-  U --> V["VideoExtensionHost"]
+  T --> AP["独立批准动作（待建设）"]
+  AP --> U["不可变 ApprovedExperience"]
+  U --> PP["可回滚发布指针（待建设）"]
+  PP --> V["VideoExtensionHost"]
   V --> W["CuePill / 48vh HalfSheet / LearningTrace"]
 ```
 
@@ -51,10 +56,12 @@ flowchart LR
 1. 来源元数据不等于媒体资产；没有权利明确的媒体文件，不启动分析。
 2. ASR/OCR/关键帧是证据，模型输出是候选；模型不能发布。
 3. ASR 时间码优先于模型猜测；未知 evidenceId 会被管线拒绝。
-4. 内容节点最多 6 个；V2.3 自动邀请最多 4 次、最小 45 秒、单次最多 12 秒，并扫描投资建议措辞。当前 `ApprovedExperience` 契约仍允许 6 次自动邀请，是待收紧差异。
+4. 内容节点最多 6 个；V2.4 候选自动邀请最多 4 次、最小 45 秒、单次最多 12 秒，并扫描投资建议措辞。当前 `ApprovedExperience` 契约仍允许 6 次自动邀请，是待收紧差异。
 5. 播放时不实时请求模型决定弹点；前端只消费已批准、版本化内容包。
 6. 展开触点不暂停、静音或 seek 视频；无蒙层，面板不超过 48vh。
 7. 媒体、作者头像/昵称、来源 URL、字幕和内容包版本必须一致；财包不得替换作者身份。
+8. PRD、内容、Schema、规则、Planner 权重、Prompt、应用提交和媒体指纹独立版本化；
+   Review Candidate 只能生成 draft，approved 内容必须引用已批准 PRD tag。
 
 ## PM 内容包迁移边界
 
@@ -64,8 +71,10 @@ flowchart LR
 PM VideoContentPackage (draft)
 → adapter + media/author/version validation
 → DraftExperience + CoverageReport
-→ human review
-→ ApprovedExperience
+→ ReviewManifest + human review
+→ independent approval
+→ immutable ApprovedExperience
+→ rollbackable publish pointer
 ```
 
 - 可迁移：视频元数据、章节、字幕候选、六节点学习意图、证据窗口、复述/报告信息结构。
@@ -85,6 +94,7 @@ PM VideoContentPackage (draft)
 | `server/src/pipeline` | 语义时间轴、有界修复、评分与 Planner、方向规则、payload 成稿、CoverageReport |
 | `server/src/jobs` | P0 内存任务与 draft/CoverageReport；进程重启后丢失是已知限制 |
 | `server/src/app.ts` | readiness、来源探测、分析任务、草稿与 coverage API |
+| Review/Publish Gate（目标） | ReviewManifest、approve/publish/retire、权限/幂等/审计；当前未实现，P0 可先用同契约 CLI |
 | `refer/moneybaby/.../app/content` | PM 参考内容结构；不得成为运行时第二内容仓 |
 
 ## Provider 选择
@@ -115,12 +125,20 @@ PM VideoContentPackage (draft)
 | 模型超时/429/无效结构 | 任务失败为类型化错误，不产生 approved 内容 |
 | 服务进程重启 | P0 内存任务丢失；前端静态已批准内容不受影响 |
 
+## 版本与发布链
+
+批准内容必须固化以下版本向量：`prdBaseline`、`contentVersion`、`schemaVersion`、
+`ruleVersion`、`weightTableVersion`、`promptVersion`、`appCommit`、`mediaFingerprint`。
+模型/adapter 只能创建 draft；reviewed、approved、published 是三个不同状态，修改产生新内容版本。
+完整规则见 `docs/VERSION_GOVERNANCE.md`。
+
 ## P1 设计缺口
 
 - 对象存储上传、病毒/MIME 魔数扫描、短时签名 URL。
 - OAuth state、token 加密存储、撤销与刷新完整流程。
 - 场景切换抽帧与长视频分段/并发控制。
-- 审核台、review/publish API、ApprovedExperience 持久化。
+- 完整审核 UI、企业级权限/双人复核、ApprovedExperience 持久化；P0 仍必须先完成可测试的
+  ReviewManifest 与受控 approve/publish/retire 动作，不能继续用手改 fixture 代替发布。
 - PostgreSQL/队列、租户隔离、审计日志和额度控制。
 - FFmpeg 子进程超时、任务并发/TTL、派生文件清理与独立媒体 worker。
 - 前端 `StaticExperienceRepository` 切换为 API + 缓存的生产仓储。
