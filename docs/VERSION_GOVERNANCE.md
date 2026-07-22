@@ -3,13 +3,14 @@
 状态：Review Candidate 配套治理规则  
 日期：2026-07-23  
 当前产品权威：`财经推演室_PRD_V2.0.md`  
-候选产品口径：`财经推演室_PRD_V2.4.md`
+最新候选产品口径：`财经推演室_PRD_V2.5.md`  
+历史候选：`财经推演室_产品功能PRD_V2.3.md`、`财经推演室_PRD_V2.4.md`
 
 ## 1. 目的
 
 本文件解决五个问题：哪个 PRD 有权裁决、何时升级文档版本、内容版本如何独立演进、批准与发布如何留下证据，以及 Agent 如何在三个仓库间安全交接。
 
-核心原则是“规范先批准，内容后生产；生成、审核、批准、发布彼此分离”。本文件存在不等于 V2.4 已批准，也不授予任何 Agent 创建批准标签或把 draft 升级为 approved 的权限。
+核心原则是“规范先批准，内容后生产；生成、审核、批准、发布彼此分离”。本文件存在不等于 V2.5 已批准，也不授予任何 Agent 创建批准标签或把 draft 升级为 approved 的权限。用户直接裁决的“进入财包自动暂停”优先于旧 PRD 的相反条款，但不会自动批准 V2.5 的其他内容。
 
 ## 2. 权威优先级
 
@@ -17,8 +18,8 @@
 2. 已批准且未被替代的 PRD；当前为 V2.0。
 3. `AGENTS.md` 与 `docs/AGENT_HANDOFF.md` 的事实/安全边界。
 4. Architecture、TDD、ADR 与实施计划。
-5. Review Candidate；当前为 V2.4。
-6. 历史候选 V2.3、PM V2.2、旧 PRD、原型与口头示例。
+5. Review Candidate；当前为 V2.5。
+6. 历史候选 V2.3/V2.4、PM V2.2、旧 PRD、原型与口头示例。
 
 Review Candidate 可以指导评审、设计探索和 draft 实验，但不得：
 
@@ -68,31 +69,31 @@ Draft → Review Candidate → Approved → Superseded
 
 ### 4.4 Superseded
 
-后继 Approved PRD 生效后，旧版只读保留。Review Candidate 也可以在批准前被新候选取代；V2.3 即属于此类历史候选，不能回写成已批准。
+后继 Approved PRD 生效后，旧版只读保留。Review Candidate 也可以在批准前被新候选取代；V2.3 和 V2.4 即属于此类历史候选，不能回写成已批准。
 
-## 5. V2.4 批准动作
+## 5. V2.5 批准动作
 
-V2.4 批准必须是一个可审计的原子变更：
+V2.5 批准必须是一个可审计的原子变更：
 
-- `财经推演室_PRD_V2.4.md` 状态改为 Approved。
-- `docs/reviews/PRD_V2.4_REVIEW.md` 记录真实结论。
+- `财经推演室_PRD_V2.5.md` 状态改为 Approved。
+- `docs/reviews/PRD_V2.5_REVIEW.md` 记录真实结论。
 - `AGENTS.md`、`docs/AGENT_HANDOFF.md`、`docs/IMPLEMENTATION_PLAN.md`、架构/TDD 指针同步。
 - PDF 从同一 Markdown 重新生成并完成用户允许的机器校验。
-- 合并到 `main` 后创建 annotated tag `prd-v2.4-approved`。
+- 合并到 `main` 后创建 annotated tag `prd-v2.5-approved`。
 
 当前分支不得创建该 tag，也不得预填签字。批准提交建议使用：
 
 ```text
-docs: approve PRD v2.4 and switch authority
+docs: approve PRD v2.5 and switch authority
 ```
 
 ## 6. 独立版本向量
 
-批准内容必须固定下列字段，不能用一个“V2.4”替代全部版本：
+批准内容必须固定下列字段，不能用一个“V2.5”替代全部版本：
 
 | 字段 | 格式建议 | 所有者 | 目的 |
 |---|---|---|---|
-| `prdBaseline` | `prd-v2.4-approved@<product-sha>` | 产品仓 | 证明依据的产品规范 |
+| `prdBaseline` | `prd-v2.5-approved@<product-sha>` | 产品仓 | 证明依据的产品规范 |
 | `contentId` | 稳定 slug | 内容 | 标识同一内容系列 |
 | `contentVersion` | 日期序列或 SemVer | 内容 | 不可变内容修订 |
 | `schemaVersion` | `finance-experience/1.0.0` | 架构 | 数据兼容性 |
@@ -164,24 +165,24 @@ generated → draft → in_review → reviewed → approved → published → re
 
 ### 9.1 产品仓
 
-文档候选从明确产品仓 SHA 建分支。本轮：
+文档候选从明确产品仓 SHA 开始。本轮用户要求以 `caibao/main` 为主，V2.5 起始基线为：
 
 ```text
-base: 720a5ffecec50b7f7dd7b3dca33e2a5cd2fbad48
-branch: docs/prd-v2.4-governance
+base: dff09ee70792d626cacf2a3d638b5b22e9b77591
+branch: main
 ```
 
 建议保留三个审计清晰的提交组：
 
-1. `docs: open PRD v2.4 review candidate`
-2. `docs: define v2.4 governance and traceability`
-3. `docs: generate PRD v2.4 review PDF`
+1. `docs: define enter-to-pause interaction in PRD v2.5`
+2. `docs: align project entrypoint and handoff with v2.5`
+3. `docs: generate PRD v2.5 review PDF`
 
 评审后另建批准提交，不修改上述候选提交。未经用户明确授权不 push、不创建远端 PR、不改写历史。
 
 ### 9.2 应用代码仓
 
-只有在 V2.4 获批且并发工作树归属清晰、干净后，才从明确 SHA 建内容分支，例如：
+只有在 V2.5 获批且并发工作树归属清晰、干净后，才从明确 SHA 建内容分支，例如：
 
 ```text
 content/fed-rate-global-capital-v1
@@ -196,7 +197,7 @@ content/fed-rate-global-capital-v1
 5. `content: add reviewed package <contentVersion>`
 6. `feat(runtime): consume approved package and enforce cue policy`
 7. `test(e2e): cover six cues recovery and evidence report`
-8. `docs: record evidence against prd-v2.4-approved`
+8. `docs: record evidence against prd-v2.5-approved`
 
 候选生成、人工 reviewed、approved 和 published 不合并为一个无审计边界的大提交。当前代码仓存在并发未提交文件时，不创建内容分支、不 stage、不代他人提交。
 

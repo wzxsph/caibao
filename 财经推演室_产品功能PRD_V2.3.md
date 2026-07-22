@@ -7,11 +7,14 @@
 版本：V2.3  
 日期：2026-07-22  
 语言：简体中文  
-状态：待产品、设计、研发、测试与内容审核联合评审  
+状态：Historical Review Candidate（已被 V2.4、V2.5 依次取代）  
 产品形态：移动 Web/PWA 财经长视频伴学体验  
 实施基座：`refer/douyin`（Vue 3 / Vite / Pinia / Express TypeScript）  
 PM 参考原型：`prac-fect/moneybaby@7db765bab9efe1064321f03d992df42e62413a7c`  
 Markdown：唯一内容源；PDF：评审版  
+
+> 历史提示：本文件关于“交互期间不自动暂停”的条款已由 `财经推演室_PRD_V2.5.md` 取代。
+> 当前口径为邀请不暂停、用户进入财包后自动暂停、退出按进入前状态恢复。
 
 <!-- BODY -->
 
