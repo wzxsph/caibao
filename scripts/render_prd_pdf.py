@@ -239,7 +239,7 @@ class PRDDocTemplate(BaseDocTemplate):
             bottomMargin=BOTTOM,
             title=f"财经推演室 PRD {DOC_VERSION}",
             author="财经推演室产品团队",
-            subject="视频时间轴知识触点与过程学习总结的唯一权威产品需求文档",
+            subject=f"视频时间轴知识触点与过程学习总结 · {DOC_FOOTER_LABEL}",
         )
         cover_frame = Frame(0, 0, PAGE_W, PAGE_H, leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0, id="cover")
         body_frame = Frame(LEFT, BOTTOM, CONTENT_W, PAGE_H - TOP - BOTTOM, leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0, id="body")
