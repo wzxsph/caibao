@@ -45,6 +45,7 @@
 - [x] Transcript、VisualEvidence、SemanticEvidence、TriggerCandidate 全链路 schema。
 - [x] 确定性 Planner 完成证据门禁、去重、限频和安全过滤。
 - [x] 单次语义分析已重构为有界多阶段管线：抽取、确定性校验、可选评审、最多 2 轮定向修复、评分/Planner、方向规则、payload 成稿与 CoverageReport。
+- [x] Planner 自动邀请默认值和硬上限收紧为 4、最小间隔 45 秒；六类 server payload 均可离线成稿（`b8ced09d`）。
 - [x] 产物固定为 `draft`，人工审核动作与发布动作分离。
 
 实现完成不等于供应商已验证：本地凭据状态以 `docs/AGENT_HANDOFF.md` 为准，`LIVE_PROVIDER_TESTS` 仍只有配置解析，没有对可入库的授权真实视频执行付费全链路。
@@ -54,7 +55,7 @@
 - [x] Express 提供健康检查、来源探测、分析任务、草稿与 CoverageReport 读取接口；默认只监听 `127.0.0.1:18787`。
 - [ ] 前端内容仓库可从静态 fixture 切到已批准 API，断网时保留静态演示兜底。
 - [ ] 完成前端 API 联调并验证模型超时、无效 JSON、缺少 FFmpeg 或密钥时不影响普通视频播放。
-- [ ] 将自动邀请从契约允许的最多 6 个收紧为最多 4 个；内容时间轴节点仍可保留 6 个。
+- [x] 自动邀请默认值和硬上限已收紧为最多 4 个、最小间隔 45 秒；内容时间轴节点仍可保留 6 个。
 - [ ] 修复财经占位条目的媒体黑屏和错误复用 `@李子柒` 作者元数据。
 
 ### M3.5｜PM 内容包选择性迁移
@@ -72,7 +73,11 @@
 
 - [ ] 先写 Review Candidate/draft 不可 approved、审核维度不完整不可批准的失败测试。
 - [ ] 实现 ReviewManifest；模型/adapter 只能生成 draft，不能填写真实审核签字。
-- [ ] 实现受控 approve、publish、retire 与回滚；三个动作权限、幂等和审计分离。
+- [ ] 实现 `PATCH /analysis/jobs/:jobId/draft`，以乐观版本和修改审计保存新 draft revision。
+- [ ] 实现 `POST /analysis/jobs/:jobId/publish`：只把已 reviewed draft 物化为不可变
+  ApprovedExperience，不切运行发布指针。
+- [ ] 实现 `/content/versions/:contentVersion/publish|retire` 与回滚；运行指针动作与 job publish
+  的权限、幂等和审计分离。
 - [ ] 客户端只读取不可变 ApprovedExperience；不得以手改 fixture 模拟发布。
 - [ ] 完整审核 UI 可延后 P1，但 P0 的同契约 CLI/API 和自动化门禁不可省略。
 
@@ -86,8 +91,10 @@
 - [ ] 片尾沙盘、反例、复述和证据报告只从真实事件与证据生成，不使用静态能力印章。
 - [ ] 内容版本引用已批准 PRD tag；Review Candidate 产物只能保持 draft。
 
-当前自动化基线已通过 20 个前端单测、84 个服务端单测、6 个 Playwright E2E、两套类型检查、构建与
-`pnpm audit --prod`（生产依赖 0 已知漏洞）。完整开发依赖仍是旧底座工具链债务，需随后续升级处理。这些是 M4 的工程前置条件，不代表 M4 已完成。
+`b8ced09d` 自动化基线已通过 20 个前端单测、102 个服务端单测、6 个 Playwright E2E、两套类型
+检查、构建与 `pnpm audit --prod`（生产依赖 0 已知漏洞）。`4b34da1f` 新增回环绑定测试后，本轮
+服务端复核 105/105。完整开发依赖仍是旧底座工具链债务；完整六类真实时间轴、真实 Provider 与
+有权媒体尚未验证。这些是 M4 的工程前置条件，不代表 M4 已完成。
 
 ## 当前不做
 

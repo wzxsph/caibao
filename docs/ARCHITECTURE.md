@@ -1,10 +1,13 @@
 # 财包视频理解与时间轴交互架构
 
 状态：P0 垂直切片已实现，V2.4 为 Review Candidate；V2.0 仍是当前权威，真实内容发布仍阻塞  
-代码：`refer/douyin` 分支 `feat/caibao-analysis-pipeline`
+代码 checkpoint / 当前检出：`refer/douyin` 的 `feat/caibao-analysis-pipeline@b8ced09d`
+（Planner 4/45 + 六类成稿）。未 push 的 `refactor/moneybaby-v2.4-foundation@4b34da1f`
+含默认前端回环绑定，但当前未检出，不属于本架构事实基线。
 
 > 产品候选：`财经推演室_PRD_V2.4.md`。V2.4 新增独立版本向量、ReviewManifest 与受控
-> approve/publish/retire 门禁；这些是目标架构，不能因文档存在描述为代码已实现。
+> draft PATCH、ReviewManifest、job publish（物化 approved）与 content publish/retire（运行指针）
+> 门禁；这些是目标架构，不能因文档存在描述为代码已实现。
 
 ## 系统分层
 
@@ -47,16 +50,18 @@ flowchart LR
 
 > 生成管线的多阶段循环见 `docs/GENERATION_PIPELINE_DESIGN.md` 与
 > `docs/ADR/0003-agentic-generation-pipeline.md`。上图 P1–P7 已在代码提交
-> `50b96560` 实现，`CoverageReport` 已作为按内容版本生成的确定性审核门产物。
+> `50b96560` 实现核心管线，`b8ced09d` 已把自动邀请默认/硬上限收紧为 4 并开放六类
+> server payload 成稿；`CoverageReport` 已作为按内容版本生成的确定性审核门产物。
 > 当前结论只由离线 fake client 测试和静态 fixture 证明；真实授权媒体、真实供应商、
-> 人工审核与发布链路仍未验证。
+> 完整六类真实时间轴 E2E、人工审核与发布链路仍未验证。
 
 ## 关键不变量
 
 1. 来源元数据不等于媒体资产；没有权利明确的媒体文件，不启动分析。
 2. ASR/OCR/关键帧是证据，模型输出是候选；模型不能发布。
 3. ASR 时间码优先于模型猜测；未知 evidenceId 会被管线拒绝。
-4. 内容节点最多 6 个；V2.4 候选自动邀请最多 4 次、最小 45 秒、单次最多 12 秒，并扫描投资建议措辞。当前 `ApprovedExperience` 契约仍允许 6 次自动邀请，是待收紧差异。
+4. 内容节点最多 6 个；自动邀请默认值和硬上限已在 `b8ced09d` 收紧为 4、最小 45 秒、
+   单次最多 12 秒，并扫描投资建议措辞。PM 六节点仍需 adapter 选择，不能按原间隔直接发布。
 5. 播放时不实时请求模型决定弹点；前端只消费已批准、版本化内容包。
 6. 展开触点不暂停、静音或 seek 视频；无蒙层，面板不超过 48vh。
 7. 媒体、作者头像/昵称、来源 URL、字幕和内容包版本必须一致；财包不得替换作者身份。
@@ -91,10 +96,10 @@ PM VideoContentPackage (draft)
 | `server/src/sources` | 抖音 URL 规范化、匿名探测、授权作品元数据分页 |
 | `server/src/media` | 受限导入目录、FFmpeg/FFprobe、指纹、音轨和帧 |
 | `server/src/providers` | OpenAI-compatible tool 输出、语义抽取/评审/修复、豆包 ASR、火山 OCR 与原生 V4 签名 |
-| `server/src/pipeline` | 语义时间轴、有界修复、评分与 Planner、方向规则、payload 成稿、CoverageReport |
+| `server/src/pipeline` | 语义时间轴、有界修复、评分与 Planner 4/45、方向规则、六类 payload 成稿、CoverageReport |
 | `server/src/jobs` | P0 内存任务与 draft/CoverageReport；进程重启后丢失是已知限制 |
 | `server/src/app.ts` | readiness、来源探测、分析任务、草稿与 coverage API |
-| Review/Publish Gate（目标） | ReviewManifest、approve/publish/retire、权限/幂等/审计；当前未实现，P0 可先用同契约 CLI |
+| Review/Publish Gate（目标） | draft PATCH、ReviewManifest、job publish、content publish/retire、权限/幂等/审计；当前未实现，P0 可先用同契约 CLI |
 | `refer/moneybaby/.../app/content` | PM 参考内容结构；不得成为运行时第二内容仓 |
 
 ## Provider 选择
@@ -138,7 +143,7 @@ PM VideoContentPackage (draft)
 - OAuth state、token 加密存储、撤销与刷新完整流程。
 - 场景切换抽帧与长视频分段/并发控制。
 - 完整审核 UI、企业级权限/双人复核、ApprovedExperience 持久化；P0 仍必须先完成可测试的
-  ReviewManifest 与受控 approve/publish/retire 动作，不能继续用手改 fixture 代替发布。
+  draft PATCH、ReviewManifest、job publish 与 content publish/retire 动作，不能继续用手改 fixture 代替发布。
 - PostgreSQL/队列、租户隔离、审计日志和额度控制。
 - FFmpeg 子进程超时、任务并发/TTL、派生文件清理与独立媒体 worker。
 - 前端 `StaticExperienceRepository` 切换为 API + 缓存的生产仓储。

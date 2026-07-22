@@ -9,18 +9,22 @@
 
 ## 当前回归基线
 
-截至已记录的 `refer/douyin@17f06c66` 基线，在无真实密钥、无有权真实视频、无付费调用的前提下验证：
+截至 `refer/douyin@b8ced09d` 完整门禁，在无真实密钥、无有权真实视频、无付费调用的前提下验证：
 
 | 命令 | 结果 | 范围 |
 |---|---:|---|
 | `pnpm test:client` | 20 项通过 | 财包编排、六类渲染、组件、契约、会话与总结 |
-| `pnpm test:server` | 84 项通过 | 来源、环境、媒体、供应商契约、富语义、多阶段管线、方向、payload、coverage 与 API |
+| `pnpm test:server` | 102 项通过 | 来源、媒体、富语义、多阶段管线、Planner 4/45、六类 payload、方向、coverage 与 API |
 | `pnpm test:e2e` | 6 项通过 | 4 个视口、三触点总结、普通推荐流隔离 |
 | `pnpm type-check` | 通过 | Vue/TypeScript |
 | `pnpm type-check:server` | 通过 | Express/服务端 TypeScript |
 | `pnpm build` | 通过 | 前端生产构建 |
 | `pnpm audit --prod` | 0 漏洞 | 生产依赖已知供应链漏洞 |
 | `pnpm audit` | 21 high / 13 moderate / 4 low | 旧底座开发工具链债务，尚未完成升级 |
+
+`4b34da1f` 增加 3 个默认回环绑定断言；本轮在该提交实际复核 `pnpm test:server` 为 105/105。
+完整 client/type/build/E2E 基线仍引用 `b8ced09d`；六类 server 成稿/前端渲染测试不等于完整六类
+有权媒体 E2E 或真实 Provider 已验证。
 
 ## P0 测试矩阵
 
@@ -47,6 +51,10 @@
 | T-REVIEW-01 | API/CLI | ReviewManifest 缺权利、内容、安全或真实审核人 | `REVIEW_INCOMPLETE`，状态不提升 |
 | T-PUBLISH-01 | API/CLI | draft、reviewed 或引用 Review Candidate 的内容尝试发布 | 拒绝；发布指针只接受 approved |
 | T-PUBLISH-02 | 集成 | publish、retire、回滚 | 不可变历史和审计保留，新会话只读当前指针 |
+| T-DRAFT-01 | API | PATCH draft 使用旧 expectedDraftVersion | 拒绝覆盖；成功修改创建新 revision 且仍为 draft |
+| T-JOB-PUBLISH-01 | API | 已 reviewed draft 调 job publish | 物化不可变 ApprovedExperience，但不切运行指针 |
+| T-JOB-PUBLISH-02 | API | 缺 ReviewManifest 或候选 PRD baseline | 拒绝，draft/review 状态不越权 |
+| T-CONTENT-PUBLISH-01 | API | content publish/retire/回滚 | 只切换或撤销 approved 运行指针，与 job publish 分离 |
 
 ## 真实供应商冒烟测试
 
@@ -65,7 +73,8 @@
 
 1. V2.4 未形成真实联合评审结论前，V2.0 仍为权威，不创建 `prd-v2.4-approved`。
 2. approved 内容必须引用已批准 PRD tag，并固化 content/schema/rule/weight/prompt/app/media 版本。
-3. 模型、PM adapter 与 Schema 校验只能生成 draft；ReviewManifest、approve 与 publish 是不同动作。
+3. 模型、PM adapter 与 Schema 校验只能生成 draft；draft PATCH、ReviewManifest、job publish
+   （物化 approved）与 content publish/retire（运行指针）是不同动作。
 4. 内容或实现发现规范性变化时，先提出下一 PRD minor 版本，不修改内容掩盖需求漂移。
 5. Markdown 是 PRD 唯一内容源。PDF 只做文件可打开、`pdfinfo`、文本抽取、页数和关键标题等机器校验；
    按用户 2026-07-23 最新指令，不做逐页 PNG、截图或肉眼视觉验收，并明确记录“视觉未验收”。

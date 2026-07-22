@@ -7,7 +7,7 @@ PM 原型或 draft 内容写成已批准/已上线事实。
 
 ## 5 分钟接手
 
-1. 先读 `docs/AGENT_HANDOFF.md` 的“5 分钟摘要”和“唯一第一任务”。
+1. 先读 `docs/AGENT_HANDOFF.md` 的“5 分钟摘要”和“当前第一任务”。
 2. 只按当前任务再读 `docs/ARCHITECTURE.md`、`docs/TDD_TEST_PLAN.md` 或
    `docs/RESEARCH_SOURCES_AND_PROVIDERS.md`，不要一开始重读全部历史材料。
    涉及内容版本或发布时还必须读 `docs/VERSION_GOVERNANCE.md` 与
@@ -35,8 +35,10 @@ git rev-parse HEAD
 
 - 产品仓：`/home/samsong/Desktop/maybe/caibao`，分支 `main`。跟踪 PRD、PDF、配图、研究、
   ADR、计划与交接；旧版材料和 `demoUI/` 只作取证。
-- 代码仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`，分支
-  `feat/caibao-analysis-pipeline`，有独立 `.git`。
+- 代码仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`，当前检出
+  `feat/caibao-analysis-pipeline@b8ced09d`；另有未 push 的
+  `refactor/moneybaby-v2.4-foundation@4b34da1f` 含回环绑定修复，但当前未检出。代码仓有独立
+  `.git`，接手仍以实际 `git status`/HEAD 为准。
 - PM 参考仓：`/home/samsong/Desktop/maybe/caibao/refer/moneybaby`，固定
   `7db765bab9efe1064321f03d992df42e62413a7c`，只用于取证和选择性迁移。
 - 父仓忽略两个 `refer/` 子仓。不得删除任一 `.git`，不得把子仓作为父仓普通目录提交。
