@@ -1,139 +1,87 @@
 # 财包 · 财经推演室
 
-> 让财经视频从“看过”变成“能讲清因果、条件与反例”。
+财包是一套“边看财经视频、边做轻量因果推演”的移动 Web/PWA 产品。系统在视频关键时间点出现轻量入口；入口曝光时继续播放，用户主动点开后才暂停，完成、跳过或关闭后按进入前状态恢复。
 
-财包是面向财经长视频的移动 Web / PWA 学习陪练。它先用 ASR、OCR 与多模态模型理解视频，
-再把需要补背景、判断条件或验证因果的时刻编排成 44px 高的财包 POI 微入口。邀请出现时不打断观看；
-用户主动进入财包后视频自动暂停，退出时按进入前状态恢复。看完后可以继续做条件沙盘、
-反例挑战和复述，得到一份有证据、无总分的理解报告。
+线上工程原型：<https://wzxsph.github.io/douyin/#/home>
 
-[历史静态工程 Demo（不代表 V2.6 媒体验收）](https://wzxsph.github.io/douyin/?demo=finance-fed#/home) ·
-[阅读 PRD V2.6](财经推演室_PRD_V2.6.md) ·
-[查看评审 PDF](output/pdf/财经推演室_PRD_V2.6.pdf) ·
-[5 分钟接手](docs/AGENT_HANDOFF.md)
+> 当前线上内容是 `internal_poc`：25 条视频来自用户提供的授权清单，学习交互为确定性 LLM Mock，仅依据标题和清单元数据生成，尚未使用最终 ASR/OCR，也未完成财经人工审核，不构成投资建议。
 
-> V2.6 目前仍是 Review Candidate；V2.5 已转为历史候选。在联合评审完成前，[PRD V2.0](财经推演室_PRD_V2.0.md)
-> 仍是已批准基线，但用户 2026-07-23 对进入暂停、POI 微入口、manifest-only 推荐和取消自动数量上限的直接裁决覆盖旧文档相反条款。
+## 当前产品形态
 
-## 产品形态
+- 首页只有竖屏财经视频推荐流，作者入口进入对应作者作品页。
+- 当前目录共 25 条：小Lin说 15 条、大陆姓陆 10 条；每条都展示抖音原作品链接和作者归属。
+- 观看中出现“财包轻触点”：入口轻、无蒙层；点开后使用不超过 48vh 的半屏交互。
+- 触点不设“自动最多 4 个”或其他产品级固定数量上限。当前 Mock 每条生成 3–6 个，是六类模板和视频时长共同形成的实现结果，不是规范上限。
+- 自动邀请之间至少间隔 45 秒，同一时间只允许一个交互；视频不自动 seek，不改静音、音量或倍速。
+- 六类模板为背景卡、快速判断、因果拼接、条件滑杆、反例翻转、概念辨析。
+- 作者头像与财包身份严格分离；总结不显示总分、虚假精度、财富画像或投资建议。
 
-观看中，财包只做轻量、可忽略的小动作：
+## 2026-07-23 可复现基线
 
-- 在关键时间点出现 44px 高、最大约 216px 的 POI 微入口，4–6 秒后收起，错过后仍可从时间轴回看；
-- 点击进入后视频在当前位置自动暂停；展开后无蒙层、最多占 48vh；
-- 完成、跳过或关闭时，进入前正在播放才从原位置续播；进入前已暂停则保持暂停；
-- 内容节点总数最多 6 个；自动邀请不设独立数量上限，但间隔至少 45 秒、同时只处理一个触点；
-- 当前四套内容中 FIFA/AI 资本各 4 个、AI 电力/自动驾驶各 5 个现有节点均自动出现；`timeline_only` 只保留给未来显式编排；
-- 支持背景卡、快速判断、因果拼接、条件滑杆、反例翻转和概念辨析；
-- 不替换作者头像，不显示虚假分数，不提供买卖、仓位或目标价建议。
-
-推荐媒体只有一个来源：`refer/douyin/media-import/authorized-douyin/download-manifest.json`。服务兼容 schema v1/v2，但推荐资格始终是清单有效条目与固定四个财经 videoId/Experience 映射的交集；当前 v2 共 25 条，其余 21 条均 `UNMAPPED`，新增条目不能扩大白名单。四条映射媒体及估算触点仅供本地 `internal_poc`，授权声明至 2026-08-22，不上传 GitHub Pages。
-
-片尾再承载完整逻辑图、显式运行的条件沙盘、两阶段反例、三句话复述与证据报告。
-
-```text
-有权视频
-  → FFmpeg / ASR / OCR / 多模态理解
-  → 证据时间轴与语义图
-  → 触点评分、频控与六类交互草稿
-  → 人工审核与不可变内容版本
-  → 观看中轻触点
-  → 片尾深挖与证据报告
-```
-
-## 当前进展
-
-| 模块 | 当前状态 |
+| 项目 | 当前事实 |
 |---|---|
-| 产品口径 | V2.6 候选锁定 POI 微入口、进入暂停和 manifest-only 推荐，尚待真实联合签字 |
-| 视频运行时 | 未 push 的 `refactor/moneybaby-v2.4-foundation@b51e0a50` 已完成 POI 微入口、进入暂停/退出恢复、Catalog-only 推荐、Range、空态和四视口 E2E |
-| 交互类型 | 前端六类渲染器及服务端六类 Payload 已有离线测试；公开 Demo 仍以工程 Fixture 为主 |
-| 生成管线 | 已有 FFmpeg、ASR/OCR Provider、语义图、修复、Planner、规则方向和 CoverageReport 垂直切片 |
-| 发布链路 | 模型只生成 Draft；人工审核、Approved API、持久发布指针和回滚仍待实现 |
-| 本地媒体 | manifest v2 有 25 条但仅固定 4 条可推荐；四条派生、Catalog/Range、推荐空态及 FIFA 核心交互 E2E 已验证；完整六类×四媒体、内容审核和公网分发仍阻塞 |
-| 工程门禁 | `b51e0a50`：client 40/40、server 127/127、Playwright 9/9、两套 type-check、build、production audit 与 diff-check 全绿 |
+| 应用仓 | `wzxsph/douyin` |
+| 应用 `master` | `e85de2bfa1743aaea5204f6e1513de6d56c2e310` |
+| 变更 PR | <https://github.com/wzxsph/douyin/pull/3> |
+| 媒体 Release | <https://github.com/wzxsph/douyin/releases/tag/showcase-media-20260723-v1> |
+| Pages 部署 | <https://wzxsph.github.io/douyin/#/home> |
+| 媒体 | 25 个 H.264/AAC 浏览器派生视频 + 25 张封面；约 167 MiB，本仓与应用 Git 均不跟踪视频 |
+| 内容 | 25 个 `internal_poc` Experience，141 个自动触点 |
+| 自动触点分布 | 1 条视频 3 个、1 条 4 个、4 条 5 个、19 条 6 个 |
+| 测试 | 前端 44、服务端 131、Playwright 8；两端 type-check、production build、production audit、diff-check 通过 |
 
-最新可执行状态、分支和测试数字以 [Agent 交接](docs/AGENT_HANDOFF.md) 为准，README 不固定容易过期的
-工作树状态。
+线上浏览器实测已确认：25 条卡片和 25 个原作链接存在，Release 视频可播放，点击财包暂停、关闭后恢复，“大陆姓陆”作者页为 10 条。
 
-## 仓库定位
+## 数据、权利与到期处理
 
-`caibao` 从现在起是项目主仓：
+- 唯一清单源是应用仓本地忽略路径 `media-import/authorized-douyin/download-manifest.json`；线上只发布由该清单生成的静态目录和浏览器派生媒体。
+- 公网展示是用户 2026-07-23 的直接发布要求；项目没有独立完成权利链法律核验，不能把用户声明表述为平台或作者官方授权。
+- 当前清单记录的窗口截至 2026-08-22（Asia/Shanghai）。未续期时必须下架/删除媒体 Release，并停止推荐；静态页面的空态不能代替 Release 资产下架。
+- 原始 HEVC 视频、Cookie、临时下载地址、ASR/OCR 原文、关键帧和模型原始响应不进入 Git。
+- 不绕过抖音登录、验证码、签名或风控；公开可见不等于可下载或可再分发。
 
-- 产品需求、架构、测试口径、版本治理、评审记录、Issue 与后续 Release 以本仓为准；
-- 新 Agent 首先阅读本仓 [AGENTS.md](AGENTS.md) 与 [交接文档](docs/AGENT_HANDOFF.md)；
-- 当前可运行应用仍在过渡代码仓 [wzxsph/douyin](https://github.com/wzxsph/douyin)，本地放在
-  `refer/douyin/`，后续工程收敛以本仓计划为准；
-- PM 原型 [prac-fect/moneybaby](https://github.com/prac-fect/moneybaby) 只作为设计与内容结构参考，
-  不是第二套产品运行时。
+## 仓库边界
 
-```text
-caibao/
-├── README.md                         # 项目首页
-├── 财经推演室_PRD_V2.6.md             # 最新评审候选
-├── docs/
-│   ├── AGENT_HANDOFF.md              # 当前事实、阻塞和接手顺序
-│   ├── ARCHITECTURE.md               # 产品与技术架构
-│   ├── GENERATION_PIPELINE_DESIGN.md # ASR/OCR/多模态生成管线
-│   ├── TDD_TEST_PLAN.md              # 测试与验收口径
-│   └── VERSION_GOVERNANCE.md         # PRD、内容和规则版本治理
-├── assets/                           # PRD 配图和产品取证
-├── output/pdf/                       # 评审 PDF
-└── refer/                            # 本地参考仓；默认不进入 caibao Git
-```
+- 产品与文档仓：`/home/samsong/Desktop/maybe/caibao`，远端 `wzxsph/caibao`。
+- 应用仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`，远端 `wzxsph/douyin`。
+- PM 参考仓：`/home/samsong/Desktop/maybe/caibao/refer/moneybaby`，只作设计取证，不直接搬运 React/Vinext 页面。
 
-## 快速开始
+两个 `refer/` 子仓均保留自己的 `.git`，不能作为产品仓普通目录提交。媒体、缓存、密钥和运行产物保持 Git ignored。
 
-### 产品、设计与评审
+## 文档入口
 
-建议按以下顺序阅读：
+1. [AGENTS.md](AGENTS.md)：所有新 Agent 的第一入口。
+2. [Agent 交接](docs/AGENT_HANDOFF.md)：精确代码、部署、测试与下一任务。
+3. [PRD V2.7](财经推演室_PRD_V2.7.md)：最新 Review Candidate。
+4. [V2.6 → V2.7 差异](docs/PRD_V2.6_TO_V2.7_DIFF.md)。
+5. [架构](docs/ARCHITECTURE.md)、[TDD](docs/TDD_TEST_PLAN.md)、[实施计划](docs/IMPLEMENTATION_PLAN.md)、[版本治理](docs/VERSION_GOVERNANCE.md)。
 
-1. [PRD V2.6](财经推演室_PRD_V2.6.md)
-2. [V2.5 → V2.6 差异](docs/PRD_V2.5_TO_V2.6_DIFF.md)
-3. [V2.6 评审表](docs/reviews/PRD_V2.6_REVIEW.md)
-4. [技术架构](docs/ARCHITECTURE.md)
-5. [实施计划](docs/IMPLEMENTATION_PLAN.md)
+PRD V2.0 仍是已批准基线；V2.7 是最新候选。用户直接裁决的 25 条展示、进入暂停、公开 Pages、来源归属和取消自动触点数量上限即时覆盖旧文档中的相反条款，但不会自动批准 V2.7 的其他内容。
 
-### 本地运行当前工程
+## 本地运行应用
 
 ```bash
-git clone https://github.com/wzxsph/caibao.git
-cd caibao
+cd /home/samsong/Desktop/maybe/caibao/refer/douyin
+corepack pnpm install --frozen-lockfile
+pnpm dev
+```
 
-git clone --branch feat/caibao-analysis-pipeline \
-  https://github.com/wzxsph/douyin.git refer/douyin
+浏览器访问 `http://127.0.0.1:3001/#/home`。本地真实媒体需要先按应用仓 README 准备派生文件；公开预览从 GitHub Release 读取媒体。
 
-cd refer/douyin
-pnpm install --frozen-lockfile
+完整门禁：
+
+```bash
 pnpm test
 pnpm type-check
 pnpm type-check:server
 pnpm build
 pnpm test:e2e
+pnpm audit --prod
+git diff --check
 ```
 
-本地启动时只绑定回环地址：
+## 文档交付规则
 
-```bash
-pnpm exec vite --host 127.0.0.1 --port 3001 --strictPort
-# http://127.0.0.1:3001/?demo=finance-fed
-```
-
-模型、ASR 与 OCR 配置模板位于代码仓 `.env.minimax.example` 和 `.env.doubao.example`。
-不要提交真实密钥，也不要在没有素材处理权和费用确认时运行真实分析任务。
-
-## 文档权威与交付规则
-
-- Markdown 是 PRD 唯一内容源，PDF 只用于评审分发；
-- V2.6 获批前保持 Review Candidate，不创建 `prd-v2.6-approved` 标签；
-- PRD、内容包、Schema、规则、Prompt、媒体指纹与应用提交分别版本化；
-- 模型不能直接发布内容，也不能改变确定性方向规则；
-- 所有内容结论必须能追溯到 evidenceId、媒体版本和真实审核记录。
-
-## 合规说明
-
-本项目用于财经知识理解与学习反馈，不构成投资建议。公开视频可访问不等于拥有下载、加工或再发布权；
-任何真实视频进入分析或发布链路前，都必须完成授权、作者、媒体指纹与内容审核。当前 manifest 的权利声明只覆盖本地内部 PoC，不覆盖 GitHub Pages、CDN 或其他公网分发。
-
-本仓目前未提供开源许可证；公开可见不代表获得复制、修改、分发或商业使用授权。抖音仿真底座的
-上游许可与非商业限制也需要在商业化前单独完成审查。
+- Markdown 是 PRD 唯一内容源。
+- 本轮 V2.7 不生成 PDF。后续若生成，只执行可读取、页数、文本抽取和关键标题等机器校验；按用户要求不做 PDF 逐页视觉验收，也不得声称版式已通过。
+- V2.7 未完成真实角色联合评审，不创建 `prd-v2.7-approved` 标签。

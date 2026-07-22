@@ -1,125 +1,144 @@
-# 财包时间轴分析与交互系统｜实施计划
+# 财包 V2.7｜实施计划
 
-状态日期：2026-07-23  
-产品主仓库：`/home/samsong/Desktop/maybe/caibao`  
-应用代码仓库：`/home/samsong/Desktop/maybe/caibao/refer/douyin`
+状态：Review Candidate 配套；工程展示已上线，生产内容链未完成  
+日期：2026-07-23
 
-## 目标
+## 1. 目标
 
-把现有静态财经触点 Demo 升级为可交接的垂直切片：本地推荐只消费授权 manifest 的有效子集，在关键点显示 44px 财包 POI 微入口；曝光不停播，进入暂停，退出按原状态恢复。自动触点不设独立数量上限，只受节点总数 ≤6、间隔 ≥45 秒和同时 1 个约束。四套估算触点可作为 `internal_poc` 本地验证，生产仍须完整审核。当前已批准基线仍为 V2.0，用户直接裁决覆盖旧的播放、入口、推荐与数量截断口径；最新产品目标为 Review Candidate `财经推演室_PRD_V2.6.md`。
+在不混淆工程原型与生产审批的前提下，完成三层交付：
 
-## 阶段与完成定义
+1. 可公开访问的 25 条清单视频展示与轻交互；
+2. 可复现、可审核的真实 ASR/OCR/视觉内容生成链；
+3. Draft→Review→Approved→Published 与学习报告闭环。
 
-### D0｜V2.6 文档候选
+## 2. 已完成基线
 
-- [x] 保留 V2.3/V2.4/V2.5 为历史候选，基于用户直接裁决形成 V2.6 Review Candidate。
-- [x] 增加 PRD/内容/Schema/规则/权重/Prompt/应用/媒体的独立版本治理。
-- [x] 增加 V2.5→V2.6 差异、POI、manifest-only 推荐、Range 与 `internal_poc` 边界。
-- [ ] 产品、设计、研发/架构、测试、内容/财经、法务/版权、安全/隐私完成真实评审。
+### M0｜仓库与文档治理
 
-### D1｜V2.6 批准与权威切换
+- [x] 产品仓、应用仓、PM 参考仓边界明确。
+- [x] V2.7 为最新 Review Candidate，V2.0 仍为批准基线。
+- [x] 自动触点固定数量上限取消。
+- [x] 密钥、媒体、运行产物与子仓隔离。
 
-- [ ] 清空或明确延期全部影响 P0 的规范性待决策。
-- [ ] Markdown 状态、PDF、评审记录、AGENTS/交接/计划权威指针在同一批准变更中更新。
-- [ ] 合并到产品仓 `main` 后创建 annotated tag `prd-v2.6-approved`。
-- [ ] 在批准前不创建 approved tag，不让内容版本引用候选 PRD 进入 approved/published。
+### M1｜25 条目录与 Mock 内容
 
-### M0｜仓库和交接基线
+- [x] manifest 25 条全部进入 Catalog。
+- [x] `finance-showcase-<videoId>` 一一映射 25 个 Experience。
+- [x] 两作者分布 15/10，逐条原作品链接。
+- [x] 六类确定性 LLM Mock；141 个 automatic 触点。
+- [x] 当前 3–6 个/视频仅为生成结果，不作为产品上限。
 
-- [x] 产品主目录初始化 Git。
-- [x] 底座保留独立上游历史并建立功能分支。
-- [x] 固定计划、架构、TDD、研究和 Agent 交接文档。
-- [x] 创建不含真实密钥的双供应商环境模板；本地实际 `.env.*` 保持 Git ignored。
+完成证据：应用提交 `70e05e70`，同步合并提交 `dd6cfa0b`，最终 `master=e85de2bf`。
 
-### M1｜内容来源边界
+### M2｜浏览器媒体
 
-- [x] 实现抖音公开主页探测器，只返回可验证的公开资料与明确失败类型。
-- [x] 实现抖音开放平台“已授权账号作品列表”客户端契约；尚未使用真实 OAuth token 调用。
-- [x] 任意博主公开页、创作者 OAuth、用户上传/授权源文件三条路径明确分层。
-- [x] 禁止验证码绕过、签名逆向、cookie 盗用和未授权媒体下载。
+- [x] 25 条 HEVC 源生成 H.264/AAC、`yuv420p`、fast-start 派生。
+- [x] 源/派生 SHA、bytes、时长校验。
+- [x] 25 MP4 + 25 JPG 上传 Release `showcase-media-20260723-v1`。
+- [x] Git 不跟踪源或派生视频。
 
-### M2｜离线分析流水线
+### M3｜前端产品壳
 
-- [x] 媒体预检、音轨和关键帧抽取适配器；FFmpeg 不存在时给出可诊断的 readiness。
-- [x] ASR、视觉 OCR、多模态语义提供商接口与真实 HTTP 客户端。
-- [x] Transcript、VisualEvidence、SemanticEvidence、TriggerCandidate 全链路 schema。
-- [x] 确定性 Planner 完成证据门禁、去重、限频和安全过滤。
-- [x] 单次语义分析已重构为有界多阶段管线：抽取、确定性校验、可选评审、最多 2 轮定向修复、评分/Planner、方向规则、payload 成稿与 CoverageReport。
-- [x] `b8ced09d` 完成 45 秒间隔与六类 server payload 离线成稿；其旧自动数量截断已被用户取消，不再视为目标完成项。
-- [x] 产物固定为 `draft`，人工审核动作与发布动作分离。
+- [x] 只保留 `#/home` 推荐流和 `#/author/:authorSlug` 作者页。
+- [x] 旧路由 catch-all 回到首页，不再暴露旧底座产品形态。
+- [x] 入口曝光不停播、点击暂停、退出恢复。
+- [x] 半屏≤48vh、无蒙层、作者/财包分离、时间轴重访。
+- [x] 来源归属、Mock/未审核/非投资建议披露。
 
-实现完成不等于供应商已验证：本地凭据状态以 `docs/AGENT_HANDOFF.md` 为准，`LIVE_PROVIDER_TESTS` 仍只有配置解析，没有对可入库的授权真实视频执行付费全链路。
+### M4｜测试、PR 与部署
 
-### M2.5｜授权媒体目录与派生服务
+- [x] Client 44、Server 131、Playwright 8。
+- [x] 两套 type-check、build、production audit、diff-check。
+- [x] PR #3 合并到 `wzxsph/douyin/master`。
+- [x] Pages workflow run `29955704172` 成功。
+- [x] 线上 25 条/来源/播放/暂停恢复/作者页浏览器验证。
 
-- [x] 先写 manifest v1/v2、当前 25→固定 4、21 个 `UNMAPPED`、schema 不扩权、重复 ID、路径 containment、期限、bytes、SHA-256、FFprobe 的失败测试。
-- [x] 实现 `AuthorizedMediaCatalog`；只允许固定四 ID/Experience 交集，逐项排除并记录原因，全部失败为空目录，禁止新增条目或旧视频 fallback。
-- [x] 从四条 HEVC 源生成 Git-ignored 的 H.264/AAC、yuv420p、fast-start 派生媒体和封面；源/派生 SHA 已记录，时长 173.710/341.262993/354.476009/233.478005 秒。
-- [x] `7660817965343870248` 已完整重建为 341.262993 秒；约 177 秒截断文件不再作为有效产物。
-- [x] 实现 Catalog、GET/HEAD video/poster、HTTP Range、404/410/416。
-- [x] 普通首页、财经 Demo、长推荐只从 Catalog 分页；空目录显示“暂无可用授权视频”。
+## 3. 下一阶段：真实多模态垂直切片
 
-### M3｜服务与前端联调
+### M5｜2–3 条黄金视频
 
-- [x] 先写 V2.6 POI/播放失败用例：44px/216px/4—6 秒；邀请不暂停；进入暂停；退出恢复；原本暂停；重复事件幂等。
-- [x] 实现 `wasPlayingBeforeInteraction`、`pausePositionMs` 与播放转换状态；不得自动 seek、静音、改音量或倍速。
-- [x] 用 `pause-for-interaction`、`release-interaction`、`playbackPolicy` 替换 `keepPlayback=true`；触点显式 `automatic|timeline_only`。
-- [x] Express 提供健康检查、来源探测、分析任务、草稿与 CoverageReport 读取接口；默认只监听 `127.0.0.1:18787`。
-- [x] 推荐仓库只读 Catalog 且 fail closed；体验仓库的 ApprovedExperience-only 发布读取仍属于后续发布链。
-- [x] 完成 Catalog/Media 前端 API 联调；API 失败和空目录进入明确空态，不影响普通播放且不回退旧视频。
-- [x] 移除自动邀请数量截断；保留内容节点总数 ≤6、自动间隔 ≥45 秒、同时 1 个，并用 6 个合格 automatic 节点全部保留的测试锁定。
-- [x] 推荐路径不再读取会黑屏或复用错误作者元数据的旧财经占位条目；非推荐历史页不在本轮迁移范围。
+目标：先证明证据质量，不立即对 25 条全量调用 Provider。
 
-### M3.5｜PM 内容包选择性迁移
+- [ ] 选 2–3 条题材和画面复杂度不同的视频。
+- [ ] 固化媒体指纹、最终字幕版本和人工时间窗金标。
+- [ ] 跑 ASR、OCR、关键帧/视觉；输出统一 `EvidenceItem`。
+- [ ] 校验多来源聚合、时间对齐、置信度和费用。
+- [ ] 记录 MiniMax 与豆包质量/延迟/费用/失败降级对比。
 
-- [x] 固定 `prac-fect/moneybaby@7db765b`，完成源码、线上交互、构建和测试取证。
-- [x] 裁决只迁移内容结构/学习叙事，以及“主动进入后暂停”的基础意图；不迁移 React/Vinext 页面、自动 seek、大遮罩和作者头像替换。暂停恢复必须按 V2.6 重写。
-- [ ] 先写 `VideoContentPackage` → `DraftExperience` 适配测试；迁入后仍必须是 `draft`。
-- [ ] 增加媒体指纹、作者昵称/头像/来源、时长和内容包版本一致性校验。
-- [ ] 授权确认后再迁移真实媒体；授权前不复制 15MB 视频到产品仓或公开发布路径。
-- [ ] 将最多 6 个候选按 45 秒间隔和内容意图编排；不按总次数截断。00:08 背景和 03:08 反例是否弱化只由内容审核决定。
-- [ ] 固化 `prdBaseline`、`contentVersion`、`schemaVersion`、`ruleVersion`、`weightTableVersion`、
-  `promptVersion`、`appCommit` 与 `mediaFingerprint`；缺任一版本不得批准。
+完成定义：每个候选概念、因果、条件、反例均可追溯 evidenceId；人工复核能解释为何在该时间出现触点。
 
-### M3.5b｜四套小Lin本地内容
+### M6｜语义生成与 Planner
 
-- [x] 四套体验升级到 `2026.07.23.2`，媒体指纹逐项使用 manifest SHA，范围固定为 `internal_poc`。
-- [x] FIFA、AI 资本当前各 4 个节点均为 automatic；AI 电力与自动驾驶当前各 5 个节点均为 automatic。`aipower-compare-grid-dc`（约 150 秒）和 `autopilot-judgment-l4`（约 240 秒）已从旧数量截断产生的 timeline-only 恢复为 automatic；`timeline_only` 类型只保留给未来内容编排。
-- [x] 估算时间码记录用户决策引用；不得包装为最终字幕/OCR/财经审核或 production approved。
-- [ ] 生产环境和公网 API 硬拒绝 internal_poc；本地显式模式才能读取。
+- [ ] 证据时间轴→语义图→Critic/Schema Repair。
+- [ ] 六类 Payload 只生成 Draft。
+- [ ] Planner 基于证据、学习价值、重复度和≥45秒间隔确定性排序。
+- [ ] 不存在 `maxAutomaticCues=4/6`；输出取舍原因。
+- [ ] 未知或证据不足返回 blocker/insufficient。
 
-### M3.6｜最小审核与发布门禁
+完成定义：相同输入/版本输出稳定；第 5、6、7 个合格节点不会因数字上限丢失。
 
-- [ ] 先写 Review Candidate/draft 不可 approved、审核维度不完整不可批准的失败测试。
-- [ ] 实现 ReviewManifest；模型/adapter 只能生成 draft，不能填写真实审核签字。
-- [ ] 实现 `PATCH /analysis/jobs/:jobId/draft`，以乐观版本和修改审计保存新 draft revision。
-- [ ] 实现 `POST /analysis/jobs/:jobId/publish`：只把已 reviewed draft 物化为不可变
-  ApprovedExperience，不切运行发布指针。
-- [ ] 实现 `/content/versions/:contentVersion/publish|retire` 与回滚；运行指针动作与 job publish
-  的权限、幂等和审计分离。
-- [ ] 客户端只读取不可变 ApprovedExperience；不得以手改 fixture 模拟发布。
-- [ ] 完整审核 UI 可延后 P1，但 P0 的同契约 CLI/API 和自动化门禁不可省略。
+### M7｜审核与发布
 
-### M4｜验证与真实内容
+- [ ] `PATCH draft` 乐观锁与 revision。
+- [ ] ReviewManifest 覆盖版权、作者、时间码、财经、安全、测试和版本。
+- [ ] 缺 blocker 时 publish 409。
+- [ ] ApprovedExperience 不可变；content publish 单独切运行指针。
+- [ ] 公共环境关闭审核写接口。
 
-- [ ] 建立并通过真实供应商 smoke suite；`LIVE_PROVIDER_TESTS=true` 必须是唯一显式开关且默认不联网。
-- [ ] 当前 4 条媒体仅在费用确认后执行一次最小真实管线 dry run；权利范围仍限内部 PoC。
-- [ ] 人工核对字幕、OCR、关键概念、证据时间码和触点文案。
-- [ ] 审核后的内容包替换当前占位时间码，再进行正式演示。
-- [ ] 六类触点在四条完整媒体上的单元、集成与 Playwright 全部通过；现有 9 项已通过 FIFA/三类核心路径、空态和四视口，不得外推为六类×四媒体。
-- [ ] 片尾沙盘、反例、复述和证据报告只从真实事件与证据生成，不使用静态能力印章。
-- [ ] 内容版本引用已批准 PRD tag；Review Candidate 产物只能保持 draft。
+完成定义：generated/draft/reviewed/approved/published/retired 无越级；负向用例通过。
 
-未 push 的 `refactor/moneybaby-v2.4-foundation@b51e0a50`（本轮 5 个提交）已通过 client 40/40、
-server 127/127、Playwright 9/9、两套 type-check、production build、`pnpm audit --prod` 与
-`git diff --check`。Catalog/Range、Catalog-only 推荐、POI 暂停恢复、空态和四目标视口不再是工程
-阻塞；最终字幕/真实时间码与财经审核、公网分发权、真实 Provider 和完整六类×四媒体 E2E 仍是 M4 前置条件。
+### M8｜会话、报告与安全
 
-## 当前不做
+- [ ] Session/Event API 与 localStorage 恢复。
+- [ ] `eventId` 幂等，切换/刷新不重复计数。
+- [ ] 沙盘、复述评价、模板兜底和证据报告。
+- [ ] 40 条复述金标及安全红队。
+- [ ] 无总分、财富画像或投资建议。
 
-- 不承诺抓取任意抖音博主的完整作品和原始媒体。
-- 不让模型直接发布触点，不在播放期间实时调用大模型决定弹窗。
-- 不建设投资建议、实时行情、用户财富画像或自由聊天 Agent。
-- 不把当前媒体、派生物、封面上传 Git/GitHub Pages/CDN；2026-08-22 后未续期则自动空推荐。
-- 不重做已完成的半屏结构；只收敛 POI 微入口并按 V2.6 重构播放状态机。
-- 不在 V2.6 获批前从并发脏工作树建立正式内容发布分支，不把 internal_poc 冒充 approved。
+完成定义：断网、超时、非法 JSON 和会话丢失仍能完成非空报告。
+
+## 4. 发布与权利工作流
+
+### M9｜到期/撤权 Runbook（最高优先级）
+
+- [ ] 指定 Release Owner 和替补责任人。
+- [ ] 在 2026-08-22 前确认续期或 retire 决策。
+- [ ] retire 顺序：下架 Release → 发布移除/空目录 → 验证直链不可访问 → 保存审计记录。
+- [ ] 不把前端到期判断当成媒体删除。
+
+### M10｜生产批准
+
+- [ ] V2.7 产品、设计、研发、测试、财经、版权、安全真实签字。
+- [ ] 公网分发权独立核验并覆盖目标环境/期限。
+- [ ] 完整多模态、内容、人审、发布、报告 E2E。
+- [ ] 原子切换权威并创建 annotated `prd-v2.7-approved`。
+
+当前不得执行 M10 的批准标签动作。
+
+## 5. 提交顺序建议
+
+后续应用代码每层独立提交：
+
+1. `test(evidence): lock multimodal golden fixtures`
+2. `feat(evidence): build ASR OCR and vision timeline`
+3. `test(planner): remove numeric cue caps and lock spacing`
+4. `feat(pipeline): generate evidence-backed draft cues`
+5. `feat(review): add review manifest and blockers`
+6. `feat(publish): materialize immutable approved content`
+7. `feat(runtime): add sessions events and reports`
+8. `test(e2e): cover provider fallback and publication gates`
+9. `docs: record exact versions and handoff`
+
+不将 Provider、审核、发布、前端与内容全量迁移压成一个不可回滚大提交。
+
+## 6. 当前不做
+
+- 不批量爬取或绕过抖音限制。
+- 不把标题 Mock 批量送审为正式财经内容。
+- 不在 GitHub Pages 暴露服务端密钥或审核写接口。
+- 不在未续期时继续保留 Release 资产。
+- 不生成 V2.7 PDF；若未来生成，不做 PDF 视觉验收。
+
+## 7. 下一位 Agent 第一任务
+
+先做 M9：为 `showcase-media-20260723-v1` 写可执行 retire/续期 Runbook 与负责人字段，并验证 Release 资产可以完整枚举和删除。随后才进入 M5，选择 2–3 条黄金视频搭建真实证据链。

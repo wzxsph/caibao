@@ -1,93 +1,85 @@
 # 财经推演室｜Agent 工作约定
 
-本文件是所有新 Agent 的入口。详细现状以 `docs/AGENT_HANDOFF.md` 为准。当前产品争议仍以
-`财经推演室_PRD_V2.0.md` 裁决；其中“不自动暂停”条款已被用户 2026-07-23 最新指令覆盖。
-`财经推演室_PRD_V2.6.md` 是最新 Review Candidate，V2.3/V2.4/V2.5 只读保留为历史候选。不得把候选稿、
-PM 原型或 draft 内容写成已批准/已上线事实；但进入财包自动暂停、POI 微入口、manifest-only 推荐和
-取消自动触点独立数量上限是用户直接裁决，不得继续沿用旧入口、旧视频池或旧数量截断。
+本文件是新 Agent 的第一入口。先读 `docs/AGENT_HANDOFF.md`，再按任务选择 PRD、架构或 TDD。不要从老 PRD、PM 原型或旧 Demo 猜测当前口径。
+
+## 当前权威与直接裁决
+
+- 已批准产品基线仍是 `财经推演室_PRD_V2.0.md`。
+- 最新 Review Candidate 是 `财经推演室_PRD_V2.7.md`；V2.3–V2.6 均为历史候选，不得写成 Approved。
+- 用户 2026-07-23 的直接裁决立即覆盖旧文档的相反条款：推荐使用清单全部 25 条、入口曝光继续播放、点击财包后暂停、退出恢复、公开 GitHub Pages 并标注来源、自动触点不设固定数量上限。
+- 不得创建 `prd-v2.7-approved` 标签；没有真实签字时不得把 Mock 内容写成财经审核通过。
 
 ## 5 分钟接手
 
-1. 先读 `docs/AGENT_HANDOFF.md` 的“5 分钟摘要”和“当前第一任务”。
-2. 只按当前任务再读 `docs/ARCHITECTURE.md`、`docs/TDD_TEST_PLAN.md` 或
-   `docs/RESEARCH_SOURCES_AND_PROVIDERS.md`，不要一开始重读全部历史材料。
-   涉及内容版本或发布时还必须读 `docs/VERSION_GOVERNANCE.md` 与
-   `docs/reviews/PRD_V2.6_REVIEW.md`。
-3. 在三个仓分别检查工作树，任何未提交内容先视为用户资产：
+1. 阅读 `docs/AGENT_HANDOFF.md` 的摘要、Git 基线、线上状态和“下一位 Agent 第一任务”。
+2. 检查三个仓库；所有未提交内容先视为用户资产：
 
 ```bash
 cd /home/samsong/Desktop/maybe/caibao
-git status --short
+git status --short --branch
 git rev-parse HEAD
 
 cd /home/samsong/Desktop/maybe/caibao/refer/douyin
-git status --short
+git status --short --branch
 git rev-parse HEAD
 git remote -v
 
 cd /home/samsong/Desktop/maybe/caibao/refer/moneybaby
-git status --short
+git status --short --branch
 git rev-parse HEAD
 ```
 
-4. 不 push、不 reset、不恢复或删除未确认文件；先写测试，再改实现。
+3. 产品仓现有未跟踪 `.vscode/`、`output/real-runs/`、`output/screenshots/` 属于用户，不删除、不 stage。
+4. 不 reset、不 force-push、不删除任一子仓 `.git`；应用仓绝不向 `upstream` 推送。
+5. 代码变更先写失败测试，再实施；文档变更必须同步 PRD、交接、架构、TDD、治理中的规范性指针。
 
 ## 三仓边界
 
-- 产品仓：`/home/samsong/Desktop/maybe/caibao`，分支 `main`。跟踪 PRD、PDF、配图、研究、
-  ADR、计划与交接；旧版材料和 `demoUI/` 只作取证。
-- 代码仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`。历史稳定引用为
-  `feat/caibao-analysis-pipeline@b8ced09d`；当前实现引用为未 push 的
-  `refactor/moneybaby-v2.4-foundation@b51e0a50`（5 个本轮提交）。该 HEAD 已通过 client 40/40、
-  server 127/127、Playwright 9/9、两套 type-check、build、production audit 与 diff-check。
-  共享工作树仍可能变化，接手必须以实时 `git status`/HEAD 为准。
-- PM 参考仓：`/home/samsong/Desktop/maybe/caibao/refer/moneybaby`，固定
-  `7db765bab9efe1064321f03d992df42e62413a7c`，只用于取证和选择性迁移。
-- 父仓忽略两个 `refer/` 子仓。不得删除任一 `.git`，不得把子仓作为父仓普通目录提交。
-- 代码仓 `origin` 是项目仓 `wzxsph/douyin`，`upstream` 是公共 `zyronon/douyin`；不得向
-  `upstream` push。未获得用户当次明确授权时，也不 push `origin`。
+- 产品仓：`/home/samsong/Desktop/maybe/caibao`，`main`，远端 `wzxsph/caibao`。只跟踪 PRD、研究、架构、测试、交接和配图。
+- 应用仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`，远端 `origin=wzxsph/douyin`、`upstream=zyronon/douyin`。当前线上 `master=e85de2bfa1743aaea5204f6e1513de6d56c2e310`。
+- PM 参考仓：`/home/samsong/Desktop/maybe/caibao/refer/moneybaby`，固定参考 `7db765bab9efe1064321f03d992df42e62413a7c`，只用于视觉与信息结构取证。
+- 产品仓忽略两个 `refer/` 子仓。媒体、依赖、缓存、运行输出、模型产物和密钥不得借父仓提交。
 
-## 产品红线
+## 已上线工程事实
 
-- 关键点入口是 44px 高、最大约 216px 的财包 POI 微入口；4—6 秒收起、单行省略，主动作与“稍后”
-  命中区均不小于 44×44px。它是页内按钮，不是外链或路由，可从时间轴重访。
-- 财包在视频时间轴上多次轻量出现；邀请曝光不暂停。用户点击进入后在当前位置自动暂停；完成、
-  跳过或关闭时仅在进入前正在播放的情况下从原位置恢复。不得自动 seek、静音、改音量或倍速。
-- 普通首页、财经 Demo 和长视频推荐只允许读取
-  `refer/douyin/media-import/authorized-douyin/download-manifest.json` 与固定四个财经 videoId 的有效交集。
-  服务兼容 manifest schema v1/v2；当前 v2 的另外 21 条必须 `UNMAPPED`，schema/条目变化不得扩大白名单。
-  任何校验失败都 fail closed，不得回退 `posts6.json`、`videos.md`、旧 URL 或其他 fixture。
-- 固定 4 条媒体与估算触点只允许本地 `internal_poc`，授权声明至 2026-08-22；四条 H.264 派生仅在
-  ignored `.analysis-work`，不得提交媒体、
-  上传 GitHub Pages 或包装为 production approved。到期未续期时推荐为空，媒体请求为 410。
-- `b51e0a50` 已验证 Catalog/Range、三个推荐入口 fail closed、明确空态、POI 暂停恢复和四目标视口；
-  不得继续把这些写成待实现。该 9 项 Playwright 主要验证 FIFA/当前三类运行交互，不等于六类交互
-  已在四条真实媒体上全部通过。
-- 半屏最高 48vh、无蒙层；作者头像与财包身份始终分离。
-- 内容节点总数最多 6 个；自动邀请不设独立数量上限，但相邻间隔至少 45 秒、同时最多 1 个；
-  不得把符合条件的第 5、6 个自动节点截断。忽略只记“未观察”。
-- 当前四套内容中 FIFA/AI 资本各 4 个、AI 电力/自动驾驶各 5 个节点均为 `automatic`；
-  `aipower-compare-grid-dc` 与 `autopilot-judgment-l4` 不得沿用旧数量截断降级。`timeline_only`
-  类型只保留给未来显式内容编排。
-- 作者头像不被财包替换；总结无总分、无虚假精度、无投资建议。
-- 完整沙盘、两阶段反例和复述在片尾；播放中只做预计不超过 12 秒的单一动作。
-- 模型输出永远是候选。只有 evidenceId、schema、权利声明和人工审核齐全才能 approved。
-- Review Candidate 只能指导探索和 draft；approved 内容必须引用已批准 PRD tag，并固化内容、
-  Schema、规则、权重、Prompt、应用提交和媒体指纹等独立版本。
-- 不绕过抖音登录、验证码、签名或风控；公开可见不代表有权下载或再处理。
+- Pages：<https://wzxsph.github.io/douyin/#/home>
+- 应用 PR：<https://github.com/wzxsph/douyin/pull/3>
+- 媒体 Release：<https://github.com/wzxsph/douyin/releases/tag/showcase-media-20260723-v1>
+- 目录 25 条：小Lin说 15、大陆姓陆 10；首页 25 个原作链接，作者页分别只展示该作者清单子集。
+- 25 个浏览器视频 + 25 张封面位于 Release，约 167 MiB；源视频和派生媒体均不进 Git。
+- 25 个 Experience、141 个 `automatic` 触点；每视频 3–6 个是当前六模板生成结果，不是产品上限。
+- 内容标记为 `internal_poc`、`deterministic_llm_mock`、`estimated_mock`，只依据标题与 manifest 元数据，未执行最终 ASR/OCR 或财经人审。
+- 门禁：前端 44/44、服务端 131/131、Playwright 8/8、两套 type-check、build、production audit、diff-check 通过。
+- 线上浏览器已验证 Release 视频可播放；点击财包暂停，关闭后恢复；作者页计数正确。
 
-## 密钥与隐私
+## 产品不变量
 
-- 真实密钥只在代码仓 Git-ignored 的 `.env.minimax` / `.env.doubao`，禁止打印、截图、复制或提交。
-- 不运行会展开密钥的未脱敏配置命令；不得把密钥放进 `VITE_*` 或 Docker build context。
-- 用户视频、ASR/OCR 原文、音轨、关键帧和模型原始响应默认不进 Git。
-- 当前凭据状态和轮换要求只看 `docs/AGENT_HANDOFF.md`，不要自行探测或调用付费接口。
+- 财包入口是页内轻量按钮，不是外链 POI，也不自动跳页。入口可自动出现并可从时间轴重访。
+- 入口曝光期间视频继续播放；用户点击进入才暂停。完成、跳过、关闭时，仅当进入前在播放才恢复。
+- 不自动 seek，不修改 `muted`、`volume`、`playbackRate`；重复 pause/release 必须幂等。
+- 半屏最高 48vh、无蒙层；作者头像永不被财包替换；触控目标至少 44×44px。
+- 自动触点不设 4 个或 6 个等固定上限。编排按证据、视频时长、学习价值和至少 45 秒间隔决定，同时最多一个。
+- 当前推荐源只允许由 `download-manifest.json` 生成的 25 条目录；失败时空态，不回退 `posts6.json`、`videos.md`、旧媒体 URL 或随机评论。
+- 线上每条必须展示真实清单标题、作者和抖音原作品链接；不伪造点赞、评论、远程头像或官方认证。
+- 学习内容不得给出买什么、仓位、目标价、稳赚等交易建议；报告无总分、虚假精度、财富画像。
 
-## 交付门禁
+## 媒体与权利红线
 
-在代码仓至少执行：
+- 公网发布来自用户本轮直接要求，但项目未独立完成权利链法律核验；不得写成抖音或作者官方授权。
+- 清单窗口截至 2026-08-22（Asia/Shanghai）。未续期必须删除/下架 `showcase-media-20260723-v1` 并停止推荐；仅让前端显示空态不足以阻止 Release 直链。
+- 不提交 `media-import/`、`.analysis-work/`、`public/demo` 大视频、Cookie、临时下载地址、字幕原文、关键帧或模型原始响应。
+- 不绕过登录、验证码、签名、风控或平台限制。遇到撤权、指纹失败或期限到期，fail closed。
+
+## 密钥
+
+- 真实密钥只允许在应用仓 Git-ignored 的 `.env.minimax`、`.env.doubao` 或开发者本地环境。
+- 只记录变量名和配置位置，不打印、不截图、不复制值，不把服务端密钥放进 `VITE_*`。
+- 当前静态 Pages 不需要模型密钥；线上内容来自已提交的确定性 Mock bundle。
+
+## 应用门禁
 
 ```bash
+cd /home/samsong/Desktop/maybe/caibao/refer/douyin
 pnpm test
 pnpm type-check
 pnpm type-check:server
@@ -97,7 +89,10 @@ pnpm audit --prod
 git diff --check
 ```
 
-涉及 PRD 时，以 Markdown 为唯一内容源重建 PDF。按用户 2026-07-23 的最新指令，当前及后续
-默认只做 `pdfinfo`、文本抽取、文件可打开、页数和关键标题一致性等非视觉机器校验；不执行逐页
-PNG、截图或肉眼视觉验收，且必须明确写“视觉未验收”，不得声称版式通过。任何因密钥、媒体、
-FFmpeg、授权或人工审核未执行的验证，都必须在交接文档写成阻塞项，不能写成已通过。
+涉及清单或媒体时还要验证 25 个 ID、SHA/bytes/时长、H.264/AAC、HTTP HEAD/Range、空目录 fail-closed 与来源链接。涉及触点时验证曝光继续播放、点击暂停、退出恢复、45 秒间隔、单并发和无数字上限。
+
+## 文档与 PDF
+
+- Markdown 是 PRD 唯一内容源；V2.7 本轮不生成 PDF。
+- 后续如生成 PDF，只做 `pdfinfo`、文本抽取、文件可打开、页数和关键标题等机器校验。
+- 用户已取消当前及后续 PDF 逐页 PNG、截图和肉眼视觉验收；必须明确写“视觉未验收”，不得声称版式通过。

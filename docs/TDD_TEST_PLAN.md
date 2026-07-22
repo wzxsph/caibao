@@ -1,114 +1,160 @@
-# TDD 与验收计划
+# 财包 V2.7｜TDD 与验收计划
 
-状态日期：2026-07-23  
-当前已批准基线：V2.0；用户直接裁决覆盖旧的播放/入口/推荐/自动数量截断相反条款；Review Candidate：`财经推演室_PRD_V2.6.md`
+状态：PRD V2.7 Review Candidate 配套  
+日期：2026-07-23
 
-## 测试顺序
+## 1. 原则
 
-每个能力按 Red → Green → Refactor 推进：先写失败的契约/边界用例，再写最小实现，最后跑全量回归。默认测试不得联网、不得消耗额度。配置层已经能够解析 `LIVE_PROVIDER_TESTS`，但仓库**尚未实现 live test suite**；因此当前即使设置 `LIVE_PROVIDER_TESTS=true`，也不能把它视为已执行真实供应商验证。
+1. 先写失败用例，再改契约/实现。
+2. 区分当前工程原型与生产目标；未执行的真实 Provider/人审测试不得写成已通过。
+3. Manifest/媒体、生成、播放、发布、报告分别测试，避免一个 E2E 掩盖分层错误。
+4. 自动触点不设固定数量上限；测试锁定 45 秒间隔和单并发，不再断言 `<=4` 或 `<=6`。
+5. 权利、Schema 或完整性失败全部 fail closed，不允许旧推荐 fallback。
 
-## 当前回归基线
+## 2. 当前回归基线
 
-截至未 push 的 `refer/douyin` 分支 `refactor/moneybaby-v2.4-foundation@b51e0a50`，在无付费调用的前提下验证：
+应用：`wzxsph/douyin@e85de2bfa1743aaea5204f6e1513de6d56c2e310`
 
-| 命令 | 结果 | 范围 |
-|---|---:|---|
-| `pnpm test:client` | 40/40 | 财包编排、六类渲染、POI、暂停恢复、推荐仓储、契约、会话与总结 |
-| `pnpm test:server` | 127/127 | manifest v1/v2、固定四 ID、Range、Planner 无数量截断、六类 payload、方向、coverage 与 API |
-| `pnpm test:e2e` | 9/9 | Catalog-only 推荐、空态、Range、FIFA/三类核心交互、POI 暂停恢复和 4 个目标视口 |
-| `pnpm type-check` | 通过 | Vue/TypeScript |
-| `pnpm type-check:server` | 通过 | Express/服务端 TypeScript |
-| `pnpm build` | 通过 | 前端生产构建 |
-| `pnpm audit --prod` | 0 漏洞 | 生产依赖已知供应链漏洞 |
-| `git diff --check` | 通过 | 代码与文档补丁无空白错误 |
+| 门禁 | 结果 |
+|---|---|
+| 前端 Vitest | 11 files / 44 passed |
+| 服务端 Vitest | 21 files / 131 passed |
+| Client type-check | passed |
+| Server type-check | passed |
+| Production build | passed |
+| Playwright | 8 passed，四视口 |
+| `pnpm audit --prod` | no vulnerabilities |
+| `git diff --check` | passed |
+| 媒体目录 | 25 ready / 0 excluded |
+| 媒体 HTTP | HEAD 200 / Range 206 |
+| Pages workflow | run `29955704172` passed |
+| 线上实页 | 25 卡片、25 原作链接、视频可播、点击暂停、退出恢复、作者页 10 条 |
 
-该基线证明 Catalog/Range、三个推荐入口 fail closed、明确空态、POI 暂停恢复、自动数量上限移除
-和四目标视口。四条 H.264/AAC 派生仍只存在 ignored `.analysis-work`，时长为
-173.710/341.262993/354.476009/233.478005 秒。现有 9 项 E2E 主要覆盖 FIFA/三类核心运行交互；
-不证明真实 Provider、最终财经内容或完整六类×四真实媒体 E2E。
+## 3. 测试矩阵
 
-## P0 测试矩阵
+### 3.1 Manifest 与目录
 
-| 编号 | 层级 | 场景 | 通过标准 |
-|---|---|---|---|
-| T-SRC-01 | 单元 | 非抖音域名、非法 secUid | 入口拒绝且不发网络请求 |
-| T-SRC-02 | 契约 | 匿名页只有 JS 风控壳 | 返回 `dynamic_page_blocked`，不伪造作品 |
-| T-SRC-03 | 契约 | 开放平台已授权作品分页 | 保留 cursor/has_more；不声称含媒体源地址 |
-| T-MEDIA-01 | 单元 | 导入目录外的本地路径 | 在调用 FFmpeg 前拒绝 |
-| T-MEDIA-02 | 单元 | FFmpeg/FFprobe 缺失 | readiness 指出缺失二进制，任务进入可诊断失败态 |
-| T-CATALOG-01 | 单元/契约 | 当前 schema v2、25 items manifest | 只产出固定 4 个财经 ID，另外 21 条 reason=`UNMAPPED`；标题/作者/时长/SHA/体验映射正确 |
-| T-CATALOG-02 | 单元/契约 | 等价 schema v1 与 v2 fixture | 两者规范化出相同四 ID、字段和排除原因 |
-| T-CATALOG-03 | 单元 | 过期、缺文件、bytes/SHA/FFprobe 不符 | 非法项 fail closed，全部固定项失败为空目录，不回退/替补 |
-| T-CATALOG-04 | 集成 | 普通首页、财经 Demo、长推荐初次/翻页 | 三处集合严格等于固定四 ID 的有效交集；当前全有效时 `total=4` |
-| T-CATALOG-05 | E2E | API 失败或目录为空 | 显示“暂无可用授权视频”；不请求 `videos.md`、旧 URL 或其他 fixture |
-| T-CATALOG-06 | 集成 | 未知视频 ID 的评论请求 | 返回空结果，不随机映射旧视频评论 |
-| T-CATALOG-07 | 单元/属性 | 新增、重排其他有效条目或固定 ID 缺失 | 白名单不扩大；新条目 `UNMAPPED`，缺失使 total 缩小 |
-| T-CATALOG-08 | 单元/契约 | schema 非 1/2、重复 ID、路径越界 | 整体或非法项按契约 fail closed，不得因解析宽松扩权 |
-| T-RANGE-01 | API | 完整 GET、HEAD、合法/尾部/非法 Range | 正确 200/206/416、长度、Accept-Ranges、Content-Range |
-| T-RANGE-02 | API | 未知 ID、授权过期 ID | 分别 404、410；不得从旧目录命中 |
-| T-DERIVE-01 | 集成 | 已生成的四条浏览器派生物 | H.264/AAC、yuv420p、fast-start、源/派生 SHA；时长 173.710/341.262993/354.476009/233.478005 秒，偏差 ≤250ms |
-| T-DERIVE-02 | E2E | `7660817965343870248` loadedmetadata | 341.262993 秒；约 177 秒截断派生物被拒绝 |
-| T-ASR-01 | 契约 | 带时间戳转写 | 时间单调、非负、不超过媒体时长 |
-| T-OCR-01 | 契约 | OCRNormal 的 V4 签名与帧中文字 | Node 原生实现签名；规范签名 `content-type;host;x-content-sha256;x-date`，每条证据绑定 frameId、timeMs、confidence、evidenceId |
-| T-AI-01 | 契约 | 供应商返回有效结构 JSON | 通过 schema 并保留 evidence 引用 |
-| T-AI-02 | 故障 | 超时、429、无效 JSON | 有类型化错误，草稿不发布，密钥不进入日志 |
-| T-PLAN-01 | 黄金 | 候选密集或重复 | 时间轴节点总数 ≤6、自动触点间隔 ≥45 秒、同时仅 1 个；无独立自动数量上限 |
-| T-PLAN-02 | 黄金 | 缺证据或投资建议措辞 | 候选被拒并记录理由 |
-| T-PLAN-03 | 黄金 | 6 个证据完整且相邻 ≥45 秒的 automatic 节点 | 6 个全部保留，不得截断为 4 个或自动改成 timeline_only |
-| T-PIPE-01 | 集成 | Fake ASR/OCR/AI 完整流水线 | 只生成 `draft` 内容包和审核清单 |
-| T-API-01 | API | 创建和轮询分析任务 | 状态只按 queued→running→succeeded/failed 转移 |
-| T-PLAY-00 | 组件/E2E | 轻邀请曝光或自动收起 | 视频继续播放，不调用 pause/play/seek |
-| T-PLAY-01 | 组件/E2E | 视频播放中点击进入财包 | 记录进入前状态与位置并自动暂停；面板 ≤48vh、无蒙层、不 seek |
-| T-PLAY-02 | 组件/E2E | 从播放态进入后完成、跳过或关闭 | 从原暂停点续播，位置漂移 ≤250ms；静音、音量和倍速不变 |
-| T-PLAY-03 | 组件/E2E | 视频已暂停时进入并退出 | 始终保持暂停，不误调用 play |
-| T-PLAY-04 | 组件/E2E | 重复打开、关闭或重复事件 | pause/play 幂等，状态和事件不重复计数 |
-| T-POI-01 | 组件/E2E | 关键点自动入口 | 高 44px、宽 ≤216px、图标 24px、单行省略、4—6 秒收起；两个命中区均 ≥44px |
-| T-POI-02 | a11y/E2E | 截断文案、键盘与时间轴重访 | 完整可访问名称；按钮可键盘操作；收起后可重访 |
-| T-VIDEO-02 | E2E | 快进跨越多触点 | 只出现一个，其他进入时间轴；邀请阶段不暂停 |
-| T-REPORT-01 | E2E | 完成/略过混合 | 无总分；只陈述已观察证据和未观察项 |
-| T-ADAPT-01 | 契约 | PM draft 完成 Schema 适配 | 状态仍 draft；不复制未授权媒体 |
-| T-VERSION-01 | 契约 | PRD/内容/Schema/规则等版本向量缺失 | 不可 reviewed/approved |
-| T-REVIEW-01 | API/CLI | ReviewManifest 缺权利、内容、安全或真实审核人 | `REVIEW_INCOMPLETE`，状态不提升 |
-| T-PUBLISH-01 | API/CLI | draft、reviewed 或引用 Review Candidate 的内容尝试发布 | 拒绝；发布指针只接受 approved |
-| T-PUBLISH-02 | 集成 | publish、retire、回滚 | 不可变历史和审计保留，新会话只读当前指针 |
-| T-DRAFT-01 | API | PATCH draft 使用旧 expectedDraftVersion | 拒绝覆盖；成功修改创建新 revision 且仍为 draft |
-| T-JOB-PUBLISH-01 | API | 已 reviewed draft 调 job publish | 物化不可变 ApprovedExperience，但不切运行指针 |
-| T-JOB-PUBLISH-02 | API | 缺 ReviewManifest 或候选 PRD baseline | 拒绝，draft/review 状态不越权 |
-| T-CONTENT-PUBLISH-01 | API | content publish/retire/回滚 | 只切换或撤销 approved 运行指针，与 job publish 分离 |
-| T-INTERNAL-POC-01 | 契约 | 四套 `finance-xiaolin-*@2026.07.23.2` | 明确 `approvalScope=internal_poc`；生产 API 拒绝，回环显式模式可读 |
-| T-DELIVERY-01 | 黄金/E2E | 四套 estimated cues | 节点 ≤6、自动间隔 ≥45 秒；FIFA/AI 资本各 4 个、AI 电力/自动驾驶各 5 个现有节点均为 automatic |
-| T-DELIVERY-02 | 黄金/E2E | `aipower-compare-grid-dc@150s`、`autopilot-judgment-l4@240s` | 分别与相邻自动节点保持约 70/70 秒、80/70 秒间隔；两者自动出现且不因序号为第 5 个被改成 timeline_only |
-| T-DELIVERY-03 | 单元/契约 | 未来内容显式声明 `delivery=timeline_only` | 不自动出现，但可从时间轴重访；类型能力保留且不影响当前四套映射 |
+- 正常识别 25 个不同 videoId、15/10 作者分布和真实标题/来源 URL。
+- 重复 ID、未知 schema、路径穿越、绝对路径、缺文件、过期、bytes/SHA/时长/编解码不符。
+- 单条失败只剔除该条；全部失败返回空目录。
+- 推荐集合严格等于有效子集，不读取 `posts6.json`、`videos.md` 或旧媒体 URL。
+- 评论或作者未知 ID 不随机映射旧数据。
 
-## 真实供应商冒烟测试
+### 3.2 媒体派生与 HTTP
 
-当前没有可运行的 live test case。下一阶段先补测试，再仅在用户填好本地环境文件并显式设置
-`LIVE_PROVIDER_TESTS=true` 后执行：
+- 25 个派生均为 H.264/AAC、`yuv420p`、fast-start。
+- 派生时长与 manifest 偏差≤250ms；记录源与派生 SHA/bytes。
+- GET 完整请求 200；合法 Range 206；HEAD 无 body；非法 Range 416；未知 ID 404；过期 410。
+- Release 资产精确 50 个，总 bytes 与发布记录一致；抽查视频/封面公网 200。
+- 源 HEVC、`.analysis-work`、`media-import` 不进入 Git。
 
-1. 使用 10–20 秒、无敏感信息、具备处理权的测试素材。
-2. 每个提供商只调用一次最小请求。
-3. 断言返回结构与延迟，不把原始响应或密钥写入仓库。
-4. 产生费用前由执行者确认当前项目、模型和额度。
-5. MiniMax 的 `MINIMAX_MULTIMODAL_MODEL` 必须由用户按账号实际权限填写；测试不得自动枚举或探测模型。
+### 3.3 Mock 生成与 Schema
 
-在 live suite 落地、短视频授权和密钥就绪以前，任何文档都不得写“真实供应商测试已通过”或“真实视频分析已完成”。
+- 25 个 Catalog 对应 25 个 Experience，videoId/指纹一一匹配。
+- 六类 Payload 有 golden；所有 Trigger 有 evidenceIds、reviewStatus、timecodeQuality、delivery。
+- 当前 evidenceBasis 明确为 `title_and_manifest_metadata_only`。
+- 相同输入产生字节级稳定或规范化稳定输出。
+- Schema 错误只做有限结构修复；修复耗尽返回明确失败。
+- 非格式错误不重试，模型不得设置 approved/published。
 
-## V2.6 文档、版本与内容门禁
+### 3.4 Planner 与数量规则
 
-1. V2.6 未形成真实联合评审结论前，V2.0 仍为已批准基线，不创建 `prd-v2.6-approved`；但进入暂停、
-   POI 微入口、manifest-only 推荐和取消自动数量截断是用户直接裁决，代码不得继续把旧行为作为目标。
-2. approved 内容必须引用已批准 PRD tag，并固化 content/schema/rule/weight/prompt/app/media 版本。
-3. 模型、PM adapter 与 Schema 校验只能生成 draft；draft PATCH、ReviewManifest、job publish
-   （物化 approved）与 content publish/retire（运行指针）是不同动作。
-4. 内容或实现发现规范性变化时，先提出下一 PRD minor 版本，不修改内容掩盖需求漂移。
-5. `internal_poc` 不是 approved/published；当前四条权利声明 2026-08-22 到期且不覆盖公网，媒体不得进 Git/GitHub Pages。
-6. Markdown 是 PRD 唯一内容源。PDF 只做文件可打开、`pdfinfo`、文本抽取、页数和关键标题等机器校验；
-   按用户 2026-07-23 最新指令，不做逐页 PNG、截图或肉眼视觉验收，并明确记录“视觉未验收”。
+- 合格 automatic 节点间隔≥45秒，同一时刻最多一个。
+- 6 个符合条件的候选全部可保留；第 5/6 个不得被旧数字上限截断。
+- 更长视频出现 7 个及以上合格候选时，契约允许输出；是否选择由证据、学习价值、重复度和时间预算解释。
+- 密集候选按确定性策略取舍，相同输入顺序稳定。
+- `timeline_only` 只由内容显式指定，不由“超过 N 个”自动降级。
 
-## 发布门禁
+### 3.5 播放状态
 
-- 单元/契约测试全部通过；不存在 `.only`、跳过的 P0 用例或真实密钥。
-- `LIVE_PROVIDER_TESTS` 对应的 live suite 已存在并由操作者显式运行；真实调用结果与费用确认有记录。
-- 真实视频的授权、字幕、时间码和证据审核完成前，只能标记“工程原型”。
-- Markdown PRD、代码 schema、环境模板和 API 文档字段一致。
-- Review Candidate 不得成为 approved 内容 baseline；ReviewManifest 与发布审计齐全。
+- 入口出现 4–6 秒内 `currentTime` 持续增长。
+- 点击后 450ms 观察窗口时间不增长。
+- 原播放进入：完成、跳过、关闭均恢复。
+- 原暂停进入：三种退出均保持暂停。
+- 重复 pause/release、双击、快速开关、组件卸载、视频切换、已结束、`play()` 拒绝。
+- 不写 `currentTime`；位置漂移≤250ms；`muted`、`volume`、`playbackRate` 不变。
+- 面板打开期间背景单击不误触播放；时间轴重访允许用户主动 seek。
+
+### 3.6 UI 与无障碍
+
+视口：390×844、393×852、430×932、1280×900。
+
+- 轻触点主动作与“稍后”命中区≥44×44px，文本单行省略且 aria-label 完整。
+- 半屏≤48vh、无蒙层、无安全区遮挡；作者头像不被财包替换。
+- 推荐位置 1/25，上一条/下一条可键盘与读屏操作。
+- 作者页分别 15/10，明确“不是官方账号主页”。
+- LLM Mock、未用最终 ASR/OCR、未经财经审核和非投资建议可见。
+
+### 3.7 API、审核与发布（目标能力）
+
+- Draft 禁止被普通播放器读取。
+- 缺版权、证据、最终时间码、财经审核或 Schema blocker 时 publish 409。
+- ApprovedExperience 不可变；修改创建新 contentVersion。
+- ReviewManifest 真实 reviewer/role/time/outcome，不允许模型代签。
+- 审核写接口在公开部署关闭；运行 API 只返回 Approved。
+- 内容 publish 与 job approval 分离，权限、幂等键、审计事件不同。
+
+### 3.8 会话、报告与安全（目标能力）
+
+- Event 以 `eventId` 幂等；刷新恢复不重复计数。
+- 服务端会话丢失时可用 localStorage 快照补回。
+- 模型超时、非法 JSON、断网时确定性模板完成全流程，报告非空。
+- 报告只引用实际事件/证据；忽略为“未观察”，不伪造错误或掌握。
+- “买什么、仓位、目标价、稳赚”等请求始终拒绝并转回机制解释。
+- 不保存原始语音，不推断财富、持仓或风险偏好。
+
+### 3.9 真实多模态与复述（待执行）
+
+- ASR/OCR/视觉时间窗和证据 ID 与人工标注对齐。
+- 先用 2–3 条建立黄金集，不直接用 25 条替代质量门。
+- 至少 40 条复述人工金标，覆盖绝对化、机制缺失、条件缺失、概念混淆。
+- Macro-F1≥0.80；严重概念错误召回≥90%。
+- Provider P95、费用、超时和降级达到 PRD 指标后再扩容。
+
+## 4. 端到端场景
+
+### E2E-01 推荐与归属
+
+Given 线上 bundle 有 25 条，When 打开 `#/home`，Then 只出现这 25 条及 25 个原作链接，作者分布 15/10。
+
+### E2E-02 曝光不停播、进入暂停
+
+Given 视频在播放，When 轻触点出现，Then 时间继续增长；When 用户点击，Then 半屏≤48vh 且视频暂停。
+
+### E2E-03 恢复前态
+
+Given 进入前在播放/暂停，When 完成、跳过或关闭，Then 分别恢复播放/保持暂停，且无 seek、音量或倍速变化。
+
+### E2E-04 无固定数量上限
+
+Given 第 5、6 个节点满足证据和 45 秒间隔，When 播放到对应时间，Then 都可自动出现，不被 `maxAutomaticCues=4` 截断。
+
+### E2E-05 作者页
+
+Given 点击作者入口，When 进入作者页，Then 仅显示该作者清单子集，并提供原作品链接。
+
+### E2E-06 失效与到期
+
+Given 目录全部失效，When 打开推荐，Then 明确空态且无旧视频网络请求。Given 到期 retire，Then Release 直链也不可访问。
+
+## 5. 发布前命令
+
+```bash
+cd /home/samsong/Desktop/maybe/caibao/refer/douyin
+pnpm test
+pnpm type-check
+pnpm type-check:server
+pnpm build
+pnpm test:e2e
+pnpm audit --prod
+git diff --check
+```
+
+另检查：`gh release view showcase-media-20260723-v1` 资产数、Pages workflow 结果、线上 DOM/视频播放和原作链接。
+
+## 6. 文档门
+
+- V2.7、差异、评审、README、AGENTS、交接、架构、实施和治理指针一致。
+- Markdown 链接存在，事实 SHA/URL/测试数准确，历史候选未写成 Approved。
+- 本轮 V2.7 不生成 PDF。
+- 后续若生成 PDF，只做 `pdfinfo`、`pdftotext`、文件大小、页数和关键标题机器校验；按用户要求不做逐页视觉验收，记录“视觉未验收”。
