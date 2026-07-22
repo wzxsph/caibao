@@ -1,7 +1,7 @@
 # TDD 与验收计划
 
 状态日期：2026-07-23  
-当前产品权威：V2.0；Review Candidate：`财经推演室_PRD_V2.4.md`
+当前已批准基线：V2.0；其“不自动暂停”条款已被用户最新指令覆盖；Review Candidate：`财经推演室_PRD_V2.5.md`
 
 ## 测试顺序
 
@@ -24,7 +24,8 @@
 
 `4b34da1f` 增加 3 个默认回环绑定断言；本轮在该提交实际复核 `pnpm test:server` 为 105/105。
 完整 client/type/build/E2E 基线仍引用 `b8ced09d`；六类 server 成稿/前端渲染测试不等于完整六类
-有权媒体 E2E 或真实 Provider 已验证。
+有权媒体 E2E 或真实 Provider 已验证。既有 E2E 按 V2.4“不停播”编写，不能作为 V2.5 播放行为
+的通过证据；实现暂停状态机前，必须先替换相反断言并让新用例进入 Red。
 
 ## P0 测试矩阵
 
@@ -43,8 +44,12 @@
 | T-PLAN-02 | 黄金 | 缺证据或投资建议措辞 | 候选被拒并记录理由 |
 | T-PIPE-01 | 集成 | Fake ASR/OCR/AI 完整流水线 | 只生成 `draft` 内容包和审核清单 |
 | T-API-01 | API | 创建和轮询分析任务 | 状态只按 queued→running→succeeded/failed 转移 |
-| T-VIDEO-01 | 组件/E2E | 展开触点 | 面板 ≤48vh、无蒙层、视频继续播放 |
-| T-VIDEO-02 | E2E | 快进跨越多触点 | 只出现一个，其他进入时间轴 |
+| T-PLAY-00 | 组件/E2E | 轻邀请曝光或自动收起 | 视频继续播放，不调用 pause/play/seek |
+| T-PLAY-01 | 组件/E2E | 视频播放中点击进入财包 | 记录进入前状态与位置并自动暂停；面板 ≤48vh、无蒙层、不 seek |
+| T-PLAY-02 | 组件/E2E | 从播放态进入后完成、跳过或关闭 | 从原暂停点续播，位置漂移 ≤250ms；静音、音量和倍速不变 |
+| T-PLAY-03 | 组件/E2E | 视频已暂停时进入并退出 | 始终保持暂停，不误调用 play |
+| T-PLAY-04 | 组件/E2E | 重复打开、关闭或重复事件 | pause/play 幂等，状态和事件不重复计数 |
+| T-VIDEO-02 | E2E | 快进跨越多触点 | 只出现一个，其他进入时间轴；邀请阶段不暂停 |
 | T-REPORT-01 | E2E | 完成/略过混合 | 无总分；只陈述已观察证据和未观察项 |
 | T-ADAPT-01 | 契约 | PM draft 完成 Schema 适配 | 状态仍 draft；不复制未授权媒体 |
 | T-VERSION-01 | 契约 | PRD/内容/Schema/规则等版本向量缺失 | 不可 reviewed/approved |
@@ -69,9 +74,10 @@
 
 在 live suite 落地、短视频授权和密钥就绪以前，任何文档都不得写“真实供应商测试已通过”或“真实视频分析已完成”。
 
-## V2.4 文档、版本与内容门禁
+## V2.5 文档、版本与内容门禁
 
-1. V2.4 未形成真实联合评审结论前，V2.0 仍为权威，不创建 `prd-v2.4-approved`。
+1. V2.5 未形成真实联合评审结论前，V2.0 仍为已批准基线，不创建 `prd-v2.5-approved`；但其
+   “不自动暂停”条款已被用户最新指令覆盖，代码不得继续把 V2.4 行为作为目标。
 2. approved 内容必须引用已批准 PRD tag，并固化 content/schema/rule/weight/prompt/app/media 版本。
 3. 模型、PM adapter 与 Schema 校验只能生成 draft；draft PATCH、ReviewManifest、job publish
    （物化 approved）与 content publish/retire（运行指针）是不同动作。

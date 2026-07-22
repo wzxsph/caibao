@@ -1,13 +1,14 @@
 # 财包视频理解与时间轴交互架构
 
-状态：P0 垂直切片已实现，V2.4 为 Review Candidate；V2.0 仍是当前权威，真实内容发布仍阻塞  
+状态：P0 垂直切片已实现，V2.5 为最新 Review Candidate；进入暂停状态机尚未实现，真实内容发布仍阻塞  
 代码 checkpoint：`refer/douyin` 的 `feat/caibao-analysis-pipeline@b8ced09d`
 （Planner 4/45 + 六类成稿）。未 push 的 `refactor/moneybaby-v2.4-foundation@4b34da1f`
 在其上增加默认前端回环绑定。共享工作树由外部 Agent 使用，当前检出状态不是稳定架构事实。
 
-> 产品候选：`财经推演室_PRD_V2.4.md`。V2.4 新增独立版本向量、ReviewManifest 与受控
+> 产品候选：`财经推演室_PRD_V2.5.md`。V2.5 沿用独立版本向量、ReviewManifest 与受控
 > draft PATCH、ReviewManifest、job publish（物化 approved）与 content publish/retire（运行指针）
-> 门禁；这些是目标架构，不能因文档存在描述为代码已实现。
+> 门禁，并把播放规则改为“邀请不暂停、进入自动暂停、退出按原状态恢复”。这些是目标架构，
+> 不能因文档存在描述为代码已实现。
 
 ## 系统分层
 
@@ -63,7 +64,9 @@ flowchart LR
 4. 内容节点最多 6 个；自动邀请默认值和硬上限已在 `b8ced09d` 收紧为 4、最小 45 秒、
    单次最多 12 秒，并扫描投资建议措辞。PM 六节点仍需 adapter 选择，不能按原间隔直接发布。
 5. 播放时不实时请求模型决定弹点；前端只消费已批准、版本化内容包。
-6. 展开触点不暂停、静音或 seek 视频；无蒙层，面板不超过 48vh。
+6. 邀请曝光不暂停；用户进入触点时记录 `wasPlayingBeforeInteraction` 和 `pausePositionMs` 后暂停。
+   完成、跳过或关闭时仅在进入前正在播放的情况下从原位置恢复；不得自动 seek、静音、改音量或倍速。
+   无蒙层，面板不超过 48vh。当前代码仍是 V2.4 不停播实现，必须先补失败测试再重构。
 7. 媒体、作者头像/昵称、来源 URL、字幕和内容包版本必须一致；财包不得替换作者身份。
 8. PRD、内容、Schema、规则、Planner 权重、Prompt、应用提交和媒体指纹独立版本化；
    Review Candidate 只能生成 draft，approved 内容必须引用已批准 PRD tag。
@@ -83,7 +86,8 @@ PM VideoContentPackage (draft)
 ```
 
 - 可迁移：视频元数据、章节、字幕候选、六节点学习意图、证据窗口、复述/报告信息结构。
-- 不迁移：React/Vinext 页面、Cloudflare 运行栈、自动暂停/seek、全屏 shade、88%–94% Sheet、财包占作者头像位、二选一与静态能力印章。
+- 可迁移但必须重写：用户主动进入后暂停这一基础意图；退出恢复必须按 V2.5 的进入前状态实现。
+- 不迁移：React/Vinext 页面、Cloudflare 运行栈、自动 seek、全屏 shade、88%–94% Sheet、财包占作者头像位、二选一与静态能力印章。
 - PM 视频仍缺公开分发授权，概念与因果边均未审核；Schema 适配成功不改变其 `draft` 状态。
 - 首包主题以美元外溢、全球资本、本国周期和相对利差为准，不向报告注入视频未覆盖的股票/黄金能力。
 
