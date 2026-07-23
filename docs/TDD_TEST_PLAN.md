@@ -28,7 +28,8 @@
 | 媒体目录            | 25 ready / 0 excluded                                           |
 | 媒体 HTTP           | HEAD 200 / Range 206                                            |
 | 旧站声音修复        | PR #5 / merge `8f21006c` / run `29971301855` passed             |
-| 主 Pages workflow   | `.github/workflows/deploy-caibao-pages.yml`                     |
+| 主 Pages workflow   | run `29972348075` / head `65151c9` passed                       |
+| 主站实页            | 10 条；有声点击后 unmuted+playing；MP4 200 / Range GET 206       |
 
 ## 3. 测试矩阵
 

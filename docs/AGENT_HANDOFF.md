@@ -4,6 +4,9 @@
 产品候选：PRD V2.7 Review Candidate  
 唯一代码源：`wzxsph/caibao/apps/web`
 
+应用发布提交：`65151c9b7f6625aca2558d25a2b2907a852ceb7d`  
+Pages run：<https://github.com/wzxsph/caibao/actions/runs/29972348075>（success）
+
 ## 0. 5 分钟摘要
 
 - 主站：<https://wzxsph.github.io/caibao/#/home>；旧站 <https://wzxsph.github.io/douyin/#/home> 仅作迁移期历史预览。
@@ -56,6 +59,7 @@ pnpm test
 ```text
 GitHub Pages: https://wzxsph.github.io/caibao/#/home
 Workflow:     .github/workflows/deploy-caibao-pages.yml
+Deploy run:   29972348075 (head 65151c9b7f6625aca2558d25a2b2907a852ceb7d)
 Web source:   apps/web
 Media source: https://github.com/wzxsph/douyin/releases/tag/showcase-media-20260723-v1
 ```
@@ -114,6 +118,8 @@ Pages staging: 10 items / 68,687,281 bytes
 ```
 
 Playwright 新增并锁定：首次显式有声入口、unmute + play、偏好保存；其余覆盖 POI 曝光继续播放、进入暂停、条件恢复、半屏尺寸、作者归属和旧路由移除。
+
+主站实页复核：10 个 article、10 个原作品链接；首条 `currentSrc` 为 `/caibao/media/7664748624454192393.mp4`，`readyState=4`、`error=null`、持续播放；点击声音入口后 `muted=false`、`paused=false`。MP4 HEAD 200、Range GET 206、`Content-Type: video/mp4`。
 
 ## 7. 常用命令
 

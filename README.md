@@ -34,6 +34,8 @@ https://github.com/wzxsph/caibao/tree/main/apps/web
 
 旧 `wzxsph/douyin` 仓保留历史部署和媒体 Release，不再双向编辑。迁移采用精简源码快照，没有带入约 616MB 的旧 Git 历史、旧推荐数据、旧商城/消息/个人中心、采集器、依赖、缓存、密钥或视频。来源与精确提交见 [`apps/web/IMPORT_PROVENANCE.md`](apps/web/IMPORT_PROVENANCE.md)。
 
+当前应用发布基线为主仓提交 `65151c9b7f6625aca2558d25a2b2907a852ceb7d`；[Pages workflow 29972348075](https://github.com/wzxsph/caibao/actions/runs/29972348075) 成功。线上实测首条同域 MP4 为 `readyState=4`、无错误且持续播放；首次有声入口点击后 `muted=false`、`paused=false`，Range GET 返回 206。
+
 ## 媒体与权利
 
 - 完整清单是本地 Git-ignored 的 `apps/web/media-import/authorized-douyin/download-manifest.json`；公开集合由 `apps/web/src/showcase/public-video-ids.json` 固定选择 10 条。

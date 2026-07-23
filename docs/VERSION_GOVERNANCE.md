@@ -115,8 +115,9 @@ generated → draft → in_review → reviewed → approved → published → re
 
 ### 8.1 当前工程展示
 
-- App：`wzxsph/caibao/apps/web`；导入源 `wzxsph/douyin@9a461b89dda782e30db2fd399b29068e95d3ec33`。
+- App：`wzxsph/caibao@65151c9b7f6625aca2558d25a2b2907a852ceb7d` 的 `apps/web`；导入源 `wzxsph/douyin@9a461b89dda782e30db2fd399b29068e95d3ec33`。
 - 主 Pages：<https://wzxsph.github.io/caibao/#/home>；旧 `/douyin/` 只作历史预览。
+- 主 Pages run：`29972348075`，成功；应用发布 SHA 与文档后续提交 SHA 可以不同。
 - Media：Release `showcase-media-20260723-v1` 保存完整派生源；Pages artifact 同域暂存公开 10 条。
 - 发布是用户直接要求的工程展示，不代表生产内容审批或权利独立核验。
 

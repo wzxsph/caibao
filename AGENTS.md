@@ -40,11 +40,13 @@ pnpm test
 ## 当前工程事实
 
 - 主 Pages：<https://wzxsph.github.io/caibao/#/home>；旧 Pages：<https://wzxsph.github.io/douyin/#/home>。
+- 当前主仓应用发布提交：`65151c9b7f6625aca2558d25a2b2907a852ceb7d`；Pages run `29972348075` 成功。
 - 完整生成目录 25 条；公开 `src/showcase/public-video-ids.json` 选择 10 条，两位作者各 5 条。
 - 媒体 Release：<https://github.com/wzxsph/douyin/releases/tag/showcase-media-20260723-v1>。Actions 只把十条校验后的 MP4/JPG 暂存进 `dist/media/`，媒体不进 Git。
 - 25 个 Experience、141 个 `automatic` 触点；每视频 3–6 个只是六模板与时长形成的当前结果，不是产品上限。
 - 内容标记为 `internal_poc`、`deterministic_llm_mock`、`estimated_mock`；未执行最终 ASR/OCR/视觉和财经人审。
 - 精简主仓基线已通过：前端 42、服务端 131、Playwright 9、两套 type-check、build、production audit、diff-check。
+- 线上验证：10 条/10 个原作链接；首条媒体同域、`readyState=4`、无错误；有声入口点击后 `muted=false && paused=false`；Range GET 206。
 
 ## 产品不变量
 

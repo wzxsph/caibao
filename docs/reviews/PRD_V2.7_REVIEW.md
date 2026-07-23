@@ -27,12 +27,14 @@
 
 - [x] 旧仓声音修复 PR #5 已合并为 `8f21006c`，工作流 `29971301855` 成功。
 - [x] 精简应用迁入主仓 `apps/web`，来源记录、GPL 许可与主仓 Pages workflow 已建立。
+- [x] 主仓应用 `65151c9` 经 run `29972348075` 成功部署到 `/caibao/`。
 - [x] Release 包含 25 个 MP4 + 25 个 JPG，共 174,689,523 bytes。
 - [x] 完整生成目录/Experience 为 25/25；公开目录/原作品链接为 10/10。
 - [x] 公开作者页小Lin说 5 条；大陆姓陆 5 条。
 - [x] 141 个 automatic 触点；当前生成分布 3–6，没有 `maxAutomaticCues=4`。
 - [x] 精简主仓 client 42、server 131、Playwright 9、两套 type-check、build、production audit、diff-check 通过。
 - [x] 线上同域视频 `readyState=4` 且持续播放；无声根因为强制静音 + 浏览器策略，不是媒体损坏；显式有声入口、偏好保存、暂停/恢复已有 E2E。
+- [x] 主站实测点击有声入口后 `muted=false && paused=false`；MP4 完整请求 200、Range GET 206。
 
 ## 3. 分角色检查
 

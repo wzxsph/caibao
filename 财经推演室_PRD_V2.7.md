@@ -62,8 +62,9 @@ Markdown：唯一内容源
 | 对象                 | 精确引用                                                                                                   |
 | -------------------- | ---------------------------------------------------------------------------------------------------------- |
 | 唯一代码源           | `wzxsph/caibao` 的 `apps/web/`；导入源 `wzxsph/douyin@9a461b89`                                           |
+| 主仓应用提交         | `65151c9b7f6625aca2558d25a2b2907a852ceb7d`                                                               |
 | 旧仓迁移提交         | PR [#5](https://github.com/wzxsph/douyin/pull/5)，merge `8f21006c`；以后只保留历史部署/媒体 Release        |
-| 主 Pages             | <https://wzxsph.github.io/caibao/#/home>；由主仓 workflow 构建                                             |
+| 主 Pages             | <https://wzxsph.github.io/caibao/#/home>；run `29972348075` 成功                                           |
 | 媒体 Release         | `showcase-media-20260723-v1`，50 个资产，174,689,523 bytes                                                 |
 | Catalog / Experience | 完整生成 25 / 25；公开运行时 10 / 10                                                                       |
 | 作者分布             | 完整源小Lin说 15、大陆姓陆 10；公开各 5                                                                    |

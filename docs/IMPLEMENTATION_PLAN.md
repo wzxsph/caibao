@@ -54,6 +54,7 @@
 - [x] 两套 type-check、build、production audit、diff-check。
 - [x] 旧仓 PR #3/#4 提供产品壳与同域媒体，PR #5 修复显式有声入口；旧站 run `29971301855` 成功。
 - [x] 主仓新增 `.github/workflows/deploy-caibao-pages.yml`，从 `apps/web` 构建并校验/暂存十条媒体。
+- [x] 主仓应用提交 `65151c9` 由 workflow `29972348075` 成功部署；线上十条、同域 MP4、有声入口与 Range 206 已验证。
 - [x] 线上根因确认：媒体可播且 `readyState=4`，无声来自强制 `muted` 与浏览器自动播放限制，不是视频损坏。
 
 ## 3. 下一阶段：真实多模态垂直切片

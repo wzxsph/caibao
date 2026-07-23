@@ -3,7 +3,8 @@
 状态：PRD V2.7 Review Candidate 配套架构  
 日期：2026-07-23  
 唯一代码源：`wzxsph/caibao/apps/web`  
-导入源：`wzxsph/douyin@9a461b89dda782e30db2fd399b29068e95d3ec33`
+导入源：`wzxsph/douyin@9a461b89dda782e30db2fd399b29068e95d3ec33`  
+当前应用发布：`caibao@65151c9b7f6625aca2558d25a2b2907a852ceb7d`，Pages run `29972348075`
 
 ## 1. 架构目标
 
