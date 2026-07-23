@@ -1,6 +1,6 @@
 {
   "draft": {
-    "experienceId": "draft-job-mrwycfpz",
+    "experienceId": "draft-job-mrx07ndx",
     "title": "降息如何影响资产价格",
     "contentVersion": "draft.mock-fingerp",
     "mediaFingerprint": "sha256:mock-fingerprint",
@@ -289,11 +289,11 @@
       },
       {
         "stage": "evidence_extract",
-        "elapsedMs": 1
+        "elapsedMs": 0
       },
       {
         "stage": "semantic_extract",
-        "elapsedMs": 0
+        "elapsedMs": 1
       },
       {
         "stage": "validate_repair",
@@ -305,11 +305,11 @@
       },
       {
         "stage": "payload_author",
-        "elapsedMs": 1
+        "elapsedMs": 0
       },
       {
         "stage": "assemble",
-        "elapsedMs": 9
+        "elapsedMs": 10
       }
     ]
   }

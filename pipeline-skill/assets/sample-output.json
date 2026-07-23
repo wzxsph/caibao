@@ -1,0 +1,98 @@
+{
+  "_about": "Sample output from caibao-pipeline-skill. Same shape as examples/demo-output.json; trimmed to highlight the contract. Do NOT import as test fixture — use examples/demo-output.json for that.",
+  "draft": {
+    "experienceId": "draft-sample-0001",
+    "title": "降息如何影响资产价格（sample）",
+    "contentVersion": "draft.sample0001fpr",
+    "mediaFingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "publishStatus": "draft",
+    "blockers": ["HUMAN_REVIEW_REQUIRED"],
+    "evidence": [
+      {
+        "evidenceId": "asr-sample-0001",
+        "startMs": 0,
+        "endMs": 6000,
+        "text": "美联储降息通常通过折现率影响资产价格。",
+        "confidence": 0.92
+      }
+    ],
+    "concepts": [
+      {
+        "conceptId": "concept-rate-cut",
+        "name": "降息",
+        "firstMentionMs": 0,
+        "isCore": true,
+        "evidenceIds": ["asr-sample-0001"]
+      }
+    ],
+    "claims": [],
+    "causalEdges": [],
+    "conditions": [],
+    "triggerCandidates": [
+      {
+        "candidateId": "cue-sample-0001",
+        "sourceEventId": "evt-sample-0001",
+        "kind": "context_card",
+        "proposedStartMs": 0,
+        "proposedEndMs": 5000,
+        "windowId": "win-0",
+        "priority": 64,
+        "expectedInteractionMs": 9000,
+        "prompt": "Check point evt-sample-0001",
+        "learningObjective": "Review concept_first_mention at window win-0",
+        "rationale": "sample rationale",
+        "evidenceIds": ["asr-sample-0001"],
+        "visualLoad": "low",
+        "subSignals": { "learningValue": 0.7, "timeSensitivity": 0.5, "interactionFit": 0.6 },
+        "direction": "insufficient",
+        "activatedPaths": [],
+        "payload": {
+          "title": "背景卡：美联储降息通常通过折现率影响资产价格。",
+          "body": "本节围绕机制而非结论展开。",
+          "keyPoint": "机制要点：折现率。",
+          "feedback": "记住机制，不下方向结论。"
+        }
+      }
+    ],
+    "rejectedTriggerCandidates": [],
+    "approvedTriggers": []
+  },
+  "coverageReport": {
+    "coverage": {
+      "concepts": { "total": 1, "coveredByAcceptedCue": 1, "uncovered": [] },
+      "causalEdges": { "total": 0, "coveredByAcceptedCue": 0, "uncovered": [] },
+      "conditions": { "total": 0, "coveredByAcceptedCue": 0, "uncovered": [] }
+    },
+    "evidenceGaps": [],
+    "kindBalance": {
+      "context_card": 1,
+      "quick_judgment": 0,
+      "condition_slider": 0,
+      "causal_stitch": 0,
+      "counterexample_flip": 0,
+      "concept_compare": 0
+    },
+    "directionResolutions": [],
+    "rejectedCandidates": [],
+    "reviewDecisionsRequired": [],
+    "versions": {
+      "contentVersion": "draft.sample0001fpr",
+      "mediaFingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "ruleEngineVersion": "direction-rules.v1",
+      "weightTableVersion": "cue-weights.v1",
+      "promptVersion": "payload-author.v1"
+    }
+  },
+  "timings": {
+    "totalMs": 12,
+    "stages": [
+      { "stage": "media_prepare", "elapsedMs": 0 },
+      { "stage": "evidence_extract", "elapsedMs": 0 },
+      { "stage": "semantic_extract", "elapsedMs": 0 },
+      { "stage": "validate_repair", "elapsedMs": 0 },
+      { "stage": "plan", "elapsedMs": 1 },
+      { "stage": "payload_author", "elapsedMs": 1 },
+      { "stage": "assemble", "elapsedMs": 6 }
+    ]
+  }
+}

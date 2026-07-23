@@ -1,0 +1,88 @@
+{
+  "name": "caibao-pipeline-skill",
+  "display_name": "Caibao Finance Video Pipeline",
+  "description": "Standalone extraction of caibao's finance-video generation pipeline. Stage 1 parses a video with ffmpeg/ffprobe; stage 2 transcribes audio with Volcengine flash ASR (or a transcript JSON override); stage 3 builds a semantic graph and authors learning-cue payloads via an OpenAI-compatible LLM (or a deterministic mock). Produces a DraftExperience + CoverageReport + timings JSON identical in shape to the caibao web app's HTTP response.",
+  "version": "0.1.0",
+  "author": "caibao team",
+  "license": "MIT",
+  "category": "media-pipeline",
+  "keywords": [
+    "caibao",
+    "finance video pipeline",
+    "财经视频生成管线",
+    "解析视频",
+    "语音模型识别",
+    "出题",
+    "讲解文本生成",
+    "DraftExperience",
+    "CoverageReport",
+    "Volcengine ASR",
+    "Volcengine flash",
+    "ffmpeg",
+    "ffprobe",
+    "transcript extraction",
+    "cue authoring",
+    "semantic graph",
+    "trigger candidate",
+    "direction rule engine",
+    "MiniMax",
+    "Ark",
+    "OpenAI-compatible",
+    "mock LLM",
+    "offline pipeline",
+    "standalone skill",
+    "caibao extraction"
+  ],
+  "entry_points": {
+    "agent": "./bin/run-pipeline.sh",
+    "loop": "./bin/run-loop.sh",
+    "library": "./src/agent/run-pipeline.ts"
+  },
+  "tools": [
+    {
+      "name": "run_pipeline",
+      "description": "Single-job pipeline runner. Reads --video or --input, runs all three stages, writes --out JSON.",
+      "entry": "./bin/run-pipeline.sh"
+    },
+    {
+      "name": "run_loop",
+      "description": "Folder-sweep pipeline runner. Iterates --inputs-dir and writes per-file outputs to --outputs-dir.",
+      "entry": "./bin/run-loop.sh"
+    },
+    {
+      "name": "smoke",
+      "description": "8-case offline smoke test. Runs against the demo transcript with --provider mock; must all pass.",
+      "entry": "npm run smoke"
+    },
+    {
+      "name": "type_check",
+      "description": "TypeScript noEmit type check. Must be clean.",
+      "entry": "npm run type-check"
+    }
+  ],
+  "modes": {
+    "default_provider": "mock",
+    "alternative_provider": "openai",
+    "offline_runnable": true,
+    "network_required": "only when provider != mock and OPENAI_API_KEY is set"
+  },
+  "io": {
+    "input": [
+      "video file (mp4 etc.) via --video",
+      "transcript JSON via --input (auto-skips ASR)",
+      "directory of input JSONs via --inputs-dir (loop mode)"
+    ],
+    "output": "DraftExperience + CoverageReport + timings JSON, shape-compatible with the caibao web app's /api/finance/v1/analysis/jobs/:jobId/draft endpoint"
+  },
+  "references": [
+    "references/architecture.md",
+    "references/provider-modes.md",
+    "references/reproduce-caibao.md"
+  ],
+  "assets": [
+    "examples/demo-transcript.json",
+    "examples/demo-output.json",
+    "assets/sample-output.json"
+  ],
+  "evals": "evals/evals.json"
+}

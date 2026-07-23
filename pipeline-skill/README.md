@@ -13,9 +13,51 @@ The pipeline produces a fully-shaped `DraftExperience` and a deterministic
 You can plug this folder into any agent harness (Claude Code, an in-house
 orchestrator, a CI job) without dragging the rest of the web app along.
 
+> **This folder is a Claude-style skill.** Read [`SKILL.md`](SKILL.md) first —
+> it has the practitioner workflow, modes, proactive triggers, and output
+> artifacts. This README is the installation + run guide. The deep docs live
+> in [`references/`](references/).
+
 ---
 
-## What's inside
+## Skill layout
+
+```
+pipeline-skill/
+├── SKILL.md              # ← practitioner workflow (start here)
+├── skill.json            # ← manifest with keywords + tools
+├── README.md             # ← install + run guide (this file)
+├── .env.example          # ← every env var, grouped by stage
+├── package.json
+├── tsconfig.json
+├── bin/
+│   ├── run-pipeline.sh   # agent entry (single job)
+│   └── run-loop.sh       # loop entry (folder sweep)
+├── commands/
+│   ├── run-pipeline.md   # /run-pipeline slash command
+│   └── run-loop.md       # /run-loop slash command
+├── src/
+│   ├── domain/           # Zod contracts (verbatim from caibao)
+│   ├── media/ffmpeg.ts   # Stage 1: parse video
+│   ├── providers/        # Stage 2 & 3 providers (real + mock)
+│   ├── pipeline/         # Stage 1–3 orchestrator + deterministic stages
+│   ├── config/env.ts     # runtime config + readiness banner
+│   └── agent/
+│       ├── run-pipeline.ts  # single-job CLI entry
+│       └── loop.ts          # folder-sweep batch driver
+├── references/
+│   ├── architecture.md      # 8-stage pipeline diagram + error model
+│   ├── provider-modes.md    # mock vs openai, MiniMax / Ark / OpenAI / vLLM
+│   └── reproduce-caibao.md  # byte-shape contract vs the web app
+├── assets/
+│   └── sample-output.json   # trimmed sample DraftExperience
+├── evals/
+│   └── evals.json           # 6 eval cases (type-check, smoke, demo, loop, shape, error model)
+└── examples/
+    ├── demo-transcript.json
+    ├── demo-output.json
+    └── smoke.spec.ts
+```
 
 ```
 pipeline-skill/

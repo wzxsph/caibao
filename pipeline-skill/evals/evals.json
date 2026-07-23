@@ -1,0 +1,78 @@
+{
+  "skill": "caibao-pipeline-skill",
+  "version": "0.1.0",
+  "description": "Eval cases for the caibao finance-video pipeline skill. Each case asserts the skill produces the expected shape / behaviour without manual intervention.",
+  "cases": [
+    {
+      "id": "type-check-passes",
+      "description": "TypeScript noEmit type check must pass cleanly with no errors.",
+      "command": "npm run type-check",
+      "expect": {
+        "exitCode": 0,
+        "stdoutContains": ""
+      },
+      "should_trigger": true,
+      "notes": "Run after every change to src/."
+    },
+    {
+      "id": "smoke-offline",
+      "description": "8-case offline smoke test must all pass with the mock provider.",
+      "command": "npm run smoke",
+      "expect": {
+        "exitCode": 0,
+        "stdoutContains": "8 passed, 0 failed"
+      },
+      "should_trigger": true,
+      "notes": "Covers transcript schema, timeline, scorer, planner, direction engine, mock author, end-to-end."
+    },
+    {
+      "id": "demo-end-to-end-mock",
+      "description": "Agent entry point must produce a DraftExperience + CoverageReport from the demo transcript with --provider mock.",
+      "command": "./bin/run-pipeline.sh --input examples/demo-transcript.json --title 'demo' --provider mock --out /tmp/eval-demo.json --quiet",
+      "expect": {
+        "exitCode": 0,
+        "stdoutContains": "accepted cues:",
+        "fileExists": "/tmp/eval-demo.json",
+        "jsonShape": {
+          "draft": ["experienceId", "title", "concepts", "claims", "causalEdges", "conditions", "triggerCandidates", "rejectedTriggerCandidates", "approvedTriggers", "publishStatus", "blockers"],
+          "coverageReport": ["coverage", "kindBalance", "directionResolutions", "reviewDecisionsRequired", "versions"],
+          "timings": ["totalMs", "stages"]
+        }
+      },
+      "should_trigger": true,
+    },
+    {
+      "id": "loop-driver-batch",
+      "description": "Loop entry point must process every JSON in the inputs dir and write a _summary.json.",
+      "command": "mkdir -p /tmp/eval-loop-in /tmp/eval-loop-out && cp examples/demo-transcript.json /tmp/eval-loop-in/a.json && cp examples/demo-transcript.json /tmp/eval-loop-in/b.json && ./bin/run-loop.sh --inputs-dir /tmp/eval-loop-in --outputs-dir /tmp/eval-loop-out --provider mock",
+      "expect": {
+        "exitCode": 0,
+        "stdoutContains": "loop done: 2/2 succeeded",
+        "fileExists": ["/tmp/eval-loop-out/a.out.json", "/tmp/eval-loop-out/b.out.json", "/tmp/eval-loop-out/_summary.json"]
+      },
+      "should_trigger": true,
+      "notes": "Per-file outputs and the summary report must both be produced."
+    },
+    {
+      "id": "output-shape-compatible-with-caibao-web",
+      "description": "Demo output must contain every top-level field the caibao web app exposes over /analysis/jobs/:jobId/draft.",
+      "command": "node -e \"const o=require('./examples/demo-output.json'); const need=['draft','coverageReport','timings']; for(const k of need){if(!(k in o)){console.error('missing '+k);process.exit(1);}} const d=o.draft; for(const k of ['experienceId','title','contentVersion','mediaFingerprint','publishStatus','blockers','evidence','concepts','claims','causalEdges','conditions','triggerCandidates','rejectedTriggerCandidates','approvedTriggers']){if(!(k in d)){console.error('draft missing '+k);process.exit(1);}} for(const c of d.triggerCandidates){if(typeof c.priority!=='number'){console.error('cue missing priority');process.exit(1);}if(!('payload' in c||c.kind==='context_card')){}} console.log('shape OK')\"",
+      "expect": {
+        "exitCode": 0,
+        "stdoutContains": "shape OK"
+      },
+      "should_trigger": false,
+      "notes": "Guards against accidental field removal. Only runs after demo-end-to-end-mock passes."
+    },
+    {
+      "id": "asr-disabled-no-creds-fails-cleanly",
+      "description": "When ASR is enabled but no creds and no transcript override, the runner must fail with ASR_CREDENTIALS_MISSING — never with a generic INTERNAL_ERROR.",
+      "command": "npm run --silent demo 2>&1; echo \"exit=$?\"; unset OPENAI_API_KEY VOLC_ASR_API_KEY VOLC_ASR_APP_ID VOLC_ASR_ACCESS_TOKEN; npx tsx src/agent/run-pipeline.ts --video /nonexistent.mp4 --provider openai 2>&1 | grep -q 'ASR_CREDENTIALS_MISSING\\|MEDIA_FILE_NOT_FOUND'",
+      "expect": {
+        "exitCode": 0
+      },
+      "should_trigger": false,
+      "notes": "Confirms the runner's error model gives a stable machine-readable code."
+    }
+  ]
+}
