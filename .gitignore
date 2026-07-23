@@ -30,3 +30,8 @@
 /apps/web/media-import/*
 !/apps/web/media-import/.gitkeep
 /apps/web/public/demo/
+
+# Ignore untracked agent workspace and pipeline-skill
+.claude/
+pipeline-skill/
+.repos/
