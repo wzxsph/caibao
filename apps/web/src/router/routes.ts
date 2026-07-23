@@ -4,8 +4,13 @@ const routes: RouteRecordRaw[] = [
   { path: '/', redirect: '/home' },
   {
     path: '/home',
-    name: 'recommendation',
+    name: 'recommendation-stable',
     component: () => import('@/showcase/pages/FeedPage.vue')
+  },
+  {
+    path: '/home/beta',
+    name: 'recommendation-beta',
+    component: () => import('@/showcase/pages/BetaFeedPage.vue')
   },
   {
     path: '/author/:authorSlug',

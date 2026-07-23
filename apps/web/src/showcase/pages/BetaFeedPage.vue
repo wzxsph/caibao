@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import ShowcasePlayer from '@/showcase/components/ShowcasePlayer.vue'
+import { useRoute, RouterLink } from 'vue-router'
+import BetaShowcasePlayer from '@/showcase/components/BetaShowcasePlayer.vue'
 import { isShowcaseExpired, showcaseBundle } from '@/showcase/catalog'
 
 const feedEl = ref<HTMLElement>()
@@ -52,8 +52,8 @@ function move(offset: number) {
 <template>
   <main class="feed-shell">
     <nav class="version-switcher" aria-label="版本切换">
-      <RouterLink to="/home" class="version-tab active">稳定版</RouterLink>
-      <RouterLink to="/home/beta" class="version-tab">测试版</RouterLink>
+      <RouterLink to="/home" class="version-tab">稳定版</RouterLink>
+      <RouterLink to="/home/beta" class="version-tab active">测试版</RouterLink>
     </nav>
 
     <section v-if="expired" class="empty-state">
@@ -72,7 +72,7 @@ function move(offset: number) {
         data-feed-card
         :data-index="index"
       >
-        <ShowcasePlayer
+        <BetaShowcasePlayer
           :item="item"
           :active="index === activeIndex"
           :eager="Math.abs(index - activeIndex) <= 1"

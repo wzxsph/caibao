@@ -20,6 +20,7 @@ import CueTimeline from './CueTimeline.vue'
 import InteractionRenderer from './InteractionRenderer.vue'
 import LearningSummaryView from './LearningSummaryView.vue'
 import caibaoImage from '../assets/caibao.png'
+import { useCueRequestStore } from '../cue-store'
 
 const props = defineProps<{
   context: VideoContext
@@ -34,6 +35,8 @@ const emit = defineEmits<{
 }>()
 
 const store = useFinanceCueStore()
+const cueStore = useCueRequestStore()
+let lastSeenToken = 0
 const experience = ref<ApprovedExperience | null>(null)
 const activeCue = ref<TimelineTrigger | null>(null)
 const expandedCue = ref<TimelineTrigger | null>(null)
@@ -159,6 +162,17 @@ watch(
 )
 
 watch(sheetOpen, (open) => emit('sheet-open-change', open), { immediate: true })
+
+watch(
+  () => [cueStore.openCueId, cueStore.requestToken] as const,
+  ([id, token]) => {
+    if (!experience.value || token === lastSeenToken || !id) return
+    lastSeenToken = token
+    const trigger = experience.value.triggers.find((t) => t.triggerId === id)
+    if (!trigger) return
+    openCue(trigger)
+  }
+)
 
 onBeforeUnmount(() => {
   clearCueTimer()

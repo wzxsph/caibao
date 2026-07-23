@@ -60,6 +60,7 @@ describe('public showcase catalog', () => {
     expect(routes.map((route) => route.path)).toEqual([
       '/',
       '/home',
+      '/home/beta',
       '/author/:authorSlug',
       '/report/:videoId',
       '/:pathMatch(.*)*'
