@@ -32,14 +32,14 @@ pnpm test
 
 - 主仓：`/home/samsong/Desktop/maybe/caibao`，远端 `origin=https://github.com/wzxsph/caibao.git`。
 - 运行应用：`apps/web/`，Vue 3 / Vite / Express TypeScript；这是唯一后续代码源。
-- 旧应用仓：`refer/douyin` / `wzxsph/douyin`，只作导入来源、历史部署和媒体 Release 来源。
+- 旧应用仓：`refer/douyin` / `wzxsph/douyin`，只作导入来源和媒体 Release 宿主；旧 Pages 已退役并跳转到主站。
 - PM 参考仓：`refer/moneybaby`，只作视觉与信息结构取证，不复制 React/Vinext 页面。
 - 导入来源：`wzxsph/douyin@9a461b89dda782e30db2fd399b29068e95d3ec33`；旧仓合并提交 `8f21006cc5fae25f1f1de11d2bdb25acbc431937`。详见 `apps/web/IMPORT_PROVENANCE.md`。
 - `node_modules`、媒体、缓存、运行输出、模型产物和密钥不得提交。
 
 ## 当前工程事实
 
-- 主 Pages：<https://wzxsph.github.io/caibao/#/home>；旧 Pages：<https://wzxsph.github.io/douyin/#/home>。
+- 唯一 Pages：<https://wzxsph.github.io/caibao/#/home>。不得再把旧 `douyin` Pages 作为预览、回滚或验收地址。
 - 当前主仓应用发布提交：`65151c9b7f6625aca2558d25a2b2907a852ceb7d`；Pages run `29972348075` 成功。
 - 完整生成目录 25 条；公开 `src/showcase/public-video-ids.json` 选择 10 条，两位作者各 5 条。
 - 媒体 Release：<https://github.com/wzxsph/douyin/releases/tag/showcase-media-20260723-v1>。Actions 只把十条校验后的 MP4/JPG 暂存进 `dist/media/`，媒体不进 Git。

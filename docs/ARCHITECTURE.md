@@ -31,9 +31,9 @@ flowchart TD
 
 ### 2.1 发布对象
 
-- 主 Pages：<https://wzxsph.github.io/caibao/#/home>；旧 `/douyin/` 只作迁移期历史预览。
+- 唯一 Pages：<https://wzxsph.github.io/caibao/#/home>；旧 `douyin` Pages 已退役为迁移跳转，不参与运行、回滚或验收。
 - App：`Vue 3 + Vite + TypeScript`，仅推荐流和作者页。
-- Source：前端、Express、生成管线和测试全部位于 `apps/web/`；旧应用仓不再双向维护。
+- Source：前端、Express、生成管线和测试全部位于 `apps/web/`；旧应用仓不再双向维护或部署应用。
 - Release：`showcase-media-20260723-v1`，50 个资产、174,689,523 bytes。
 - Bundle：提交内生成 JSON 保留 25 条目录、25 个 `internal_poc` Experience、141 个 automatic 触点；运行时按配置过滤为 10 条。
 - 作者页：公开 `xiaolin=5`、`dalu-xing-lu=5`；完整源分布仍为 15/10。

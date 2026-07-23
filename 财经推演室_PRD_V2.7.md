@@ -7,8 +7,7 @@
 Markdown：唯一内容源  
 当前已批准基线：PRD V2.0  
 上一候选：PRD V2.6（历史候选）  
-主仓工程原型：<https://wzxsph.github.io/caibao/#/home>  
-历史迁移预览：<https://wzxsph.github.io/douyin/#/home>
+唯一工程原型：<https://wzxsph.github.io/caibao/#/home>
 
 > V2.7 记录完整 25 条清单内容与生成管线、其中 10 条的公开展示原型、推荐流 + 作者页、确定性 LLM Mock 和取消自动触点固定数量上限。它不代表财经内容、版权链或生产发布已经完成联合审批。
 
@@ -63,7 +62,7 @@ Markdown：唯一内容源
 | -------------------- | ---------------------------------------------------------------------------------------------------------- |
 | 唯一代码源           | `wzxsph/caibao` 的 `apps/web/`；导入源 `wzxsph/douyin@9a461b89`                                           |
 | 主仓应用提交         | `65151c9b7f6625aca2558d25a2b2907a852ceb7d`                                                               |
-| 旧仓迁移提交         | PR [#5](https://github.com/wzxsph/douyin/pull/5)，merge `8f21006c`；以后只保留历史部署/媒体 Release        |
+| 旧仓迁移提交         | PR [#5](https://github.com/wzxsph/douyin/pull/5)，merge `8f21006c`；以后只保留迁移历史/媒体 Release        |
 | 主 Pages             | <https://wzxsph.github.io/caibao/#/home>；run `29972348075` 成功                                           |
 | 媒体 Release         | `showcase-media-20260723-v1`，50 个资产，174,689,523 bytes                                                 |
 | Catalog / Experience | 完整生成 25 / 25；公开运行时 10 / 10                                                                       |
@@ -467,7 +466,7 @@ flowchart TD
 ```
 
 - 应用为 Vue 3 / Vite / TypeScript；服务端工具为 Express / TypeScript。
-- 前端、服务端、生成管线与测试的唯一代码源是主仓 `apps/web/`；旧 `wzxsph/douyin` 只保留历史预览和媒体 Release。
+- 前端、服务端、生成管线与测试的唯一代码源是主仓 `apps/web/`；旧 `wzxsph/douyin` 只保留迁移历史和媒体 Release，其 Pages 已退役。
 - 迁移使用来源可追溯的精简快照，没有复制约 616MB 旧 Git 历史、旧页面/数据/抓取器、依赖、缓存、密钥或视频。
 - GitHub Pages 发布前端与同域媒体 artifact；GitHub Release 保存完整浏览器派生媒体，避免把 167 MiB 视频放进 Git 历史。
 - 此前浏览器直连 Release 会经历 302 到 `release-assets.githubusercontent.com`，最终得到 `application/octet-stream` + attachment；部分网络/内嵌浏览器无法稳定播放。当前浏览器只请求 Pages 同域 `video/mp4`，Release 仅供 Actions 构建取源。
@@ -750,7 +749,7 @@ PRD、内容、Schema、规则、Planner 权重、Prompt、应用提交、媒体
 6. 新增两作者归属、公开 10 个原作链接、Release/Pages 双重下架和到期责任。
 7. 旧仓工程基线更新到含声音修复的 `8f21006c`；精简应用迁入主仓 `apps/web`，测试更新为 client 42、server 131、Playwright 9。
 8. 新增浏览器兼容的首次声音入口、站点偏好和自动播放失败重试口径。
-9. 以 `caibao` Pages 取代 `douyin` Pages 作为主预览；旧站只作迁移期历史预览。
+9. `caibao` Pages 是唯一在线预览；旧 `douyin` Pages 工作流停用，旧地址只允许跳转到主站。
 
 保持不变：入口曝光不停播、点击进入暂停、退出恢复、半屏≤48vh、无蒙层、作者/财包分离、45 秒间隔、单并发、无总分和无投资建议。
 

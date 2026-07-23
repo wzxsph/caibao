@@ -9,7 +9,7 @@ Pages run：<https://github.com/wzxsph/caibao/actions/runs/29972348075>（succes
 
 ## 0. 5 分钟摘要
 
-- 主站：<https://wzxsph.github.io/caibao/#/home>；旧站 <https://wzxsph.github.io/douyin/#/home> 仅作迁移期历史预览。
+- 唯一站点：<https://wzxsph.github.io/caibao/#/home>。旧 `douyin` Pages 已退役，不得用于预览、验收或回滚。
 - 前端、Express 后端、生成管线和测试已精简迁入 `apps/web/`，以后只在 `caibao` 主仓修改。
 - 导入源为 `wzxsph/douyin@9a461b89dda782e30db2fd399b29068e95d3ec33`，旧仓合并提交为 `8f21006cc5fae25f1f1de11d2bdb25acbc431937`。
 - 迁移未携带约 616MB 的旧 Git 历史、旧页面/数据/抓取器、依赖、缓存、密钥或媒体；源码快照本身约 2.7MB。
@@ -49,8 +49,9 @@ pnpm test
 - 功能源提交：`9a461b89...`，包含有声入口修复；
 - 旧仓合并提交：`8f21006...`；
 - 旧仓 PR：<https://github.com/wzxsph/douyin/pull/5>；
-- 旧仓部署：<https://github.com/wzxsph/douyin/actions/runs/29971301855>，成功；
-- 旧仓今后只保留历史部署和媒体 Release，不再双向手工同步。
+- 旧仓最后一次应用部署：<https://github.com/wzxsph/douyin/actions/runs/29971301855>，仅作审计记录；
+- 旧 Pages workflow `318209156` 已手动停用；`gh-pages@afcf216` 只保留跳转页，父提交 `c2a94450` 可恢复历史内容；
+- 旧仓今后只保留迁移历史和媒体 Release，不再双向手工同步，也不作为在线产品地址。
 
 这是精简快照，不是 subtree 历史导入。保留了 Vue/Vite 推荐流、财包交互、Express、媒体校验、ASR/OCR/多模态 adapter、确定性生成管线及测试；未导入旧商城/消息/个人中心、旧推荐数据、通用爬虫、历史截图、多语言文档或视频。
 

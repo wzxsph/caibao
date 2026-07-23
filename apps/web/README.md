@@ -2,7 +2,7 @@
 
 财包把财经长视频变成时间轴上的轻量学习体验：关键点先出现一个可忽略的 POI 微入口；用户点击后，视频在当前位置暂停并展开不超过 `48vh` 的互动；完成、关闭或跳过后，只在进入前正在播放时恢复。
 
-[主仓在线预览](https://wzxsph.github.io/caibao/#/home) · [历史预览](https://wzxsph.github.io/douyin/#/home) · [产品与 PRD](https://github.com/wzxsph/caibao)
+[在线预览](https://wzxsph.github.io/caibao/#/home) · [产品与 PRD](https://github.com/wzxsph/caibao)
 
 > 这是独立参赛学习原型，与抖音及原作者不存在官方隶属关系。当前互动内容由确定性 LLM Mock 仅根据标题和清单元数据生成，尚未使用最终 ASR/OCR，也未经财经审核；内容不构成投资建议。
 

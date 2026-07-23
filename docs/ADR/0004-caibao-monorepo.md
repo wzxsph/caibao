@@ -13,7 +13,7 @@
 - 将精简后的运行源码纳入 `wzxsph/caibao` 的 `apps/web/`。
 - `apps/web` 自导入提交起是前端、后端、生成管线和测试的唯一代码源。
 - 不执行 subtree 历史导入；用 `apps/web/IMPORT_PROVENANCE.md` 固化来源提交与许可证。
-- 保留 `wzxsph/douyin` 作为历史部署和 `showcase-media-20260723-v1` 的媒体 Release 宿主，不再双向手工编辑代码。
+- 保留 `wzxsph/douyin` 作为迁移历史和 `showcase-media-20260723-v1` 的媒体 Release 宿主，不再双向手工编辑代码；旧 Pages 退役为指向 `caibao` 主站的迁移跳转。
 - 不迁入旧路由、旧推荐数据、通用抓取器、依赖、缓存、密钥、源/派生视频或模型产物。
 - 主仓 Pages workflow 从 `apps/web` 构建，并从旧 Release 校验、暂存公开十条媒体；媒体仍不进入 Git。
 

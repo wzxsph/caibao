@@ -1046,7 +1046,7 @@ EvidenceReport        仅由事件和证据生成的过程总结
 
 - PM GitHub：`https://github.com/prac-fect/moneybaby`
 - PM 在线 Demo：`https://finance-feed-lab.earthy-brush-4461.chatgpt.site/`
-- 当前集成 Demo：`https://wzxsph.github.io/douyin/?demo=finance-fed#/home`
+- 当时的集成 Demo 位于旧 `douyin` Pages；该入口现已退役，当前入口见主仓 README。
 - 详细差异评审：`docs/PRD_V2.2_GAP_REVIEW.md`
 - 技术架构：`docs/ARCHITECTURE.md`
 - 生成管线：`docs/GENERATION_PIPELINE_DESIGN.md`

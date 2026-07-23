@@ -39,7 +39,7 @@ V2.6 面向固定四条、本地 `internal_poc` 和 manifest 其余条目 `UNMAP
 - PR：[展示 #3](https://github.com/wzxsph/douyin/pull/3)、[同域媒体 #4](https://github.com/wzxsph/douyin/pull/4)
 - 合并提交：`9b5bd02503c951a8b416e66bdd81f48ba89931d5`
 - 媒体 Release：<https://github.com/wzxsph/douyin/releases/tag/showcase-media-20260723-v1>
-- Pages：<https://wzxsph.github.io/douyin/#/home>
+- 当时的旧 `douyin` Pages 已退役；当前唯一入口见主仓 README。
 - 完整目录/内容：25/25；公开目录：10，作者 5/5；触点生成总数 141。
 - 触点分布：1×3、1×4、4×5、19×6。
 - 门禁：client 45、server 131、Playwright 8、两套 type-check、build、audit、diff-check。

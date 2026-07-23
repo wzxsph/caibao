@@ -116,7 +116,7 @@ generated → draft → in_review → reviewed → approved → published → re
 ### 8.1 当前工程展示
 
 - App：`wzxsph/caibao@65151c9b7f6625aca2558d25a2b2907a852ceb7d` 的 `apps/web`；导入源 `wzxsph/douyin@9a461b89dda782e30db2fd399b29068e95d3ec33`。
-- 主 Pages：<https://wzxsph.github.io/caibao/#/home>；旧 `/douyin/` 只作历史预览。
+- 唯一 Pages：<https://wzxsph.github.io/caibao/#/home>；旧 `douyin` Pages 已退役为迁移跳转，不再作为产品版本载体。
 - 主 Pages run：`29972348075`，成功；应用发布 SHA 与文档后续提交 SHA 可以不同。
 - Media：Release `showcase-media-20260723-v1` 保存完整派生源；Pages artifact 同域暂存公开 10 条。
 - 发布是用户直接要求的工程展示，不代表生产内容审批或权利独立核验。
@@ -150,7 +150,7 @@ generated → draft → in_review → reviewed → approved → published → re
 
 ### 历史应用仓与迁移来源
 
-- `wzxsph/douyin` 保留旧上游历史、迁移期预览和媒体 Release，不再双向维护代码。
+- `wzxsph/douyin` 保留旧上游历史和媒体 Release，不再双向维护或部署应用；其 Pages workflow 已停用。
 - 精简导入来源为 `9a461b89`，旧仓合并提交为 `8f21006c`；追溯见 `apps/web/IMPORT_PROVENANCE.md` 和 ADR-0004。
 - 媒体不进任一 Git 历史；Release 保存完整派生，主仓 Actions 只把 10 条复制进临时 Pages artifact；密钥和模型原始响应不进 Git。
 - 所有后续应用变更在 `caibao` 主仓走功能分支、意图明确的提交、PR 或用户明确要求的普通 main push。
