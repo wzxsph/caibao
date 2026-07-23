@@ -55,7 +55,11 @@ const rawExperience = {
         title: '体育赛事的经济引擎',
         body: '大型赛事的经济价值分三层：转播权卖给全球媒体、赞助商获得品牌曝光、主办国获得旅游和基建投资。FIFA在这三层都有收入。',
         keyPoint: '赛事经济=转播权+赞助+主办国投入产出，FIFA是核心分配者。',
-        feedback: '你理解了体育赛事的商业三层结构，这是分析FIFA生意模式的基础。'
+        feedback: '你理解了体育赛事的商业三层结构，这是分析FIFA生意模式的基础。',
+        chapterLabel: '1. 历史上的资本去向',
+        whyNow: '视频开头介绍降息与资本流动，需要先建立认知框架',
+        lookAhead: '接下来会分析具体国家案例（巴西、日本）的资本去向',
+        reference: 'FIFA 2023 Financial Report, Reinhart & Rogoff 2009'
       }
     },
     {

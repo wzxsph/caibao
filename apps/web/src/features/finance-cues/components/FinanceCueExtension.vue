@@ -12,7 +12,7 @@ import { advanceCueOrchestrator } from '../orchestrator'
 import { experienceRepository } from '../repository'
 import { useFinanceCueStore } from '../session-store'
 import { buildLearningSummary, latestActions } from '../summary'
-import { awardDemoCoins, DEMO_FINANCE_LEVEL, DEMO_WALLET_EVENT, loadDemoWallet } from '../wallet'
+import { awardDemoCoins } from '../wallet'
 import CaibaoHalfSheet from './CaibaoHalfSheet.vue'
 import CaibaoChat from './CaibaoChat.vue'
 import CuePill from './CuePill.vue'
@@ -39,8 +39,6 @@ const activeCue = ref<TimelineTrigger | null>(null)
 const expandedCue = ref<TimelineTrigger | null>(null)
 const feedback = ref('')
 const feedbackAllowsRetry = ref(false)
-const walletCoins = ref(loadDemoWallet().coins)
-const coinPulse = ref(false)
 const summaryOpen = ref(false)
 const chatOpen = ref(false)
 const briefVisible = ref(false)
@@ -167,14 +165,7 @@ onBeforeUnmount(() => {
   clearBriefTimer()
   releasePlaybackInteraction('unmounted', false)
   emit('sheet-open-change', false)
-  if (typeof window !== 'undefined') window.removeEventListener(DEMO_WALLET_EVENT, syncWallet)
 })
-
-if (typeof window !== 'undefined') window.addEventListener(DEMO_WALLET_EVENT, syncWallet)
-
-function syncWallet() {
-  walletCoins.value = loadDemoWallet().coins
-}
 
 function clearCueTimer() {
   if (cueTimer) clearTimeout(cueTimer)
@@ -289,11 +280,6 @@ function complete(payload: {
     coinsAwarded: reward.awarded ? rewardCoins : 0,
     evidenceIds: trigger.evidenceIds
   })
-  walletCoins.value = reward.coins
-  if (reward.awarded) {
-    coinPulse.value = true
-    window.setTimeout(() => (coinPulse.value = false), 700)
-  }
   feedback.value = evaluation?.explanation ?? payload.feedback
   feedbackAllowsRetry.value = false
 }
@@ -365,15 +351,17 @@ function releasePlaybackInteraction(reason: InteractionExitReason, allowResume: 
 
 <template>
   <div v-if="experience" class="finance-extension" data-testid="finance-cue-extension">
-    <div class="agent-bar" :class="{ 'coin-pulse': coinPulse }">
-      <img :src="caibaoImage" alt="" />
-      <span>
-        <b>财包 Agent</b>
-        <small>财经等级 {{ DEMO_FINANCE_LEVEL }} 级 · 社交标识 Demo</small>
-      </span>
-      <em>🪙 {{ walletCoins }}</em>
-      <button type="button" @click.stop="openChat">问财包</button>
-    </div>
+    <button
+      type="button"
+      class="caibao-fab"
+      data-testid="caibao-fab"
+      aria-label="打开财包对话"
+      @click.stop="openChat"
+      @pointerdown.stop
+      @pointerup.stop
+    >
+      <img :src="caibaoImage" alt="财包" />
+    </button>
     <aside v-if="briefVisible && experience.openingBrief" class="opening-brief" role="status">
       <button type="button" aria-label="关闭财包导读" @click.stop="dismissBrief">×</button>
       <small>{{ experience.openingBrief.contentType }}</small>
@@ -470,72 +458,27 @@ function releasePlaybackInteraction(reason: InteractionExitReason, allowResume: 
   pointer-events: none;
 }
 
-.agent-bar {
+.caibao-fab {
   position: absolute;
-  top: calc(62px + env(safe-area-inset-top));
-  left: 14px;
-  right: 14px;
-  z-index: 12;
-  display: flex;
-  min-height: 44px;
-  box-sizing: border-box;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 10px 5px 6px;
-  color: rgba(255, 255, 255, 0.86);
-  background: rgba(0, 0, 0, 0.46);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
-  backdrop-filter: blur(8px);
+  top: calc(16px + env(safe-area-inset-top));
+  left: 16px;
+  z-index: 30;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background: rgba(255, 213, 65, 0.96);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.32);
+  cursor: pointer;
+  pointer-events: auto;
 
   img {
-    width: 32px;
-    height: 32px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    background: #fff4c2;
+    object-fit: cover;
   }
-
-  span {
-    display: grid;
-    min-width: 0;
-    flex: 1;
-  }
-
-  b {
-    font-size: 11px;
-  }
-
-  small {
-    overflow: hidden;
-    font-size: 9px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  em {
-    color: #ffd541;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 800;
-  }
-
-  button {
-    min-width: 64px;
-    min-height: 44px;
-    color: #272217;
-    background: #ffd541;
-    border: 0;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 800;
-    cursor: pointer;
-  }
-
-  pointer-events: auto;
-}
-
-.agent-bar.coin-pulse {
-  animation: coin-pulse 0.7s ease;
 }
 
 .opening-brief {

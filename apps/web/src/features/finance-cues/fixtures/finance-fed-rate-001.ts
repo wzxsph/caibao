@@ -57,7 +57,11 @@ const rawExperience = {
         title: '财包先陪你认认"资本流动"',
         body: '降息降低一部分美元资产回报后，资本可能寻找更高的风险调整后回报。但去向仍受风险、汇率和流动性约束。',
         keyPoint: '降息只是改变比较条件，不直接指定资金终点。',
-        feedback: '对，资金先做相对比较。带着这个概念继续看。'
+        feedback: '对，资金先做相对比较。带着这个概念继续看。',
+        chapterLabel: '1. 历史上的降息与资本去向',
+        whyNow: '视频开场讨论便宜美元与跨境流动的基本概念',
+        lookAhead: '接下来分析历史样本的相关性 vs 因果性',
+        reference: 'Bernanke & Kuttner 2005, BIS Quarterly Review 2024'
       }
     },
     // Cue 2: predict at 35s → quick_judgment

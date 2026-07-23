@@ -55,7 +55,11 @@ const rawExperience = {
         title: '美国AI资本的分配地图',
         body: '美国AI投资高度集中：OpenAI、Anthropic等闭源巨头获得数百亿美元融资，算力基础设施公司拿到最大份额。资本集中在少数玩家手中，形成了"钱→算力→模型→数据飞轮→更多钱"的正循环。',
         keyPoint: 'AI资本遵循幂律分布——少数头部公司拿走了绝大多数资金，算力是最大投入项。',
-        feedback: '你看到了AI资本的分配地图，理解资本集中的核心逻辑。'
+        feedback: '你看到了AI资本的分配地图，理解资本集中的核心逻辑。',
+        chapterLabel: '1. AI 资本格局',
+        whyNow: '视频先建立谁在投资 AI 的整体图景',
+        lookAhead: '接下来分析资本集中度与开源 vs 闭源',
+        reference: 'CB Insights State of AI 2024, PitchBook AI Deal Tracker'
       }
     },
     {

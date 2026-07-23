@@ -4,6 +4,7 @@ import { RouterLink, useRoute } from 'vue-router'
 import caibaoImage from '@/features/finance-cues/assets/caibao.png'
 import CaibaoChat from '@/features/finance-cues/components/CaibaoChat.vue'
 import { buildEvidenceReport, reportShareText } from '@/features/finance-cues/report'
+import type { ReportPerspective } from '@/features/finance-cues/contracts'
 import { renderReportShareCard } from '@/features/finance-cues/share-card'
 import { useFinanceCueStore } from '@/features/finance-cues/session-store'
 import { DEMO_FINANCE_LEVEL, loadDemoWallet } from '@/features/finance-cues/wallet'
@@ -84,6 +85,11 @@ function formatTimestamp(ms: number): string {
   const seconds = safe % 60
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
+
+const expandedPerspective = ref<ReportPerspective | null>(null)
+function openPerspective(entry: ReportPerspective) {
+  expandedPerspective.value = expandedPerspective.value === entry ? null : entry
+}
 </script>
 
 <template>
@@ -162,14 +168,26 @@ function formatTimestamp(ms: number): string {
 
       <section>
         <h2>财经事件影响到谁</h2>
-        <div class="perspective-grid">
-          <article v-for="entry in report.perspectives" :key="entry.audience">
-            <h3>{{ entry.audience }}</h3>
-            <p><b>影响：</b>{{ entry.impact }}</p>
-            <p><b>原因：</b>{{ entry.reason }}</p>
-            <p><b>观察与应对：</b>{{ entry.response }}</p>
-          </article>
-        </div>
+        <ol class="poi-perspectives" data-testid="perspective-pois">
+          <li v-for="entry in report.perspectives" :key="entry.audience" class="poi-perspective">
+            <button
+              type="button"
+              class="poi-pill"
+              :aria-label="`展开 ${entry.audience} 影响细节`"
+              @click.stop="openPerspective(entry)"
+            >
+              <span class="poi-icon">🔗</span>
+              <span class="poi-text">{{ entry.audience }}</span>
+              <small class="poi-impact">{{ entry.impact.slice(0, 24) }}{{ entry.impact.length > 24 ? '…' : '' }}</small>
+            </button>
+          </li>
+        </ol>
+        <aside v-if="expandedPerspective" class="poi-detail">
+          <h4>{{ expandedPerspective.audience }}的影响</h4>
+          <p><b>影响：</b>{{ expandedPerspective.impact }}</p>
+          <p><b>原因：</b>{{ expandedPerspective.reason }}</p>
+          <p><b>观察与应对：</b>{{ expandedPerspective.response }}</p>
+        </aside>
       </section>
 
       <section class="suggestions">
@@ -218,13 +236,21 @@ function formatTimestamp(ms: number): string {
   padding: 20px;
   color: #28261f;
   background: #eee8dc;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 .back {
   display: inline-flex;
-  min-height: 44px;
   align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
   color: #5e543e;
   text-decoration: none;
+  font-size: 18px;
 }
 .report-card {
   max-width: 980px;
@@ -233,6 +259,8 @@ function formatTimestamp(ms: number): string {
   background: #fffaf0;
   border-radius: 28px;
   box-shadow: 0 18px 60px rgba(66, 50, 20, 0.14);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
 }
 header {
   display: flex;
@@ -240,14 +268,15 @@ header {
   align-items: center;
 }
 header img {
-  width: 96px;
-  height: 96px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: #fff0b2;
 }
 header h1 {
   margin: 5px 0;
-  font-size: clamp(24px, 5vw, 44px);
+  font-size: clamp(18px, 2.6vw, 24px);
+  line-height: 1.3;
 }
 header p,
 header small {
@@ -261,8 +290,7 @@ header small {
   margin: 20px 0;
 }
 .metrics span,
-.mastery-grid article,
-.perspective-grid article {
+.mastery-grid article {
   padding: 12px;
   background: #fff;
   border: 1px solid #e7dcc6;
@@ -293,8 +321,7 @@ section h2 {
   color: #8c7963;
   font-size: 12px;
 }
-.mastery-grid,
-.perspective-grid {
+.mastery-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
@@ -309,12 +336,37 @@ section h2 {
 .mastery-grid article.pending b {
   color: #c2772b;
 }
-.perspective-grid article h3 {
-  color: #8a681b;
+.poi-perspectives {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
 }
-.perspective-grid article p {
-  line-height: 1.55;
+.poi-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 6px 12px;
+  background: #f5ead0;
+  border: 1px solid rgba(217, 170, 44, 0.3);
+  border-radius: 22px;
+  font-size: 13px;
+  color: #2a2820;
+  cursor: pointer;
 }
+.poi-pill .poi-icon { color: #8a681b; }
+.poi-pill .poi-impact { color: #8a681b; font-size: 11px; }
+.poi-detail {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid #e7dcc6;
+  border-radius: 14px;
+}
+.poi-detail h4 { margin: 0 0 8px; color: #8a681b; }
+.poi-detail p { margin: 4px 0; line-height: 1.55; }
 .reasoning {
   padding: 18px;
   background: #fff;
@@ -492,14 +544,13 @@ section h2 {
     border-radius: 20px;
   }
   header img {
-    width: 72px;
-    height: 72px;
+    width: 56px;
+    height: 56px;
   }
   .metrics {
     grid-template-columns: repeat(2, 1fr);
   }
   .mastery-grid,
-  .perspective-grid,
   .reasoning-paths {
     grid-template-columns: 1fr;
   }

@@ -39,7 +39,11 @@ const contextCardTriggerSchema = z.object({
     title: z.string().min(1),
     body: z.string().min(1),
     keyPoint: z.string().min(1),
-    feedback: z.string().min(1).max(80)
+    feedback: z.string().min(1).max(80),
+    chapterLabel: z.string().optional(),
+    whyNow: z.string().optional(),
+    lookAhead: z.string().optional(),
+    reference: z.string().optional()
   })
 })
 

@@ -122,6 +122,19 @@ function dismissCue() {
         <small>记住这一点</small>
         <b>{{ trigger.payload.keyPoint }}</b>
       </div>
+      <p v-if="trigger.payload.chapterLabel" class="context-chapter">
+        <small>本节</small><span>{{ trigger.payload.chapterLabel }}</span>
+      </p>
+      <p v-if="trigger.payload.whyNow" class="context-why">
+        <small>为什么现在</small><span>{{ trigger.payload.whyNow }}</span>
+      </p>
+      <p v-if="trigger.payload.lookAhead" class="context-lookahead">
+        <small>接下来</small><span>{{ trigger.payload.lookAhead }}</span>
+      </p>
+      <p v-if="trigger.payload.reference" class="context-reference">
+        <small>参考</small><span>{{ trigger.payload.reference }}</span>
+      </p>
+      <p v-if="trigger.payload.feedback" class="context-feedback">{{ trigger.payload.feedback }}</p>
       <button class="primary" type="button" @click.stop="completeContext">我知道了</button>
     </template>
 
@@ -305,6 +318,51 @@ function dismissCue() {
     font-size: 14px;
     line-height: 1.5;
   }
+}
+
+.context-chapter,
+.context-why,
+.context-lookahead,
+.context-reference {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 6px 0;
+  padding: 8px 10px;
+  background: #f5ead0;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.context-why { background: #fdf4e0; }
+.context-lookahead { background: #fcf0d2; }
+.context-reference { background: #efe9dc; font-size: 11px; color: #5e5648; }
+.context-chapter small,
+.context-why small,
+.context-lookahead small,
+.context-reference small {
+  flex: 0 0 auto;
+  color: #8a681b;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+.context-chapter span,
+.context-why span,
+.context-lookahead span,
+.context-reference span {
+  flex: 1 1 auto;
+  color: #2a2820;
+}
+.context-feedback {
+  margin: 8px 0;
+  padding: 8px 12px;
+  color: #4e493f;
+  font-size: 12px;
+  line-height: 1.6;
+  background: #fff;
+  border-left: 3px solid #d9aa2c;
+  border-radius: 0 8px 8px 0;
 }
 
 .primary,

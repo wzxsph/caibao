@@ -55,7 +55,11 @@ const rawExperience = {
         title: '自动驾驶的商业化技术栈',
         body: '自动驾驶不是单一技术突破，而是感知、规划、控制三层的系统集成。商业化还额外需要数据闭环、车规量产、运营牌照三个中间层——这些才是L4公司IPO的底气所在。',
         keyPoint: '技术栈是地基，但商业化需要数据闭环和量产能力两个中间层才能真正变现。',
-        feedback: '你理解了自动驾驶的技术栈全景，这是分析商业化路径的基础。'
+        feedback: '你理解了自动驾驶的技术栈全景，这是分析商业化路径的基础。',
+        chapterLabel: '1. 自动驾驶技术栈',
+        whyNow: '视频要从感知-规划-控制三层结构讲起',
+        lookAhead: '接下来会分析技术→商业→IPO的中间环节',
+        reference: 'SAE J3016 Levels of Driving Automation, McKinsey Auto 2024'
       }
     },
     {

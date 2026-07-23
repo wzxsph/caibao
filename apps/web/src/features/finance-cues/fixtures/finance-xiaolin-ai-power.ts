@@ -55,7 +55,11 @@ const rawExperience = {
         title: 'AI的电力胃口有多大',
         body: '训练一个大模型需要几万度电，相当于数百个家庭一年的用电量。推理阶段持续运行的数据中心用电量更为惊人，一座超大规模数据中心可以消耗一个中小城市的全部电力。',
         keyPoint: 'AI的电力需求已经不是锦上添花，而是基础设施级别的能源挑战。',
-        feedback: '你对AI的电力消耗规模有了体感，这是理解电网瓶颈的基础。'
+        feedback: '你对AI的电力消耗规模有了体感，这是理解电网瓶颈的基础。',
+        chapterLabel: '1. AI 电力需求',
+        whyNow: '视频开场要建立AI 算力增长的基本量级认知',
+        lookAhead: '接下来会分析美国电网是否能承载这种增长',
+        reference: 'IEA Electricity 2024 Report, Epoch AI 2024 Compute Forecast'
       }
     },
     {
