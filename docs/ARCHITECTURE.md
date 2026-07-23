@@ -2,7 +2,8 @@
 
 状态：PRD V2.7 Review Candidate 配套架构  
 日期：2026-07-23  
-应用线上基线：`wzxsph/douyin@9b5bd02503c951a8b416e66bdd81f48ba89931d5`
+唯一代码源：`wzxsph/caibao/apps/web`  
+导入源：`wzxsph/douyin@9a461b89dda782e30db2fd399b29068e95d3ec33`
 
 ## 1. 架构目标
 
@@ -12,7 +13,9 @@
 
 ```mermaid
 flowchart TD
-  Browser["浏览器"] --> Pages["GitHub Pages · Vue/Vite"]
+  Repo["caibao/apps/web"] --> CI["caibao GitHub Actions"]
+  CI --> Pages["caibao GitHub Pages · Vue/Vite"]
+  Browser["浏览器"] --> Pages
   Pages --> Bundle["公开子集 · 10 Catalog + 10 Experience"]
   Pages --> Media["Pages 同域 media · 10 MP4 + 10 JPG"]
   Pages --> Source["10 个抖音原作品链接"]
@@ -20,15 +23,16 @@ flowchart TD
   Manifest --> Mock["完整 25 条确定性 Mock generator"]
   Public["public-video-ids.json · 5+5"] --> Bundle
   Prepare --> Release
-  Release["GitHub Release · 25 MP4 + 25 JPG"] --> Stage["Actions 校验并暂存 10 条"]
+  Release["旧 douyin 仓 GitHub Release · 25 MP4 + 25 JPG"] --> Stage["主仓 Actions 校验并暂存 10 条"]
   Stage --> Media
   Mock --> Bundle
 ```
 
 ### 2.1 发布对象
 
-- Pages：<https://wzxsph.github.io/douyin/#/home>
+- 主 Pages：<https://wzxsph.github.io/caibao/#/home>；旧 `/douyin/` 只作迁移期历史预览。
 - App：`Vue 3 + Vite + TypeScript`，仅推荐流和作者页。
+- Source：前端、Express、生成管线和测试全部位于 `apps/web/`；旧应用仓不再双向维护。
 - Release：`showcase-media-20260723-v1`，50 个资产、174,689,523 bytes。
 - Bundle：提交内生成 JSON 保留 25 条目录、25 个 `internal_poc` Experience、141 个 automatic 触点；运行时按配置过滤为 10 条。
 - 作者页：公开 `xiaolin=5`、`dalu-xing-lu=5`；完整源分布仍为 15/10。
@@ -92,8 +96,24 @@ stateDiagram-v2
 
 - `pause-for-interaction(interactionId)` 捕获真实 `wasPlayingBeforeInteraction` 和位置。
 - `release-interaction(interactionId, reason, allowResume)` 幂等恢复。
-- 不写 `currentTime`、`muted`、`volume`、`playbackRate`。
+- 财包状态机不写 `currentTime`、`muted`、`volume`、`playbackRate`；用户显式声音动作可修改 `muted`。
 - 半屏打开期间屏蔽背景点击播放；上下文切换不自动恢复旧视频。
+
+### 5.1 浏览器声音策略
+
+```mermaid
+stateDiagram-v2
+  [*] --> MutedAutoplay: 首次访问
+  MutedAutoplay --> SoundEnabled: 用户点击声音/视频/播放键
+  MutedAutoplay --> RetryRequired: autoplay 被拒绝
+  RetryRequired --> SoundEnabled: 用户再次点击
+  SoundEnabled --> MutedByUser: 用户显式静音
+  MutedByUser --> SoundEnabled: 用户显式开启
+```
+
+- 首次先静音尝试自动播放，同时展示 44px 有声入口。
+- unmute 与 `play()` 必须在同一次用户手势中执行；成功后保存站点声音偏好。
+- `play()` 被拒绝时显示可重试状态，不把媒体标记为损坏，也不伪造播放成功。
 
 ## 6. 目录与媒体
 
@@ -101,7 +121,7 @@ stateDiagram-v2
 
 1. `prepare:showcase-media` 读取忽略的 manifest，生成 H.264/AAC `yuv420p` fast-start 视频和 JPG。
 2. `generate:showcase-content` 生成 Schema 校验的静态 bundle。
-3. 25 组视频/封面上传 Release；bundle、10 条公开配置和代码进入 Git，媒体不进入 Git。
+3. 25 组视频/封面保留在旧 `douyin` Release；bundle、10 条公开配置和代码进入 `caibao` Git，媒体不进入 Git。
 4. Pages 构建设置 `VITE_SHOWCASE_MEDIA_BASE_URL=./media/`，再由 `stage:showcase-pages-media` 校验公开 10 条 SHA/bytes/格式并写入临时 artifact。
 5. 浏览器从 Pages 同域读取 `video/mp4`，必须支持 200/206 和 `Accept-Ranges`，不再经历 Release 302 与 attachment 响应。
 
@@ -165,4 +185,4 @@ P0 可用 Express 内存态 + `localStorage` 镜像；事件以 `eventId` 幂等
 - 真实 ASR/OCR/视觉证据链未在 25 条上建立。
 - Review/Publish 与 Session/Event/Report 未闭环。
 - Release 与 Pages 媒体到期下架仍需负责人、提醒和操作手册。
-- 公开 10 条逐媒体与六类 E2E 尚未完整执行；当前 8 项 E2E 覆盖代表路径与四视口。
+- 公开 10 条逐媒体与六类 E2E 尚未完整执行；当前 9 项 E2E 覆盖代表路径、四视口和首次有声入口。

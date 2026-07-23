@@ -15,7 +15,8 @@
 
 ### M0｜仓库与文档治理
 
-- [x] 产品仓、应用仓、PM 参考仓边界明确。
+- [x] 前端、Express、生成管线和测试精简迁入产品主仓 `apps/web/`，单一代码源明确。
+- [x] 旧 `wzxsph/douyin` 固化为历史部署/媒体 Release，不再双向维护；来源记录见 `apps/web/IMPORT_PROVENANCE.md`。
 - [x] V2.7 为最新 Review Candidate，V2.0 仍为批准基线。
 - [x] 自动触点固定数量上限取消。
 - [x] 密钥、媒体、运行产物与子仓隔离。
@@ -45,14 +46,15 @@
 - [x] 入口曝光不停播、点击暂停、退出恢复。
 - [x] 半屏≤48vh、无蒙层、作者/财包分离、时间轴重访。
 - [x] 来源归属、Mock/未审核/非投资建议披露。
+- [x] 首次静音自动播放提供显式“点击开启声音”；一次手势解除静音并播放、保存偏好，自动播放失败可重试。
 
-### M4｜测试、PR 与部署
+### M4｜测试、迁移与部署
 
-- [x] Client 45、Server 131、Playwright 8。
+- [x] 精简主仓 Client 42、Server 131、Playwright 9。
 - [x] 两套 type-check、build、production audit、diff-check。
-- [x] PR #3（产品壳）与 PR #4（10 条同域媒体）合并到 `wzxsph/douyin/master`。
-- [x] Pages workflow run `29970251130` 成功。
-- [x] 线上 10 条来源、作者 5/5、同域播放与媒体 200/206 验证；暂停恢复由既有 E2E 锁定。
+- [x] 旧仓 PR #3/#4 提供产品壳与同域媒体，PR #5 修复显式有声入口；旧站 run `29971301855` 成功。
+- [x] 主仓新增 `.github/workflows/deploy-caibao-pages.yml`，从 `apps/web` 构建并校验/暂存十条媒体。
+- [x] 线上根因确认：媒体可播且 `readyState=4`，无声来自强制 `muted` 与浏览器自动播放限制，不是视频损坏。
 
 ## 3. 下一阶段：真实多模态垂直切片
 
@@ -142,4 +144,4 @@
 
 ## 7. 下一位 Agent 第一任务
 
-先做 M9：为 `showcase-media-20260723-v1` 和 Pages media artifact 写可执行 retire/续期 Runbook 与负责人字段，并验证两类资产都能停止分发。随后才进入 M5，选择 2–3 条黄金视频搭建真实证据链。
+所有新工作从 `/home/samsong/Desktop/maybe/caibao/apps/web` 开始，不再修改旧 `refer/douyin`。先做 M9：为 `showcase-media-20260723-v1` 和 Pages media artifact 写可执行 retire/续期 Runbook 与负责人字段；随后进入 M5，选择 2–3 条黄金视频搭建真实证据链。

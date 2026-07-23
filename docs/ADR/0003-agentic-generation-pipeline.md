@@ -1,13 +1,13 @@
 # ADR-0003｜Agentic 生成管线：有界多阶段与规则裁决
 
-状态：已采纳；核心实现见 `refer/douyin` 提交 `50b96560`
+状态：已采纳；核心历史实现见旧仓 `50b96560`，当前实现位于 `apps/web/server`
 日期：2026-07-22
 关联：细化 `ADR-0002｜证据优先的离线管线与人工发布门禁`（非替代）
 规格：`docs/GENERATION_PIPELINE_DESIGN.md`
 
 ## 背景
 
-ADR-0002 锁定「播放前完成解析/规划/审核、模型输出必须引用 evidenceId、确定性 Planner 定数量间距、只产 DraftExperience」。本 ADR 决策时，`refer/douyin/server` 是**单次 LLM、无自检修复**的线性链，且存在三处结构缺口：语义类型扁平（因果边无 from/to）、触点候选无 payload、触点 kind 命名在 server/前端/PRD 三层不一致。ADR-0002 的门禁思想正确，但生成过程本身不足以产出可审核、可上线的内容。这些核心缺口已由 `50b96560` 修复，但真实供应商/媒体与人工发布门仍未验证。
+ADR-0002 锁定「播放前完成解析/规划/审核、模型输出必须引用 evidenceId、确定性 Planner 定数量间距、只产 DraftExperience」。本 ADR 决策时，旧 `refer/douyin/server` 是**单次 LLM、无自检修复**的线性链，且存在三处结构缺口：语义类型扁平（因果边无 from/to）、触点候选无 payload、触点 kind 命名在 server/前端/PRD 三层不一致。ADR-0002 的门禁思想正确，但生成过程本身不足以产出可审核、可上线的内容。这些核心缺口已由历史提交 `50b96560` 修复，并按 ADR-0004 迁入 `apps/web/server`；真实供应商/媒体与人工发布门仍未验证。
 
 ## 决策
 

@@ -20,17 +20,19 @@
 | D-08 | 到期处置   | 2026-08-22 未续期时下架 Release 并部署无媒体 Pages artifact，而非只隐藏前端      | 待版权/负责人确认 |
 | D-09 | 报告与安全 | 无总分、虚假精度、财富画像和投资建议                                             | 待联合确认        |
 | D-10 | 权威切换   | 真实签字、阻塞闭合后才能批准 V2.7                                                | 待联合确认        |
+| D-11 | 声音恢复   | 首次静音自动播放 + 显式有声入口；用户手势内 unmute + play；失败可重试             | 用户已直接裁决    |
+| D-12 | 代码归属   | 前后端、生成管线和测试统一在 `caibao/apps/web`；旧 `douyin` 不再双向维护          | 用户已直接裁决    |
 
 ## 2. 已验证工程事实
 
-- [x] `wzxsph/douyin@9b5bd02503c951a8b416e66bdd81f48ba89931d5` 已合并。
-- [x] PR #3、PR #4 与 Pages 工作流 `29970251130` 成功。
+- [x] 旧仓声音修复 PR #5 已合并为 `8f21006c`，工作流 `29971301855` 成功。
+- [x] 精简应用迁入主仓 `apps/web`，来源记录、GPL 许可与主仓 Pages workflow 已建立。
 - [x] Release 包含 25 个 MP4 + 25 个 JPG，共 174,689,523 bytes。
 - [x] 完整生成目录/Experience 为 25/25；公开目录/原作品链接为 10/10。
 - [x] 公开作者页小Lin说 5 条；大陆姓陆 5 条。
 - [x] 141 个 automatic 触点；当前生成分布 3–6，没有 `maxAutomaticCues=4`。
-- [x] client 45、server 131、Playwright 8、两套 type-check、build、production audit、diff-check 通过。
-- [x] 线上同域视频 `readyState=4` 且持续播放；MP4 完整请求 200、Range 206；暂停/恢复 E2E 通过。
+- [x] 精简主仓 client 42、server 131、Playwright 9、两套 type-check、build、production audit、diff-check 通过。
+- [x] 线上同域视频 `readyState=4` 且持续播放；无声根因为强制静音 + 浏览器策略，不是媒体损坏；显式有声入口、偏好保存、暂停/恢复已有 E2E。
 
 ## 3. 分角色检查
 
@@ -46,6 +48,8 @@
 - [x] Pages 静态 bundle、同域 artifact 与 Release 源分层，Git 不含视频。
 - [x] 25 条目录与六类 Payload 有 Schema/生成测试。
 - [x] pause/release 状态机不 seek、不改音量/倍速。
+- [x] 首次声音入口在同一次用户手势中解除静音并播放；财包状态机不改声音偏好。
+- [x] 主仓为唯一代码源；旧仓只保留历史部署与媒体 Release。
 - [ ] `internal_poc` 与未来 Approved API 硬隔离。
 - [ ] Release 与 Pages 媒体到期下架有自动提醒、负责人和可审计操作手册。
 

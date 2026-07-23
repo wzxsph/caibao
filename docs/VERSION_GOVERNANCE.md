@@ -61,7 +61,7 @@ V2.7 批准标签只能是 `prd-v2.7-approved`，当前不得创建。
 | `ruleVersion`      | `finance-causal/1.0.0`       | 确定性方向               |
 | `plannerVersion`   | `cue-planner/1.0.0`          | 触点选择复现             |
 | `promptVersion`    | `showcase-mock-prompt/1.0.0` | 生成差异                 |
-| `appCommit`        | `9b5bd025...`                | 运行实现                 |
+| `appCommit`        | `caibao` 精确发布 SHA        | `apps/web` 运行实现      |
 | `mediaFingerprint` | SHA-256                      | 媒体一致性               |
 | `subtitleVersion`  | 内容 ID                      | 字幕/时间码追溯          |
 | `mediaRelease`     | `showcase-media-20260723-v1` | 公网媒体批次与下架       |
@@ -115,8 +115,8 @@ generated → draft → in_review → reviewed → approved → published → re
 
 ### 8.1 当前工程展示
 
-- App：`wzxsph/douyin@9b5bd02503c951a8b416e66bdd81f48ba89931d5`。
-- Pages：<https://wzxsph.github.io/douyin/#/home>。
+- App：`wzxsph/caibao/apps/web`；导入源 `wzxsph/douyin@9a461b89dda782e30db2fd399b29068e95d3ec33`。
+- 主 Pages：<https://wzxsph.github.io/caibao/#/home>；旧 `/douyin/` 只作历史预览。
 - Media：Release `showcase-media-20260723-v1` 保存完整派生源；Pages artifact 同域暂存公开 10 条。
 - 发布是用户直接要求的工程展示，不代表生产内容审批或权利独立核验。
 
@@ -139,19 +139,20 @@ generated → draft → in_review → reviewed → approved → published → re
 
 ## 9. Git 治理
 
-### 产品仓
+### 主仓
 
 - 分支 `main`，远端 `wzxsph/caibao`。
+- 文档、前端、Express 后端、生成管线与测试统一跟踪；运行代码位于 `apps/web/`。
 - 当前 V2.7 文档基于 `096bf3d` 之后的同一线性历史。
 - 产品仓未跟踪 `.vscode/`、`output/real-runs/`、`output/screenshots/` 不纳入提交。
-- 不 force-push，不删除子仓 `.git`，不把 `refer/` 当普通目录提交。
+- 不 force-push；不修改或清理 ignored 的 `refer/` 历史/参考工作树。
 
-### 应用仓
+### 历史应用仓与迁移来源
 
-- `origin=wzxsph/douyin`，`upstream=zyronon/douyin`；绝不 push upstream。
-- 25 条生成基线通过 PR #3；10 条同域公开展示通过 PR #4，当前 `master=9b5bd025`。
-- 媒体不进 Git；Release 保存完整派生，Actions 只把 10 条复制进临时 Pages artifact；密钥和模型原始响应不进 Git。
-- 新变更走功能分支、意图明确的提交、PR 和精确 head SHA 合并。
+- `wzxsph/douyin` 保留旧上游历史、迁移期预览和媒体 Release，不再双向维护代码。
+- 精简导入来源为 `9a461b89`，旧仓合并提交为 `8f21006c`；追溯见 `apps/web/IMPORT_PROVENANCE.md` 和 ADR-0004。
+- 媒体不进任一 Git 历史；Release 保存完整派生，主仓 Actions 只把 10 条复制进临时 Pages artifact；密钥和模型原始响应不进 Git。
+- 所有后续应用变更在 `caibao` 主仓走功能分支、意图明确的提交、PR 或用户明确要求的普通 main push。
 
 ## 10. PDF 与文档
 

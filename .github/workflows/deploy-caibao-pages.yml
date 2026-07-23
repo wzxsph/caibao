@@ -1,0 +1,71 @@
+name: Deploy Caibao Web to GitHub Pages
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - 'apps/web/**'
+      - '.github/workflows/deploy-caibao-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: caibao-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: apps/web/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify application
+        run: pnpm test && pnpm type-check && pnpm type-check:server
+
+      - name: Build frontend for Pages
+        env:
+          VITE_SHOWCASE_MEDIA_BASE_URL: ./media/
+        run: pnpm build-gp-pages
+
+      - name: Stage ten same-origin media items
+        env:
+          SHOWCASE_MEDIA_SOURCE_BASE_URL: https://github.com/wzxsph/douyin/releases/download/showcase-media-20260723-v1/
+        run: pnpm stage:showcase-pages-media
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./apps/web/dist
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

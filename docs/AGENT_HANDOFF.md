@@ -2,201 +2,123 @@
 
 更新时间：2026-07-23  
 产品候选：PRD V2.7 Review Candidate  
-线上应用：`wzxsph/douyin@9b5bd02503c951a8b416e66bdd81f48ba89931d5`
+唯一代码源：`wzxsph/caibao/apps/web`
 
 ## 0. 5 分钟摘要
 
-- 线上：<https://wzxsph.github.io/douyin/#/home>。
-- 完整 manifest 和内容生成覆盖 25 条；用户最新决定将公开工程展示收敛为其中 10 条。
-- 页面只保留推荐流和作者页；公开页小Lin说 5 条、大陆姓陆 5 条。
-- 25 个视频与 25 张封面保存在 GitHub Release，未进 Git；Actions 校验后只把公开 10 条暂存进 Pages artifact，每条页面有原作者与抖音原作品链接。
-- 25 套学习内容是确定性 LLM Mock，仅使用标题和 manifest 元数据，未跑最终 ASR/OCR/视觉、未经财经人审。
-- 入口曝光不停播，点击财包后暂停，完成/跳过/关闭后按进入前状态恢复。
-- **自动触点没有“最多 4 个”或其他固定数量上限。** 当前每条 3–6 个、共 141 个，只是六模板和时长形成的结果。
-- PRD V2.7 未批准；V2.0 仍为批准基线。不得创建 `prd-v2.7-approved`。
-- 当前最高风险：媒体窗口截至 2026-08-22；未续期必须同时下架 Release、部署无媒体 Pages artifact，不能只隐藏前端。
+- 主站：<https://wzxsph.github.io/caibao/#/home>；旧站 <https://wzxsph.github.io/douyin/#/home> 仅作迁移期历史预览。
+- 前端、Express 后端、生成管线和测试已精简迁入 `apps/web/`，以后只在 `caibao` 主仓修改。
+- 导入源为 `wzxsph/douyin@9a461b89dda782e30db2fd399b29068e95d3ec33`，旧仓合并提交为 `8f21006cc5fae25f1f1de11d2bdb25acbc431937`。
+- 迁移未携带约 616MB 的旧 Git 历史、旧页面/数据/抓取器、依赖、缓存、密钥或媒体；源码快照本身约 2.7MB。
+- 完整 manifest 与内容生成覆盖 25 条；公开展示其中 10 条，两位作者各 5 条。视频仍位于独立 Release，Pages 构建时只暂存公开十条。
+- 视频先按浏览器要求静音自动播放，页面显式显示“点击开启声音”。用户点击后在同一手势中解除静音并播放，站点记住选择；自动播放被拒绝时显示可重试入口。
+- 入口曝光不停播；点击财包暂停；完成/跳过/关闭后按进入前状态恢复。交互状态机本身不得修改声音、音量、倍速或播放位置。
+- 自动触点没有 4/6 个固定上限；当前 3–6 个只是 Mock 模板与时长结果。
+- V2.7 未批准，V2.0 仍为批准基线；不得创建 `prd-v2.7-approved`。
 
-## 1. 精确仓库与 Git 状态
-
-### 1.1 产品仓
+## 1. 仓库与工作树
 
 ```text
 path:   /home/samsong/Desktop/maybe/caibao
 remote: https://github.com/wzxsph/caibao.git
 branch: main
-V2.7 文档起始 parent: 096bf3dbbdeec2c216e3ddf28a9d76757dd19593
+app:    apps/web
 ```
 
-本文件与 V2.7 文档同提交发布；接手用 `git rev-parse HEAD` 获得产品仓精确文档 SHA。产品仓现有用户未跟踪目录：
+接手时执行：
+
+```bash
+cd /home/samsong/Desktop/maybe/caibao
+git status --short --branch
+git rev-parse HEAD
+git remote -v
+
+cd apps/web
+pnpm test
+```
+
+产品仓未跟踪 `.vscode/`、`output/real-runs/`、`output/screenshots/` 属于用户，不删除、不 stage。`refer/douyin` 与 `refer/moneybaby` 被父仓忽略，可能含其他 Agent 工作，不要 reset、清理或代提交。
+
+## 2. 迁移与所有权
+
+`apps/web/IMPORT_PROVENANCE.md` 是迁移追溯记录：
+
+- 功能源提交：`9a461b89...`，包含有声入口修复；
+- 旧仓合并提交：`8f21006...`；
+- 旧仓 PR：<https://github.com/wzxsph/douyin/pull/5>；
+- 旧仓部署：<https://github.com/wzxsph/douyin/actions/runs/29971301855>，成功；
+- 旧仓今后只保留历史部署和媒体 Release，不再双向手工同步。
+
+这是精简快照，不是 subtree 历史导入。保留了 Vue/Vite 推荐流、财包交互、Express、媒体校验、ASR/OCR/多模态 adapter、确定性生成管线及测试；未导入旧商城/消息/个人中心、旧推荐数据、通用爬虫、历史截图、多语言文档或视频。
+
+## 3. 发布结构
 
 ```text
-.vscode/
-output/real-runs/
-output/screenshots/
+GitHub Pages: https://wzxsph.github.io/caibao/#/home
+Workflow:     .github/workflows/deploy-caibao-pages.yml
+Web source:   apps/web
+Media source: https://github.com/wzxsph/douyin/releases/tag/showcase-media-20260723-v1
 ```
 
-不得删除、stage 或代提交。
+工作流在主仓 `main` 的 `apps/web/**` 或 workflow 变化时：安装依赖 → 单测/type-check → 构建 → 从 Release 下载并校验十条 MP4/JPG → 暂存到 `dist/media/` → Pages 部署。浏览器只读取 Pages 同域媒体，Git 历史不含媒体。
 
-### 1.2 应用仓
+Release 保存 25 个 H.264/AAC MP4 和 25 张封面；十条 Pages 媒体合计 68,687,281 bytes。完整清单只在本地 ignored 路径：
 
 ```text
-path:     /home/samsong/Desktop/maybe/caibao/refer/douyin
-origin:   https://github.com/wzxsph/douyin.git
-upstream: https://github.com/zyronon/douyin
-feature:  fix/pages-same-origin-media@88fe726dccb7b2170a57512bd51e00d89622c413
-master:   9b5bd02503c951a8b416e66bdd81f48ba89931d5
-PR:       https://github.com/wzxsph/douyin/pull/4
+apps/web/media-import/authorized-douyin/download-manifest.json
 ```
 
-PR #3 以精确 head SHA 合并。不得向 `upstream` push；不 force-push。
+## 4. 当前内容事实
 
-关键提交：
-
-- `70e05e70da8a5c1f1943f443f27e84cbdaf1c297`：25 条展示、Mock、推荐流/作者页、媒体准备与 Pages。
-- `dd6cfa0b57d980f067785683a2612fbef2d53229`：同步当时 `origin/master` 的 merge checkpoint。
-- `e85de2bfa1743aaea5204f6e1513de6d56c2e310`：PR #3 合并后的线上 `master`。
-- `88fe726dccb7b2170a57512bd51e00d89622c413`：10 条公开子集、同域媒体暂存和旧资源瘦身。
-- `9b5bd02503c951a8b416e66bdd81f48ba89931d5`：PR #4 合并后的当前线上 `master`。
-
-### 1.3 PM 参考仓
-
-```text
-path: /home/samsong/Desktop/maybe/caibao/refer/moneybaby
-reference: 7db765bab9efe1064321f03d992df42e62413a7c
-```
-
-只用于视觉、信息层级和内容结构取证。不迁 React/Vinext、暂停/seek、大遮罩、88–94% 面板或静态能力分数。
-
-## 2. GitHub 发布事实
-
-### 2.1 Media Release
-
-<https://github.com/wzxsph/douyin/releases/tag/showcase-media-20260723-v1>
-
-- 25 个 `.mp4` + 25 个 `.jpg`。
-- GitHub 记录总大小 174,689,523 bytes；本地目录约 167 MiB。
-- Release 仍是派生媒体源；浏览器不再直接请求其 302 跳转链。
-- 视频为 H.264/AAC 浏览器派生，源 HEVC 未上传。
-- Release tag 目标为 `dd6cfa0b...`；当前页面代码合并在 `9b5bd025...`。
-
-本地派生目录（ignored）：
-
-```text
-/home/samsong/Desktop/maybe/caibao/refer/douyin/.analysis-work/showcase-media/douyin-authorized-20260723-01/
-```
-
-### 2.2 Pages
-
-- URL：<https://wzxsph.github.io/douyin/#/home>
-- Workflow run：<https://github.com/wzxsph/douyin/actions/runs/29970251130>
-- 结果：success，31 秒。
-- 构建变量：`VITE_SHOWCASE_MEDIA_BASE_URL=./media/`。
-- `stage:showcase-pages-media` 从 Release 下载并校验公开 10 条，写入临时 `dist/media/`；视频和封面合计 68,687,281 bytes。
-- Pages artifact 移除旧 `demo/`、`data/`、`images/` 和 `libarchive.wasm`，最终本地构建约 67 MiB。
-
-### 2.3 线上浏览器验证
-
-- 抖音原作品链接 `10`，推荐位置为 `1 / 10`。
-- 作者 href 只有 `#/author/xiaolin` 和 `#/author/dalu-xing-lu`。
-- 首条视频从 `https://wzxsph.github.io/douyin/media/7664748624454192393.mp4` 加载，`readyState=4`、时长 173.71 秒、8 秒后仍在播放且无媒体错误。
-- 同域 MP4 完整请求 200，Range 0–1023 请求 206，`Content-Type: video/mp4`，无 Release 跳转与 attachment disposition。
-- 点击财包触点后 `paused=true`；450ms 内时间不增长。
-- 点击关闭后时间从 17.371 增至 18.499 秒且 `paused=false`。
-- `#/author/xiaolin` 与 `#/author/dalu-xing-lu` 均为 5 张作品卡。
-
-## 3. 产品不变量
-
-1. 完整清单有效 25 条是唯一输入集合；公开推荐严格等于 `src/showcase/public-video-ids.json` 的 10 条清单子集，不回退旧视频或底座 fixture。
-2. 轻触点是页内按钮，不是外链或路由。
-3. 入口曝光继续播放；点击进入暂停；退出恢复进入前状态。
-4. 不自动 seek，不改静音、音量、倍速；pause/release 幂等。
-5. 面板≤48vh、无蒙层；作者头像不被财包替换。
-6. 自动触点不设固定数量上限；至少间隔 45 秒、同时最多一个。
-7. `timeline_only` 由内容显式编排，不是超过 N 个后的溢出桶。
-8. 每条显示真实标题、作者、原作品链接和 Mock 边界；不伪造互动数据。
-9. 报告无总分、虚假精度、财富画像或投资建议。
-
-## 4. 当前数据与内容
-
-### 4.1 Bundle
-
-```text
-src/showcase/generated/showcase-bundle.json
-```
-
-- 生成源 Catalog 25 / Experience 25；运行时公开 `showcaseBundle` 过滤为 10 / 10。
-- 完整作者分布：`xiaolin=15`、`dalu-xing-lu=10`；公开作者页为 5/5。
+- 完整 Catalog / Experience：25 / 25；公开运行时：10 / 10。
+- 完整作者分布：小Lin说 15、大陆姓陆 10；公开作者页 5 / 5。
 - `contentVersion=showcase-mock@2026.07.23.1`。
-- `generation.mode=mock`。
-- `provider=deterministic_llm_mock`。
+- `generation.mode=mock`、`provider=deterministic_llm_mock`。
 - `evidenceBasis=title_and_manifest_metadata_only`。
 - `publishStatus=internal_poc`、`timecodeQuality=estimated_mock`。
+- 141 个 automatic 触点；1 条×3、1 条×4、4 条×5、19 条×6。六类模板构成当前结果，不是规范上限。
 
-### 4.2 触点
+## 5. 声音问题的根因与修复
 
-- 总计 141，全部 `automatic`。
-- 分布：1 条×3、1 条×4、4 条×5、19 条×6。
-- 类型：context 25、quick 25、causal 23、condition 23、counterexample 23、concept 22。
-- 当前最多 6 是六类模板的实现结果，**不是产品上限**。
+线上排查确认首条媒体 `readyState=4`、无媒体错误、时间持续增长，但页面每次激活卡片都会设置 `muted=true`。浏览器又不允许未经过用户手势的有声自动播放，于是用户只看到一个不醒目的静音按钮，容易判断为无声或无法播放。
 
-## 5. 当前测试证据
-
-在应用仓已通过：
+修复位于：
 
 ```text
-frontend Vitest: 11 files, 45 passed
-server Vitest:   21 files, 131 passed
-Playwright:      8 passed
-type-check:      client + server passed
-build:           passed
-audit --prod:    no vulnerabilities
-diff-check:      passed
+apps/web/src/showcase/sound-preference.ts
+apps/web/src/showcase/components/ShowcasePlayer.vue
+apps/web/e2e/finance-cues.spec.ts
 ```
 
-Playwright 视口：390×844、393×852、430×932、1280×900。覆盖推荐/作者、来源披露、曝光继续、点击暂停、48vh、恢复前态和旧路由重定向。
+行为：
 
-真实本地 Media API 冒烟：Catalog `ready`、total 25、0 exclusions；HEAD 200；Range 0–1023 返回 206/1024 bytes。线上 Pages 冒烟：公开 10 条、作者 5/5、同域 MP4 200/206、`readyState=4`。
+1. 首次加载静音自动播放，显示 44px “点击开启声音”。
+2. 点击声音入口、视频或中央播放键时，在同一次用户手势内执行 unmute + `play()`。
+3. 成功后把 `caibao-showcase-sound-enabled=true` 写入当前站点 localStorage。
+4. 若 `play()` 被拒绝，显示“点击有声播放”供重试。
+5. 用户显式静音会清除偏好；财包 pause/release 不修改声音属性。
 
-## 6. 代码地图
+## 6. 已执行门禁
 
-### 6.1 展示前端
+主仓精简应用：
 
 ```text
-src/showcase/catalog.ts
-src/showcase/public-video-ids.json
-src/showcase/components/ShowcasePlayer.vue
-src/showcase/pages/FeedPage.vue
-src/showcase/pages/AuthorPage.vue
-src/showcase/styles.css
-src/showcase/generated/showcase-bundle.json
+frontend Vitest: 10 files / 42 passed
+server Vitest:   21 files / 131 passed
+client type-check: passed
+server type-check: passed
+production build: passed
+Playwright: 9 passed（390×844、393×852、430×932、1280×900）
+pnpm audit --prod: no known vulnerabilities
+Pages staging: 10 items / 68,687,281 bytes
 ```
 
-### 6.2 内容生成
-
-```text
-server/src/showcase/content-seeds.ts
-server/src/showcase/mock-content-generator.ts
-server/src/cli/generate-showcase-content.ts
-```
-
-### 6.3 媒体
-
-```text
-server/src/cli/prepare-showcase-media.ts
-server/src/authorized-media/*
-scripts/stage-showcase-pages-media.mjs
-media-import/authorized-douyin/download-manifest.json   # ignored
-.analysis-work/showcase-media/*                         # ignored
-```
-
-### 6.4 播放交互
-
-现有 `FinanceCue`/`VideoExtensionHost`/Cue orchestrator 仍负责半屏、触点和 pause/release；`ShowcasePlayer.vue` 将其接入简化推荐流。
+Playwright 新增并锁定：首次显式有声入口、unmute + play、偏好保存；其余覆盖 POI 曝光继续播放、进入暂停、条件恢复、半屏尺寸、作者归属和旧路由移除。
 
 ## 7. 常用命令
 
 ```bash
-cd /home/samsong/Desktop/maybe/caibao/refer/douyin
+cd /home/samsong/Desktop/maybe/caibao/apps/web
 
 corepack pnpm install --frozen-lockfile
 pnpm dev
@@ -204,7 +126,6 @@ pnpm dev:api
 
 pnpm prepare:showcase-media
 pnpm generate:showcase-content
-# 或：pnpm prepare:showcase
 
 VITE_SHOWCASE_MEDIA_BASE_URL=./media/ pnpm build-gp-pages
 SHOWCASE_MEDIA_SOURCE_DIRECTORY=.analysis-work/showcase-media/<batchId> pnpm stage:showcase-pages-media
@@ -218,58 +139,25 @@ pnpm audit --prod
 git diff --check
 ```
 
-## 8. 环境变量（只记录名称）
-
-### 展示/媒体
+## 8. 环境变量（仅变量名）
 
 - `VITE_SHOWCASE_MEDIA_BASE_URL`
 - `VITE_FINANCE_API_BASE_URL`
 - `AUTHORIZED_MEDIA_ROOT`
 - `AUTHORIZED_MEDIA_MANIFEST_PATH`
-
-### Provider
-
 - `CAIBAO_ENV_FILE`
-- `MINIMAX_API_KEY`
-- `MINIMAX_BASE_URL`
-- `MINIMAX_MODEL`
-- `DOUBAO_API_KEY`
-- `DOUBAO_BASE_URL`
-- `DOUBAO_MODEL`
+- `MINIMAX_API_KEY` / `MINIMAX_BASE_URL` / `MINIMAX_MODEL`
+- `DOUBAO_API_KEY` / `DOUBAO_BASE_URL` / `DOUBAO_MODEL`
 
-真实值只放应用仓 ignored `.env.minimax` / `.env.doubao`，绝不打印或提交。Pages 当前不需要 Provider key。
+真实值只放 `apps/web/.env.minimax`、`apps/web/.env.doubao` 或本地环境，绝不打印或提交。Pages 不需要 Provider key。
 
-## 9. 权利、安全与到期
+## 9. 红线与阻塞
 
-- 公网展示来自用户直接要求；项目未独立核验平台/作者权利链，不得写成官方授权。
-- 当前窗口截至 2026-08-22（Asia/Shanghai）。未续期必须下架 `showcase-media-20260723-v1`。
-- Runbook 顺序：下架 Release → 部署不含媒体的 Pages artifact 与目录移除/空态 → 验证两类 URL 不可访问 → 保存审计记录。
-- 不提交原始媒体、字幕原文、关键帧、Cookie、临时 URL、模型原始响应或密钥。
-- 不绕过登录、验证码、签名或风控。
+- 公网展示来自用户直接要求，但项目未独立核验权利链；不得写成平台/作者官方授权。
+- 当前窗口截至 2026-08-22（Asia/Shanghai）。未续期必须下架 Release，再部署无媒体 Pages artifact，并验证两类直链不可访问。
+- 不提交媒体、字幕原文、关键帧、Cookie、临时 URL、模型响应或密钥。
+- V2.7 联合评审、最终多模态证据、25 套财经审核、Review/Publish、Session/Event/Report、Provider 质量/费用报告仍未完成。
 
-## 10. 当前未完成 / 发布阻塞
+## 10. 下一位 Agent 第一任务
 
-- V2.7 联合评审和真实签字。
-- 公网分发权独立核验、续期或到期 retire Owner。
-- 真实 ASR/OCR/视觉证据、最终字幕和人工时间码。
-- 25 套概念/因果/条件/反例的财经与事实审核。
-- Review/Approve/Publish 生命周期。
-- Session/Event/Simulation/Retell/Report 闭环。
-- MiniMax/豆包真实质量、延迟、费用和降级报告。
-- 公开 10 条逐媒体加载与六类完整浏览器矩阵；当前 E2E 为代表路径。
-
-## 11. 下一位 Agent 第一任务
-
-先完成 Release + Pages 媒体到期/撤权 Runbook：明确 owner、提醒时间、续期证据字段、删除/无媒体重部署命令、验证两类直链和审计记录。该任务必须在 2026-08-22 前落地。
-
-完成后再从 25 条中选 2–3 条黄金视频，建立真实 ASR/OCR/视觉 `EvidenceItem` 和人工时间窗，不要直接全量调用付费 Provider。
-
-## 12. 不要做
-
-- 不把公开集合扩回 25 条或换回旧 mock；公开 10 条配置变化需要用户决定，完整 25 条生成管线不得随之删除。
-- 不重新加入自动触点最多 4/6 个的截断。
-- 不把当前 Mock 写成真实多模态或财经审核结果。
-- 不删产品仓未跟踪目录，不动其他 Agent/用户工作树。
-- 不 push upstream、不 force-push、不提交媒体或密钥。
-- 不创建 `prd-v2.7-approved` 标签。
-- 不生成 V2.7 PDF；后续若生成，按用户要求不做 PDF 视觉验收。
+先在 `apps/web` 选择 2–3 条黄金视频，建立真实 ASR/OCR/视觉证据时间线与人工时间窗；不要继续修改旧 `refer/douyin`。同时为 2026-08-22 到期的 Release/Pages 媒体指定 retire/续期负责人和可执行操作记录。

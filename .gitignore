@@ -18,9 +18,15 @@
 **/coverage/
 **/test-results/
 **/playwright-report/
+**/.analysis-work/
 /tmp/
 *.log
 **/__pycache__/
 *.pyc
 .DS_Store
 *.tsbuildinfo
+
+# The monorepo app tracks only sanitized templates and a media placeholder.
+/apps/web/media-import/*
+!/apps/web/media-import/.gitkeep
+/apps/web/public/demo/
