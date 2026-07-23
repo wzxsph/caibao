@@ -226,9 +226,8 @@ for (const viewport of viewports) {
         viewportWidth: innerWidth
       }
     })
-    // 半屏 80vh 高度
-    expect(sheetGeometry.height / sheetGeometry.viewportHeight).toBeLessThanOrEqual(0.8201)
-    expect(sheetGeometry.height / sheetGeometry.viewportHeight).toBeGreaterThan(0.5)
+    // 半屏 48vh 高度（原始版本）
+    expect(sheetGeometry.height / sheetGeometry.viewportHeight).toBeLessThanOrEqual(0.4801)
     expect(sheetGeometry.left).toBeGreaterThanOrEqual(0)
     expect(sheetGeometry.right).toBeLessThanOrEqual(sheetGeometry.viewportWidth + 0.5)
     expect(page.locator('.finance-extension .mask')).toHaveCount(0)

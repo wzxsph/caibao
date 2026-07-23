@@ -106,8 +106,8 @@ function toggleFullscreen() {
   z-index: 30;
   display: flex;
   box-sizing: border-box;
-  height: 80vh;
-  max-height: 80vh;
+  height: min(48vh, 420px);
+  max-height: 48vh;
   flex-direction: column;
   overflow: hidden;
   color: #1d1c18;
