@@ -256,7 +256,9 @@ function complete(payload: {
   const currentExperience = experience.value
   if (!trigger || !currentExperience) return
   const evaluation = trigger.evaluation
-  if (evaluation?.mode === 'objective' && payload.isCorrect !== true) {
+  const isWrong = payload.isCorrect === false
+
+  if (isWrong) {
     store.record(currentExperience, {
       triggerId: trigger.triggerId,
       action: 'attempted',
@@ -272,21 +274,19 @@ function complete(payload: {
     return
   }
 
-  const reward =
-    evaluation?.mode === 'objective' && payload.isCorrect === true
-      ? awardDemoCoins(
-          `${currentExperience.videoId}:${currentExperience.contentVersion}:${trigger.triggerId}`,
-          evaluation.rewardCoins
-        )
-      : { awarded: false, coins: walletCoins.value }
+  const rewardCoins = evaluation?.rewardCoins ?? 1
+  const reward = awardDemoCoins(
+    `${currentExperience.videoId}:${currentExperience.contentVersion}:${trigger.triggerId}`,
+    rewardCoins
+  )
   store.record(currentExperience, {
     triggerId: trigger.triggerId,
     action: 'completed',
     playbackPositionMs: props.clock.currentTimeMs,
     response: payload.response,
     answerId: payload.answerId,
-    isCorrect: evaluation?.mode === 'objective' ? true : undefined,
-    coinsAwarded: reward.awarded ? (evaluation?.rewardCoins ?? 0) : 0,
+    isCorrect: payload.isCorrect ?? (evaluation?.mode === 'objective' ? true : undefined),
+    coinsAwarded: reward.awarded ? rewardCoins : 0,
     evidenceIds: trigger.evidenceIds
   })
   walletCoins.value = reward.coins

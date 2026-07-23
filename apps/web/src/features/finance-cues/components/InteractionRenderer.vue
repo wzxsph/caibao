@@ -7,14 +7,16 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  complete: [payload: { response: string; feedback: string; kind?: string }]
+  complete: [payload: { response: string; feedback: string; kind?: string; isCorrect?: boolean; answerId?: string }]
 }>()
 
 function completeContext() {
   if (props.trigger.kind !== 'context_card') return
   emit('complete', {
     response: props.trigger.payload.keyPoint,
-    feedback: props.trigger.payload.feedback
+    feedback: props.trigger.payload.feedback,
+    isCorrect: true,
+    answerId: 'ack'
   })
 }
 
@@ -24,7 +26,9 @@ function selectCondition(optionId: string) {
   if (!option) return
   emit('complete', {
     response: option.label + '：' + option.result,
-    feedback: option.result
+    feedback: option.result,
+    isCorrect: true,
+    answerId: optionId
   })
 }
 
@@ -33,7 +37,9 @@ function selectCausal(option: string) {
   const correct = option === props.trigger.payload.correctOption
   emit('complete', {
     response: (correct ? '识别正确：' : '已修正：') + props.trigger.payload.correctOption,
-    feedback: props.trigger.payload.feedback
+    feedback: props.trigger.payload.feedback,
+    isCorrect: correct,
+    answerId: option
   })
 }
 
@@ -43,7 +49,9 @@ function selectJudgment(optionId: string) {
   if (!option) return
   emit('complete', {
     response: option.label + '：' + option.result,
-    feedback: props.trigger.payload.feedback
+    feedback: props.trigger.payload.feedback,
+    isCorrect: true,
+    answerId: optionId
   })
 }
 
@@ -51,7 +59,9 @@ function skipJudgment() {
   if (props.trigger.kind !== 'quick_judgment') return
   emit('complete', {
     response: '暂时不确定',
-    feedback: props.trigger.payload.feedback
+    feedback: props.trigger.payload.feedback,
+    isCorrect: false,
+    answerId: 'skip'
   })
 }
 
@@ -61,7 +71,9 @@ function selectFlip(optionId: string) {
   if (!option) return
   emit('complete', {
     response: option.label + '：' + option.result,
-    feedback: props.trigger.payload.feedback
+    feedback: props.trigger.payload.feedback,
+    isCorrect: true,
+    answerId: optionId
   })
 }
 
@@ -69,7 +81,9 @@ function completeCompare() {
   if (props.trigger.kind !== 'concept_compare') return
   emit('complete', {
     response: props.trigger.payload.left.term + ' vs ' + props.trigger.payload.right.term,
-    feedback: props.trigger.payload.keyDistinction
+    feedback: props.trigger.payload.keyDistinction,
+    isCorrect: true,
+    answerId: 'compare'
   })
 }
 
