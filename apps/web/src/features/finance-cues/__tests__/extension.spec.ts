@@ -40,7 +40,7 @@ describe('FinanceCueExtension', () => {
     }
   })
 
-  it('keeps the invitation passive, then requests pause and release around the interaction', async () => {
+  it('auto-surfaces the cue half-sheet on arrival, then releases on close', async () => {
     localStorage.clear()
     const wrapper = mount(FinanceCueExtension, {
       props: { context, clock: clock(0) },
@@ -51,9 +51,7 @@ describe('FinanceCueExtension', () => {
     await wrapper.setProps({ clock: clock(15_100) })
     await flushPromises()
 
-    expect(wrapper.find('[data-testid="finance-cue-pill"]').exists()).toBe(true)
-    expect(wrapper.emitted('pause-for-interaction')).toBeUndefined()
-    await wrapper.get('.cue-main').trigger('click')
+    // 关键点到达时自动弹出半屏，不再显示 CuePill
     expect(wrapper.find('[data-testid="caibao-half-sheet"]').exists()).toBe(true)
     expect(wrapper.emitted('pause-for-interaction')).toEqual([
       [
@@ -86,7 +84,7 @@ describe('FinanceCueExtension', () => {
     await flushPromises()
     await wrapper.setProps({ clock: clock(15_100) })
     await flushPromises()
-    await wrapper.get('.cue-main').trigger('click')
+    // 半屏已自动弹出，无需点击 CuePill
     await wrapper.get('[data-testid="finance-skip-interaction"]').trigger('click')
 
     expect(wrapper.emitted('release-interaction')?.at(-1)).toEqual([

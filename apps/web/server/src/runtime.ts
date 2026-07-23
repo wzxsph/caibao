@@ -1,5 +1,6 @@
 import { config as loadDotEnv } from 'dotenv'
 import { createApp } from './app.js'
+import { loadShowcaseExperience } from './chat/showcase-experiences.js'
 import { analysisInputReadiness, loadRuntimeConfig, providerReadiness } from './config/env.js'
 import { AnalysisJobService } from './jobs/analysis-job-service.js'
 import { AuthorizedMediaService, FfprobeMediaProbe } from './media/authorized-media.js'
@@ -75,7 +76,15 @@ export function buildRuntime() {
       mediaReadiness: () => media.readiness(),
       profileProbe: new DouyinPublicProfileProbe(),
       jobs,
-      authorizedMedia
+      authorizedMedia,
+      chat: {
+        apiKey: config.minimax.apiKey,
+        baseUrl: config.minimax.baseUrl,
+        model: config.minimax.textModel,
+        allowedOrigin: '',
+        loadExperience: async (videoId) => loadShowcaseExperience(videoId),
+        checkQuota: async () => ({ allowed: true, remainingDaily: 999, remainingVideo: 999 })
+      }
     })
   }
 }

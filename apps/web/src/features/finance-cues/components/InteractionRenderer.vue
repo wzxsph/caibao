@@ -117,23 +117,30 @@ function dismissCue() {
       </p>
     </aside>
     <template v-if="trigger.kind === 'context_card'">
-      <p class="lead">{{ trigger.payload.body }}</p>
-      <div class="key-point">
+      <div v-if="trigger.backgroundContext" class="context-banner">
+        <span class="context-banner-label">{{ trigger.backgroundContext.setting }}</span>
+      </div>
+      <div class="context-body-card">
+        <p class="lead">{{ trigger.payload.body }}</p>
+      </div>
+      <div class="key-point card-highlight">
         <small>记住这一点</small>
         <b>{{ trigger.payload.keyPoint }}</b>
       </div>
-      <p v-if="trigger.payload.chapterLabel" class="context-chapter">
-        <small>本节</small><span>{{ trigger.payload.chapterLabel }}</span>
-      </p>
-      <p v-if="trigger.payload.whyNow" class="context-why">
-        <small>为什么现在</small><span>{{ trigger.payload.whyNow }}</span>
-      </p>
-      <p v-if="trigger.payload.lookAhead" class="context-lookahead">
-        <small>接下来</small><span>{{ trigger.payload.lookAhead }}</span>
-      </p>
-      <p v-if="trigger.payload.reference" class="context-reference">
-        <small>参考</small><span>{{ trigger.payload.reference }}</span>
-      </p>
+      <div v-if="trigger.payload.chapterLabel || trigger.payload.whyNow || trigger.payload.lookAhead || trigger.payload.reference" class="context-extra-grid">
+        <p v-if="trigger.payload.chapterLabel" class="context-chapter">
+          <small>📍 本节</small><span>{{ trigger.payload.chapterLabel }}</span>
+        </p>
+        <p v-if="trigger.payload.whyNow" class="context-why">
+          <small>💡 为什么现在</small><span>{{ trigger.payload.whyNow }}</span>
+        </p>
+        <p v-if="trigger.payload.lookAhead" class="context-lookahead">
+          <small>🔮 接下来</small><span>{{ trigger.payload.lookAhead }}</span>
+        </p>
+        <p v-if="trigger.payload.reference" class="context-reference">
+          <small>📖 参考</small><span>{{ trigger.payload.reference }}</span>
+        </p>
+      </div>
       <p v-if="trigger.payload.feedback" class="context-feedback">{{ trigger.payload.feedback }}</p>
       <button class="primary" type="button" @click.stop="completeContext">我知道了</button>
     </template>
@@ -257,50 +264,112 @@ function dismissCue() {
 
 .lead {
   margin: 0;
-  color: #5e594f;
-  font-size: 14px;
-  line-height: 1.65;
+  color: #3b3932;
+  font-size: 15px;
+  line-height: 1.75;
 }
 
 .trigger-background {
   display: grid;
-  gap: 6px;
-  padding: 10px 14px;
-  background: #efe9dc;
-  border-left: 4px solid #b88a2b;
-  border-radius: 12px;
+  gap: 8px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #fdf6e8, #efe9dc);
+  border-left: 5px solid #b88a2b;
+  border-radius: 14px;
 
   small {
     color: #8a681b;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   b {
     color: #2c2a25;
-    font-size: 13px;
-    line-height: 1.45;
+    font-size: 14px;
+    line-height: 1.55;
   }
 
   ul {
     margin: 0;
     padding-left: 18px;
     color: #4e493f;
-    font-size: 12px;
-    line-height: 1.55;
+    font-size: 13px;
+    line-height: 1.6;
+
+    li { margin-bottom: 3px; }
   }
 
   p {
     margin: 0;
-    color: #6b6559;
-    font-size: 12px;
-    line-height: 1.55;
+    color: #5e5749;
+    font-size: 13px;
+    line-height: 1.6;
   }
 }
 
-.key-point,
+.context-banner {
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #2a2820, #3b3630);
+  border-radius: 12px;
+
+  .context-banner-label {
+    color: #ffd541;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+}
+
+.context-body-card {
+  padding: 16px 18px;
+  background: #fff;
+  border: 1px solid #e7dcc6;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.context-extra-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.key-point.card-highlight,
 .variable {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #fdf4d8, #f5ead0);
+  border-left: 5px solid #d3a32b;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(217, 170, 44, 0.12);
+
+  small {
+    color: #8f6d1f;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  b {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #2a2820;
+  }
+}
+
+.variable {
+  background: linear-gradient(135deg, #e8f0f8, #dce8f4);
+  border-left-color: #4a7da4;
+
+  small { color: #4a7da4; }
+}
+
+.key-point:not(.card-highlight),
+.variable:not(.card-highlight) {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -327,16 +396,16 @@ function dismissCue() {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin: 6px 0;
-  padding: 8px 10px;
+  margin: 0;
+  padding: 10px 12px;
   background: #f5ead0;
-  border-radius: 8px;
-  font-size: 12px;
+  border-radius: 10px;
+  font-size: 13px;
   line-height: 1.55;
 }
 .context-why { background: #fdf4e0; }
-.context-lookahead { background: #fcf0d2; }
-.context-reference { background: #efe9dc; font-size: 11px; color: #5e5648; }
+.context-lookahead { background: linear-gradient(135deg, #fcf0d2, #f7e9c8); }
+.context-reference { background: #efe9dc; font-size: 12px; color: #5e5648; }
 .context-chapter small,
 .context-why small,
 .context-lookahead small,
@@ -344,7 +413,7 @@ function dismissCue() {
   flex: 0 0 auto;
   color: #8a681b;
   font-weight: 700;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.04em;
 }
 .context-chapter span,
@@ -353,6 +422,7 @@ function dismissCue() {
 .context-reference span {
   flex: 1 1 auto;
   color: #2a2820;
+  font-weight: 500;
 }
 .context-feedback {
   margin: 8px 0;

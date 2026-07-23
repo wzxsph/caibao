@@ -86,6 +86,15 @@ function formatTimestamp(ms: number): string {
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
 
+function audienceIcon(audience: string): string {
+  const icons: Record<string, string> = {
+    '国家与公共部门': '🏛️',
+    '企业': '🏢',
+    '居民': '🏠'
+  }
+  return icons[audience] ?? '🔗'
+}
+
 const expandedPerspective = ref<ReportPerspective | null>(null)
 function openPerspective(entry: ReportPerspective) {
   expandedPerspective.value = expandedPerspective.value === entry ? null : entry
@@ -104,6 +113,11 @@ function openPerspective(entry: ReportPerspective) {
           <p>财经等级 {{ DEMO_FINANCE_LEVEL }} 级 · 社交标识 Demo</p>
         </div>
       </header>
+
+      <div v-if="report.thesisStatement" class="thesis-statement">
+        <small>核心论点</small>
+        <p>{{ report.thesisStatement }}</p>
+      </div>
 
       <div class="metrics" aria-label="本次学习记录">
         <span
@@ -131,11 +145,15 @@ function openPerspective(entry: ReportPerspective) {
       <section>
         <h2>掌握情况</h2>
         <div class="mastery-grid">
-          <article v-for="entry in report.observed" :key="entry.triggerId">
-            <b>✓ 已观察</b><span>{{ entry.title }}</span>
+          <article v-for="entry in report.mastery.observed" :key="entry.triggerId">
+            <b>✓ 已观察</b>
+            <span>{{ entry.title }}</span>
+            <small v-if="entry.detail" class="mastery-detail">{{ entry.detail }}</small>
           </article>
-          <article v-for="entry in report.notObserved" :key="entry.triggerId" class="pending">
-            <b>待加强</b><span>{{ entry.title }}</span>
+          <article v-for="entry in report.mastery.pending" :key="entry.triggerId" class="pending">
+            <b>待加强</b>
+            <span>{{ entry.title }}</span>
+            <small class="mastery-detail">尚未触达 · {{ formatTimestamp(entry.revisitMs) }}</small>
           </article>
         </div>
       </section>
@@ -166,6 +184,30 @@ function openPerspective(entry: ReportPerspective) {
         </div>
       </section>
 
+      <section v-if="report.causalPaths.length" class="causal-paths-section">
+        <h2>因果传导路径</h2>
+        <div class="causal-paths-grid">
+          <article v-for="(path, index) in report.causalPaths" :key="index" class="causal-path-card">
+            <small class="path-category">{{ path.category }}</small>
+            <b class="path-root">{{ path.root }}</b>
+            <div class="path-steps">
+              <span v-for="(step, si) in path.steps" :key="si" class="step-chip">{{ step }}</span>
+            </div>
+            <div class="path-outcome">
+              <i>→</i><span>{{ path.outcome }}</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section v-if="report.counterForce" class="counter-force-section">
+        <h2>反向力量</h2>
+        <p class="counter-force-statement">{{ report.counterForce.statement }}</p>
+        <div class="counter-force-factors">
+          <span v-for="(factor, fi) in report.counterForce.factors" :key="fi" class="factor-chip">{{ factor }}</span>
+        </div>
+      </section>
+
       <section>
         <h2>财经事件影响到谁</h2>
         <ol class="poi-perspectives" data-testid="perspective-pois">
@@ -176,24 +218,42 @@ function openPerspective(entry: ReportPerspective) {
               :aria-label="`展开 ${entry.audience} 影响细节`"
               @click.stop="openPerspective(entry)"
             >
-              <span class="poi-icon">🔗</span>
+              <span class="poi-icon">{{ audienceIcon(entry.audience) }}</span>
               <span class="poi-text">{{ entry.audience }}</span>
               <small class="poi-impact">{{ entry.impact.slice(0, 24) }}{{ entry.impact.length > 24 ? '…' : '' }}</small>
             </button>
           </li>
         </ol>
         <aside v-if="expandedPerspective" class="poi-detail">
-          <h4>{{ expandedPerspective.audience }}的影响</h4>
-          <p><b>影响：</b>{{ expandedPerspective.impact }}</p>
-          <p><b>原因：</b>{{ expandedPerspective.reason }}</p>
-          <p><b>观察与应对：</b>{{ expandedPerspective.response }}</p>
+          <div class="poi-detail-header">
+            <span class="poi-detail-icon">{{ audienceIcon(expandedPerspective.audience) }}</span>
+            <h4>{{ expandedPerspective.audience }}的影响</h4>
+          </div>
+          <div class="poi-detail-chain">
+            <div class="poi-chain-step">
+              <small>影响</small>
+              <p>{{ expandedPerspective.impact }}</p>
+            </div>
+            <i class="poi-chain-arrow">↓</i>
+            <div class="poi-chain-step">
+              <small>原因</small>
+              <p>{{ expandedPerspective.reason }}</p>
+            </div>
+            <i class="poi-chain-arrow">↓</i>
+            <div class="poi-chain-step">
+              <small>观察与应对</small>
+              <p>{{ expandedPerspective.response }}</p>
+            </div>
+          </div>
         </aside>
       </section>
 
       <section class="suggestions">
         <h2>建议补充</h2>
-        <p v-if="report.notObserved.length">回到时间轴补看尚未观察的关键点，再检查条件与反例。</p>
-        <p v-else>关键点均已观察，可以尝试用三句话复述“原因—机制—结果”。</p>
+        <ul v-if="report.suggestions.length" class="suggestions-list">
+          <li v-for="(suggestion, si) in report.suggestions" :key="si">{{ suggestion }}</li>
+        </ul>
+        <p v-else>关键点均已观察，可以尝试用三句话复述：原因—机制—结果。</p>
       </section>
 
       <section v-if="report.suggestedWatch" class="suggested-watch">
@@ -204,6 +264,18 @@ function openPerspective(entry: ReportPerspective) {
             <p v-if="report.suggestedWatch.note">{{ report.suggestedWatch.note }}</p>
           </div>
           <span class="timestamp">{{ formatTimestamp(report.suggestedWatch.startMs) }}</span>
+        </div>
+      </section>
+
+      <section v-if="report.recommendedExtension" class="recommended-extension">
+        <h2>推荐拓展学习</h2>
+        <div class="extension-card">
+          <b>{{ report.recommendedExtension.title }}</b>
+          <p>{{ report.recommendedExtension.reason }}</p>
+          <div class="extension-meta">
+            <span class="timestamp">{{ formatTimestamp(report.recommendedExtension.startMs) }}</span>
+            <small>{{ Math.round(report.recommendedExtension.durationMs / 1000) }}秒</small>
+          </div>
         </div>
       </section>
 
@@ -522,6 +594,246 @@ section h2 {
 .status {
   color: #6d604d;
 }
+.thesis-statement {
+  margin: 14px 0;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #fdf4d8, #faf1db);
+  border: 1px solid rgba(217, 170, 44, 0.4);
+  border-radius: 14px;
+
+  small {
+    color: #8a681b;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  p {
+    margin: 6px 0 0;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.6;
+    color: #2a2820;
+  }
+}
+
+.mastery-detail {
+  display: block;
+  margin-top: 4px;
+  color: #8c7963;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.causal-paths-section,
+.counter-force-section {
+  padding: 18px;
+  background: #fff;
+  border: 1px solid #e7dcc6;
+  border-radius: 16px;
+  margin-top: 18px;
+
+  h2 {
+    margin: 0 0 12px;
+  }
+}
+
+.causal-paths-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.causal-path-card {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  background: #faf7f0;
+  border: 1px solid #e7dcc6;
+  border-radius: 12px;
+
+  .path-category {
+    color: #8a681b;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .path-root {
+    color: #2a2820;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .path-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .step-chip {
+    padding: 4px 10px;
+    background: #efe9dc;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #4e493f;
+  }
+
+  .path-outcome {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding-top: 6px;
+    border-top: 1px dashed #d9cfbb;
+
+    i {
+      color: #8a681b;
+      font-style: normal;
+    }
+
+    span {
+      color: #2a2820;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  }
+}
+
+.counter-force-statement {
+  margin: 0 0 10px;
+  color: #4e493f;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.counter-force-factors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.factor-chip {
+  padding: 6px 12px;
+  background: #f5ead0;
+  border: 1px solid rgba(217, 170, 44, 0.3);
+  border-radius: 10px;
+  font-size: 12px;
+  color: #5e543e;
+  font-weight: 500;
+}
+
+.suggestions-list {
+  margin: 0;
+  padding-left: 18px;
+
+  li {
+    margin-bottom: 6px;
+    color: #4e493f;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+}
+
+.recommended-extension {
+  padding: 18px;
+  background: #faf7f0;
+  border: 1px solid #e7dcc6;
+  border-radius: 16px;
+  margin-top: 18px;
+
+  h2 { margin: 0 0 10px; }
+}
+
+.extension-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e7dcc6;
+
+  b {
+    font-size: 13px;
+    color: #2a2820;
+  }
+
+  p {
+    margin: 0;
+    color: #5e5749;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+}
+
+.extension-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+
+  .timestamp {
+    padding: 4px 10px;
+    color: #8a681b;
+    background: #fff1b7;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  small {
+    color: #8c7963;
+    font-size: 11px;
+  }
+}
+
+.poi-detail-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.poi-detail-icon {
+  font-size: 24px;
+}
+
+.poi-detail-chain {
+  display: grid;
+  gap: 4px;
+}
+
+.poi-chain-step {
+  padding: 10px 14px;
+  background: #faf7f0;
+  border: 1px solid #e7dcc6;
+  border-radius: 10px;
+
+  small {
+    color: #8a681b;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: #3b3932;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+}
+
+.poi-chain-arrow {
+  display: block;
+  text-align: center;
+  color: #8a681b;
+  font-size: 14px;
+  font-style: normal;
+}
+
 .notice {
   display: flex;
   justify-content: space-between;

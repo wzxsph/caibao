@@ -1,6 +1,8 @@
 import { createReadStream } from 'node:fs'
 import express, { type NextFunction, type Request, type Response } from 'express'
 import { z } from 'zod'
+import type { ChatHandlerOptions } from './chat/chat-handler.js'
+import { handleChatStreamRequest } from './chat/chat-handler.js'
 import type { AnalysisInputReadiness, ProviderReadiness } from './config/env.js'
 import { mediaAssetSchema } from './domain/contracts.js'
 import { AppError, publicError } from './domain/errors.js'
@@ -21,6 +23,7 @@ interface AppDependencies {
     | { probe(url: string): Promise<Partial<DouyinProfileProbeResult>> }
   jobs?: AnalysisJobService
   authorizedMedia?: Pick<AuthorizedMediaService, 'getCatalog' | 'resolveAsset'>
+  chat?: ChatHandlerOptions
 }
 
 interface ByteRange {
@@ -282,6 +285,66 @@ export function createApp(dependencies: AppDependencies) {
       next(error)
     }
   })
+
+  const handleChatStream = async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      if (!dependencies.chat) {
+        throw new AppError('CHAT_NOT_CONFIGURED', 'Chat is not configured', { status: 503 })
+      }
+      const headers = new Headers()
+      for (const [key, value] of Object.entries(request.headers)) {
+        if (value === undefined) continue
+        if (Array.isArray(value)) headers.set(key, value.join(', '))
+        else headers.set(key, String(value))
+      }
+      const body =
+        request.method === 'GET' || request.method === 'HEAD'
+          ? undefined
+          : JSON.stringify(request.body ?? {})
+      const webRequest = new Request(`http://localhost${request.originalUrl}`, {
+        method: request.method,
+        headers,
+        body
+      })
+      const result = await handleChatStreamRequest(webRequest, dependencies.chat)
+      response.status(result.status)
+      result.headers.forEach((value, key) => {
+        if (key.toLowerCase() === 'set-cookie') return
+        response.setHeader(key, value)
+      })
+      if (!result.body) {
+        response.end()
+        return
+      }
+      const reader = result.body.getReader()
+      let closed = false
+      const cleanup = (): void => {
+        if (closed) return
+        closed = true
+        response.off('close', cleanup)
+        response.off('error', cleanup)
+      }
+      response.on('close', cleanup)
+      response.on('error', cleanup)
+      const pump = async (): Promise<void> => {
+        while (!closed) {
+          const { done, value } = await reader.read()
+          if (done || closed) break
+          response.write(Buffer.from(value))
+        }
+        if (!closed) response.end()
+        cleanup()
+      }
+      pump().catch(next)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  app
+    .route('/api/finance/v1/chat/stream')
+    .post(handleChatStream)
+    .options(handleChatStream)
 
   app.use((error: unknown, _request: Request, response: Response, _next: NextFunction) => {
     const safe = publicError(error)

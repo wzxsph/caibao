@@ -203,10 +203,8 @@ function surface(trigger: TimelineTrigger) {
     record(trigger, 'missed')
     return
   }
-  activeCue.value = trigger
-  record(trigger, 'surfaced')
-  clearCueTimer()
-  cueTimer = setTimeout(() => closeCue(true), trigger.cueDurationMs)
+  // 自动弹出半屏互动，无需用户点击 CuePill
+  openCue(trigger)
 }
 
 function openCue(trigger: TimelineTrigger) {
@@ -402,6 +400,7 @@ function releasePlaybackInteraction(reason: InteractionExitReason, allowResume: 
       v-if="expandedCue"
       :title="expandedCue.payload.title"
       :eyebrow="expandedCue.cueLabel"
+      :fullscreen="true"
       @close="closeSheet"
     >
       <div v-if="feedback" class="feedback" data-testid="finance-feedback">
