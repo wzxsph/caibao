@@ -218,6 +218,7 @@ function surface(trigger: TimelineTrigger) {
     return
   }
   activeCue.value = trigger
+  cueStore.setActive(trigger.triggerId)
   record(trigger, 'surfaced')
   clearCueTimer()
   cueTimer = setTimeout(() => closeCue(true), trigger.cueDurationMs)
@@ -239,6 +240,7 @@ function closeCue(recordDismissal = true) {
   const trigger = activeCue.value
   clearCueTimer()
   activeCue.value = null
+  cueStore.clearActive()
   if (trigger && recordDismissal) record(trigger, 'dismissed')
 }
 

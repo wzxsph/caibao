@@ -261,7 +261,9 @@ function formatTime(milliseconds: number) {
           :key="trigger.triggerId"
           type="button"
           class="poi-chip"
+          :class="{ 'poi-chip-active': cueStore.activeCueId === trigger.triggerId }"
           :data-testid="`beta-poi-${trigger.triggerId}`"
+          :data-active="cueStore.activeCueId === trigger.triggerId ? 'true' : 'false'"
           @click.stop="openPoiCue(trigger.triggerId)"
         >
           <span class="poi-chip-icon">📍</span>
@@ -535,6 +537,7 @@ function formatTime(milliseconds: number) {
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 2px;
+  min-height: 32px;
   pointer-events: auto;
 }
 
@@ -552,6 +555,18 @@ function formatTime(milliseconds: number) {
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(8px) scale(0.92);
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.poi-chip.poi-chip-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  box-shadow: 0 6px 20px rgba(255, 213, 65, 0.45), 0 0 0 3px rgba(255, 213, 65, 0.35);
+  animation: poi-pop 220ms ease-out, poi-pulse 1.6s ease-in-out 220ms infinite;
 }
 
 .poi-chip-icon { font-size: 12px; }
@@ -564,5 +579,23 @@ function formatTime(milliseconds: number) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@keyframes poi-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.85);
+  }
+}
+
+@keyframes poi-pulse {
+  0%, 100% { box-shadow: 0 6px 20px rgba(255, 213, 65, 0.45), 0 0 0 3px rgba(255, 213, 65, 0.35); }
+  50%      { box-shadow: 0 6px 20px rgba(255, 213, 65, 0.6), 0 0 0 6px rgba(255, 213, 65, 0.18); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poi-chip.poi-chip-active {
+    animation: none;
+  }
 }
 </style>
