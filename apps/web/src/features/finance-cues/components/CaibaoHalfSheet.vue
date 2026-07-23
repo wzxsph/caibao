@@ -106,8 +106,8 @@ function toggleFullscreen() {
   z-index: 30;
   display: flex;
   box-sizing: border-box;
-  height: min(48vh, 420px);
-  max-height: 48vh;
+  height: 80vh;
+  max-height: 80vh;
   flex-direction: column;
   overflow: hidden;
   color: #1d1c18;
@@ -123,24 +123,9 @@ function toggleFullscreen() {
   &.fullscreen {
     height: 100vh;
     max-height: none;
-    width: min(80vw, 980px);
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    border-radius: 24px;
-    border: 1px solid rgba(211, 163, 43, 0.35);
-    box-shadow: 0 0 80px rgba(0, 0, 0, 0.5);
-  }
-
-  @media (max-width: 500px) {
-    .caibao-half-sheet.fullscreen {
-      width: 100vw;
-      left: 0;
-      transform: none;
-      border-radius: 0;
-      border: 0;
-      box-shadow: none;
-    }
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
   }
 }
 

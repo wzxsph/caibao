@@ -146,24 +146,29 @@ function dismissCue() {
     </template>
 
     <template v-else-if="trigger.kind === 'condition_slider'">
-      <p class="lead">只换一个条件，看看哪条路径会变强。</p>
+      <div v-if="trigger.backgroundContext" class="context-banner">
+        <span class="context-banner-label">{{ trigger.backgroundContext.setting }}</span>
+      </div>
+      <p class="lead">只换一个条件，看看哪条路径会变强。选一个试试——没有标准答案。</p>
       <div class="variable">
         <small>变量</small>
         <b>{{ trigger.payload.variable }}</b>
       </div>
       <div class="option-grid">
-        <button
-          v-for="option in trigger.payload.options"
-          :key="option.id"
-          type="button"
-          @click.stop="selectCondition(option.id)"
-        >
+        <button v-for="option in trigger.payload.options" :key="option.id" type="button" @click.stop="selectCondition(option.id)">
           {{ option.label }}
         </button>
+      </div>
+      <div v-if="trigger.learningObjective" class="learning-goal-tip">
+        <small>🎯 学习目标</small>
+        <span>{{ trigger.learningObjective }}</span>
       </div>
     </template>
 
     <template v-else-if="trigger.kind === 'causal_stitch'">
+      <div v-if="trigger.backgroundContext" class="context-banner">
+        <span class="context-banner-label">{{ trigger.backgroundContext.setting }}</span>
+      </div>
       <div class="causal-path">
         <span>{{ trigger.payload.before }}</span>
         <i>→</i>
@@ -172,55 +177,61 @@ function dismissCue() {
         <span>{{ trigger.payload.after }}</span>
       </div>
       <div class="option-list">
-        <button
-          v-for="option in trigger.payload.options"
-          :key="option"
-          type="button"
-          @click.stop="selectCausal(option)"
-        >
+        <button v-for="option in trigger.payload.options" :key="option" type="button" @click.stop="selectCausal(option)">
           {{ option }}
         </button>
+      </div>
+      <div v-if="trigger.learningObjective" class="learning-goal-tip">
+        <small>🎯 学习目标</small>
+        <span>{{ trigger.learningObjective }}</span>
       </div>
     </template>
 
     <template v-else-if="trigger.kind === 'quick_judgment'">
+      <div v-if="trigger.backgroundContext" class="context-banner">
+        <span class="context-banner-label">{{ trigger.backgroundContext.setting }}</span>
+      </div>
       <p class="lead">先凭直觉判断，不确定也没关系。</p>
       <div class="key-point">
         <small>快速判断</small>
         <b>{{ trigger.payload.title }}</b>
       </div>
       <div class="option-list">
-        <button
-          v-for="option in trigger.payload.options"
-          :key="option.id"
-          type="button"
-          @click.stop="selectJudgment(option.id)"
-        >
+        <button v-for="option in trigger.payload.options" :key="option.id" type="button" @click.stop="selectJudgment(option.id)">
           {{ option.label }}
         </button>
         <button class="soft" type="button" @click.stop="skipJudgment">不确定</button>
       </div>
+      <div v-if="trigger.learningObjective" class="learning-goal-tip">
+        <small>🎯 学习目标</small>
+        <span>{{ trigger.learningObjective }}</span>
+      </div>
     </template>
 
     <template v-else-if="trigger.kind === 'counterexample_flip'">
+      <div v-if="trigger.backgroundContext" class="context-banner">
+        <span class="context-banner-label">{{ trigger.backgroundContext.setting }}</span>
+      </div>
       <p class="lead">换个条件，看看主导路径会不会变。</p>
       <div class="key-point">
         <small>换个条件看看</small>
         <b>{{ trigger.payload.baseClaim }}</b>
       </div>
       <div class="option-list">
-        <button
-          v-for="option in trigger.payload.options"
-          :key="option.id"
-          type="button"
-          @click.stop="selectFlip(option.id)"
-        >
+        <button v-for="option in trigger.payload.options" :key="option.id" type="button" @click.stop="selectFlip(option.id)">
           {{ option.label }}
         </button>
+      </div>
+      <div v-if="trigger.learningObjective" class="learning-goal-tip">
+        <small>🎯 学习目标</small>
+        <span>{{ trigger.learningObjective }}</span>
       </div>
     </template>
 
     <template v-else-if="trigger.kind === 'concept_compare'">
+      <div v-if="trigger.backgroundContext" class="context-banner">
+        <span class="context-banner-label">{{ trigger.backgroundContext.setting }}</span>
+      </div>
       <div class="compare-grid">
         <div class="compare-side">
           <small>{{ trigger.payload.left.term }}</small>
@@ -236,6 +247,10 @@ function dismissCue() {
         <b>{{ trigger.payload.keyDistinction }}</b>
       </div>
       <button class="primary" type="button" @click.stop="completeCompare">我能区分了</button>
+      <div v-if="trigger.learningObjective" class="learning-goal-tip">
+        <small>🎯 学习目标</small>
+        <span>{{ trigger.learningObjective }}</span>
+      </div>
     </template>
 
     <div v-else-if="trigger.kind === 'retell'" class="interaction-renderer__body">
@@ -544,6 +559,30 @@ function dismissCue() {
   p {
     margin: 0;
     color: #3b3932;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
+
+.learning-goal-tip {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #f0f7f0;
+  border-left: 3px solid #4f9274;
+  border-radius: 8px;
+
+  small {
+    color: #4f9274;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  span {
+    color: #3b5544;
     font-size: 12px;
     line-height: 1.5;
   }

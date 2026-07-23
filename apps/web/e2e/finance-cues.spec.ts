@@ -177,34 +177,67 @@ async function surfaceFirstCue(page: Page) {
 }
 
 for (const viewport of viewports) {
-  test(`${viewport.width}×${viewport.height} 关键点自动弹出全屏半屏，80% 宽度居中`, async ({
+  test(`${viewport.width}×${viewport.height} POI 不停播，点击后暂停且半屏 80vh 不越界`, async ({
     page
   }) => {
     const { player, video } = await openShowcase(page, viewport)
     await surfaceFirstCue(page)
 
-    // 关键点到达时自动弹出半屏，视频暂停
-    const sheet = page.getByTestId('caibao-half-sheet')
-    await expect(sheet).toBeVisible({ timeout: 2_000 })
-    expect(await video.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true)
+    // CuePill 出现但视频继续播放
+    const invitation = page.getByTestId('finance-cue-pill')
+    const geometry = await invitation.evaluate((element) => {
+      const rect = element.getBoundingClientRect()
+      const main = element.querySelector('.cue-main')!.getBoundingClientRect()
+      const later = element.querySelector('.later')!.getBoundingClientRect()
+      return {
+        width: rect.width,
+        height: rect.height,
+        mainHeight: main.height,
+        laterWidth: later.width,
+        laterHeight: later.height
+      }
+    })
+    expect(geometry.width).toBeLessThanOrEqual(216.5)
+    expect(geometry.height).toBeGreaterThanOrEqual(44)
+    expect(geometry.mainHeight).toBeGreaterThanOrEqual(44)
+    expect(geometry.laterWidth).toBeGreaterThanOrEqual(44)
+    expect(geometry.laterHeight).toBeGreaterThanOrEqual(44)
 
+    const beforeInvitation = await video.evaluate((node: HTMLVideoElement) => node.currentTime)
+    await page.waitForTimeout(300)
+    const afterInvitation = await video.evaluate((node: HTMLVideoElement) => node.currentTime)
+    expect(afterInvitation).toBeGreaterThan(beforeInvitation + 0.15)
+
+    // 用户点击 CuePill 打开半屏
+    await video.evaluate((node: HTMLVideoElement) => {
+      node.volume = 0.37
+      node.playbackRate = 1.25
+    })
+    await invitation.locator('.cue-main').dispatchEvent('click')
+    const sheet = page.getByTestId('caibao-half-sheet')
+    await expect(sheet).toBeVisible()
     const sheetGeometry = await sheet.evaluate((element) => {
       const rect = element.getBoundingClientRect()
       return {
+        height: rect.height,
+        viewportHeight: innerHeight,
         left: rect.left,
         right: rect.right,
-        width: rect.width,
         viewportWidth: innerWidth
       }
     })
-    // 全屏模式：80vw 宽度且居中（桌面端），移动端全宽
-    const widthRatio = sheetGeometry.width / sheetGeometry.viewportWidth
-    expect(widthRatio).toBeGreaterThanOrEqual(0.5)
-    expect(widthRatio).toBeLessThanOrEqual(1.01)
-    // 居中检查：半屏左右边距对称
-    expect(sheetGeometry.left).toBeGreaterThanOrEqual(-1)
-    expect(sheetGeometry.right).toBeLessThanOrEqual(sheetGeometry.viewportWidth + 1)
+    // 半屏 80vh 高度
+    expect(sheetGeometry.height / sheetGeometry.viewportHeight).toBeLessThanOrEqual(0.8201)
+    expect(sheetGeometry.height / sheetGeometry.viewportHeight).toBeGreaterThan(0.5)
+    expect(sheetGeometry.left).toBeGreaterThanOrEqual(0)
+    expect(sheetGeometry.right).toBeLessThanOrEqual(sheetGeometry.viewportWidth + 0.5)
     expect(page.locator('.finance-extension .mask')).toHaveCount(0)
+    expect(await video.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true)
+
+    const pausedAt = await video.evaluate((node: HTMLVideoElement) => node.currentTime)
+    await page.waitForTimeout(450)
+    const pausedAfter = await video.evaluate((node: HTMLVideoElement) => node.currentTime)
+    expect(Math.abs(pausedAfter - pausedAt)).toBeLessThanOrEqual(0.25)
 
     const authorText = await player.locator('.author-avatar').textContent()
     const caibaoSrc = await sheet.locator('header img').getAttribute('src')
@@ -213,6 +246,13 @@ for (const viewport of viewports) {
 
     await sheet.getByRole('button', { name: '关闭' }).click()
     await expect.poll(() => video.evaluate((node: HTMLVideoElement) => node.paused)).toBe(false)
+    expect(
+      await video.evaluate((node: HTMLVideoElement) => ({
+        muted: node.muted,
+        volume: node.volume,
+        playbackRate: node.playbackRate
+      }))
+    ).toEqual({ muted: true, volume: 0.37, playbackRate: 1.25 })
   })
 }
 
@@ -232,11 +272,12 @@ test('首次进入提供显式有声播放入口并记住用户选择', async ({
   )
 })
 
-test('半屏自动弹出后关闭保持暂停且不改变位置', async ({ page }) => {
+test('进入前已暂停，点击 CuePill 后关闭保持暂停且不改变位置', async ({ page }) => {
   const { video } = await openShowcase(page)
   await surfaceFirstCue(page)
-  // 半屏已自动弹出，视频已暂停
+  await video.evaluate((node: HTMLVideoElement) => node.pause())
   const before = await video.evaluate((node: HTMLVideoElement) => node.currentTime)
+  await page.getByTestId('finance-cue-pill').locator('.cue-main').dispatchEvent('click')
   await page.getByTestId('caibao-half-sheet').getByRole('button', { name: '关闭' }).click()
   await page.waitForTimeout(250)
   const result = await video.evaluate((node: HTMLVideoElement) => ({
