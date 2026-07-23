@@ -9,11 +9,8 @@ import type {
   VideoContext
 } from '@/features/video-extensions/contracts'
 import { createInteractionPlaybackController } from '@/features/video-extensions/interaction-playback'
-import { useCueRequestStore } from '@/features/finance-cues/cue-store'
-import type { TimelineTrigger } from '@/features/finance-cues/contracts'
 import {
   showcaseBundle,
-  showcaseExperiences,
   showcaseMediaUrl,
   showcasePosterUrl,
   type ShowcaseCatalogItem
@@ -26,7 +23,6 @@ const props = defineProps<{
   eager?: boolean
 }>()
 
-const cueStore = useCueRequestStore()
 const videoEl = ref<HTMLVideoElement>()
 const sheetOpen = ref(false)
 const loadError = ref(false)
@@ -44,10 +40,6 @@ const clock = ref<MediaClockState>({
 const mediaUrl = computed(() => showcaseMediaUrl(props.item))
 const posterUrl = computed(() => showcasePosterUrl(props.item))
 const authorInitial = computed(() => props.item.author.slice(0, 1))
-const triggers = computed<TimelineTrigger[]>(() => {
-  const experienceId = props.item.financeExperienceId
-  return showcaseExperiences[experienceId]?.triggers ?? []
-})
 const context = computed<VideoContext>(() => ({
   videoId: props.item.videoId,
   financeExperienceId: props.item.financeExperienceId,
@@ -169,10 +161,6 @@ function releaseInteraction(request: ReleaseInteractionRequest) {
   void interactionPlayback.releaseInteraction(request).finally(syncClock)
 }
 
-function openPoiCue(triggerId: string) {
-  cueStore.requestOpen(triggerId)
-}
-
 function formatTime(milliseconds: number) {
   const total = Math.max(0, Math.floor(milliseconds / 1000))
   const minutes = Math.floor(total / 60)
@@ -255,22 +243,6 @@ function formatTime(milliseconds: number) {
         @{{ item.author }}
       </RouterLink>
       <h1>{{ item.title }}</h1>
-      <div v-if="triggers.length" class="poi-row" data-testid="beta-poi-row">
-        <button
-          v-for="trigger in triggers"
-          :key="trigger.triggerId"
-          type="button"
-          class="poi-chip"
-          :class="{ 'poi-chip-active': cueStore.activeCueId === trigger.triggerId }"
-          :data-testid="`beta-poi-${trigger.triggerId}`"
-          :data-active="cueStore.activeCueId === trigger.triggerId ? 'true' : 'false'"
-          @click.stop="openPoiCue(trigger.triggerId)"
-        >
-          <span class="poi-chip-icon">📍</span>
-          <span class="poi-chip-label">{{ trigger.cueLabel }}</span>
-          <span class="poi-chip-prompt">{{ trigger.prompt }}</span>
-        </button>
-      </div>
       <div class="source-row">
         <a :href="item.sourceUrl" target="_blank" rel="noopener noreferrer" @click.stop>
           查看抖音原作品 ↗
@@ -530,72 +502,5 @@ function formatTime(milliseconds: number) {
 .media-error span {
   font-size: 12px;
   line-height: 1.45;
-}
-
-.poi-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 2px;
-  min-height: 32px;
-  pointer-events: auto;
-}
-
-.poi-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  min-height: 32px;
-  padding: 5px 10px;
-  color: #29271f;
-  background: rgba(255, 213, 65, 0.95);
-  border: 1px solid rgba(255, 200, 50, 0.6);
-  border-radius: 16px;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  opacity: 0;
-  transform: translateY(8px) scale(0.92);
-  pointer-events: none;
-  transition: opacity 220ms ease, transform 220ms ease;
-}
-
-.poi-chip.poi-chip-active {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-  box-shadow: 0 6px 20px rgba(255, 213, 65, 0.45), 0 0 0 3px rgba(255, 213, 65, 0.35);
-  animation: poi-pop 220ms ease-out, poi-pulse 1.6s ease-in-out 220ms infinite;
-}
-
-.poi-chip-icon { font-size: 12px; }
-
-.poi-chip-prompt {
-  color: #5e4a16;
-  font-weight: 500;
-  font-size: 10px;
-  max-width: 160px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@keyframes poi-pop {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.85);
-  }
-}
-
-@keyframes poi-pulse {
-  0%, 100% { box-shadow: 0 6px 20px rgba(255, 213, 65, 0.45), 0 0 0 3px rgba(255, 213, 65, 0.35); }
-  50%      { box-shadow: 0 6px 20px rgba(255, 213, 65, 0.6), 0 0 0 6px rgba(255, 213, 65, 0.18); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .poi-chip.poi-chip-active {
-    animation: none;
-  }
 }
 </style>
