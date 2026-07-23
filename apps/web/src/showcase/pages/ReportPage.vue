@@ -315,6 +315,136 @@ section h2 {
 .perspective-grid article p {
   line-height: 1.55;
 }
+.reasoning {
+  padding: 18px;
+  background: #fff;
+  border: 1px solid #e7dcc6;
+  border-radius: 16px;
+}
+.reasoning .hand-written-note {
+  padding: 12px 14px;
+  color: #2a2820;
+  background: repeating-linear-gradient(
+    to bottom,
+    #fffbe6,
+    #fffbe6 22px,
+    rgba(217, 170, 44, 0.18) 22px,
+    rgba(217, 170, 44, 0.18) 23px
+  );
+  border-left: 3px solid #d9aa2c;
+  border-radius: 12px;
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.7;
+}
+.reasoning small {
+  display: block;
+  margin-top: 8px;
+  color: #8a681b;
+  font-size: 12px;
+}
+.reasoning-paths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.reasoning-path {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  background: #f8efd9;
+  border-radius: 14px;
+}
+.reasoning-path header {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.reasoning-path .icon {
+  font-size: 16px;
+}
+.reasoning-path b {
+  color: #5b3f12;
+  font-size: 12px;
+}
+.reasoning-path .top {
+  margin: 0;
+  color: #8a681b;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.reasoning-path .bottom {
+  margin: 0;
+  color: #2c2a25;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.reasoning-path.tone-teal {
+  background: #e1efe8;
+}
+.reasoning-path.tone-gold {
+  background: #fff5d4;
+}
+.reasoning-path.tone-blue {
+  background: #e3ecf7;
+}
+.counter-path {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px dashed #d9aa2c;
+  border-radius: 12px;
+}
+.counter-path small {
+  display: block;
+  margin-bottom: 6px;
+  color: #8a681b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.counter-path ol {
+  margin: 0;
+  padding-left: 18px;
+  color: #4e493f;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.suggested-watch {
+  padding: 18px;
+  background: #f8efd9;
+  border-radius: 16px;
+}
+.suggested-watch-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  background: #fff;
+  border-radius: 12px;
+}
+.suggested-watch-card b {
+  display: block;
+  color: #2a2820;
+  font-size: 13px;
+}
+.suggested-watch-card p {
+  margin: 4px 0 0;
+  color: #6b6559;
+  font-size: 12px;
+}
+.suggested-watch-card .timestamp {
+  padding: 4px 10px;
+  color: #8a681b;
+  background: #fff1b7;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
 .report-chat {
   margin-top: 18px;
   padding: 16px;
@@ -369,7 +499,8 @@ section h2 {
     grid-template-columns: repeat(2, 1fr);
   }
   .mastery-grid,
-  .perspective-grid {
+  .perspective-grid,
+  .reasoning-paths {
     grid-template-columns: 1fr;
   }
   .notice {

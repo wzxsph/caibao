@@ -45,6 +45,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '2026年AI算力规模化部署进入新阶段，电力需求倍增。',
+        keyFacts: ['训练耗电激增', '数据中心负荷高', '长期合同紧'],
+        relevance: '把AI电力消耗从概念变成可量化的产业约束。'
+      },
       kind: 'context_card' as const,
       payload: {
         title: 'AI的电力胃口有多大',
@@ -68,6 +73,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '美国电网扩容周期长、跨州审批复杂，供电能力滞后于算力扩张。',
+        keyFacts: ['电网扩容5-10年', '审批跨州协调', '新建项目排队'],
+        relevance: '判断电网刚性约束是否在AI算力竞赛中卡住产能。'
+      },
       kind: 'quick_judgment' as const,
       payload: {
         title: '电力是不是AI的硬瓶颈？',
@@ -101,6 +111,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '传统电网负载分散可调度，AI数据中心集中高密度、24/7满负荷。',
+        keyFacts: ['传统负载可预测', '数据中心满负荷', '区域集中部署'],
+        relevance: '理解两种负载差异，才能判断电网需要怎样的改造。'
+      },
       kind: 'concept_compare' as const,
       payload: {
         title: '传统电网 vs AI数据中心',
@@ -130,6 +145,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '微软、亚马逊等科技巨头与核电公司签订长期购电协议，锁定基荷电力。',
+        keyFacts: ['微软签核电合约', '亚马逊锁定PPA', '碳目标驱动'],
+        relevance: '厘清算力扩张如何传导到核电需求，理解PPA机制。'
+      },
       kind: 'causal_stitch' as const,
       payload: {
         title: '补全电网瓶颈的下一步',
@@ -156,6 +176,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: 'SMR小型堆与大型反应堆同时推进，建设时间表仍在博弈中。',
+        keyFacts: ['SMR五年内可建', '大型堆十年周期', '审批各有节奏'],
+        relevance: '用建设周期作为承重条件，区分核电复兴的虚实。'
+      },
       kind: 'condition_slider' as const,
       payload: {
         title: '核电复兴的可持续条件',

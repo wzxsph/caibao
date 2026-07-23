@@ -45,6 +45,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: 'OpenAI完成66亿美元融资，刷新AI初创估值纪录。',
+        keyFacts: ['OpenAI吸金66亿', '估值超千亿', '闭源主导'],
+        relevance: '理解资本集中度之前，先把头部融资规模作为锚点。'
+      },
       kind: 'context_card' as const,
       payload: {
         title: '美国AI资本的分配地图',
@@ -68,6 +73,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: 'Microsoft继续加注OpenAI，亚马逊重金押注Anthropic，资本集中加速。',
+        keyFacts: ['微软加注OpenAI', '亚马逊押Anthropic', '少数玩家主导'],
+        relevance: '判断资本集中是产业加速器还是垄断源头，先看资金流向。'
+      },
       kind: 'quick_judgment' as const,
       payload: {
         title: 'AI资本集中：好事还是坏事？',
@@ -101,6 +111,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: 'Llama、Mistral等开源模型在多项基准上逼近闭源头部。',
+        keyFacts: ['Llama版本迭代', 'Mistral团队有底', '差距在缩小'],
+        relevance: '用开源反例校准对闭源护城河的乐观判断。'
+      },
       kind: 'counterexample_flip' as const,
       payload: {
         title: '换个条件：开源追上了',
@@ -135,6 +150,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: 'GPU集群扩张主导资本流向，但数据计算记录中心（DCR）模式也在兴起。',
+        keyFacts: ['GPU集群烧钱', 'DCR模式试水', '两类路径并存'],
+        relevance: '分清资本流向，才能区分AI公司的护城河类别。'
+      },
       kind: 'concept_compare' as const,
       payload: {
         title: '算力AI vs 数据AI',

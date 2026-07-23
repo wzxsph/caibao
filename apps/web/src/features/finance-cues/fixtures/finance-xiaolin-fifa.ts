@@ -45,6 +45,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '2026年世界杯商业化进入四年周期节点，转播权与赞助重谈判。',
+        keyFacts: ['四年周期收入约70亿美元', '转播权占收入45%', '赞助收入波动大'],
+        relevance: '理解FIFA收入结构是分析它盈利模式的前提。'
+      },
       kind: 'context_card' as const,
       payload: {
         title: '体育赛事的经济引擎',
@@ -68,6 +73,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '转播权谈判周期长、品牌赞助合约灵活，两类收入对周期与冲击反应不同。',
+        keyFacts: ['转播合同锁定多年', '赞助合约按周期谈', '退出可能造成缺口'],
+        relevance: '判断FIFA收入依赖结构，决定它对单一冲击的脆弱性。'
+      },
       kind: 'condition_slider' as const,
       payload: {
         title: '拨动FIFA的收入杠杆',
@@ -101,6 +111,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '主办国需要在前几年投入场馆和基建，预算审议与工期压力大。',
+        keyFacts: ['场馆建设成本高', '审批与工期敏感', '赛后利用率参差'],
+        relevance: '识别FIFA收益与主办国投入的错位，避免把两者当成同一笔账。'
+      },
       kind: 'causal_stitch' as const,
       payload: {
         title: '补全FIFA与主办国的中间环节',
@@ -130,6 +145,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '卡塔尔与俄罗斯的成本超支经验揭示了主办国长期亏损的极端样本。',
+        keyFacts: ['卡塔尔成本超支', '俄罗斯赛后利用低', '申办意愿下降'],
+        relevance: '用反例校准对FIFA模式的乐观判断，避免把单一案例当常态。'
+      },
       kind: 'counterexample_flip' as const,
       payload: {
         title: '换个条件看FIFA模式',

@@ -2,6 +2,7 @@ import type {
   ApprovedExperience,
   CueSession,
   EvidenceReport,
+  LearningSummary,
   OpeningBrief,
   ReportPerspective
 } from './contracts'
@@ -34,6 +35,23 @@ const fallbackPerspectives: ReportPerspective[] = [
     response: '避免把科普内容直接当作个人交易建议。'
   }
 ]
+
+function generateSuggestions(
+  experience: ApprovedExperience,
+  summary: LearningSummary
+): string[] {
+  const suggestions: string[] = []
+  if (summary.notObserved.length > 0) {
+    suggestions.push(`回到时间轴补看尚未观察的${summary.notObserved.length}个关键点`)
+  }
+  suggestions.push(
+    `检验${experience.concepts[0]?.name ?? '核心概念'}的相反力量与场景假设`
+  )
+  if (experience.report?.transferQuestion) {
+    suggestions.push(`尝试用一句话复述：${experience.report.transferQuestion}`)
+  }
+  return suggestions
+}
 
 export function buildEvidenceReport(
   experience: ApprovedExperience,
@@ -80,7 +98,12 @@ export function buildEvidenceReport(
       ? {
           handWrittenNote: experience.report.transferQuestion,
           coreVariable: experience.report.coreVariable,
-          paths: experience.report.paths,
+          paths: experience.report.paths.map((path) => ({
+            tone: path.tone,
+            top: path.top,
+            bottom: path.bottom,
+            icon: path.icon
+          })),
           counterPath: experience.report.counterPath,
           replayAtMs: experience.report.replayAt
         }
@@ -92,7 +115,81 @@ export function buildEvidenceReport(
           note: '从此处重看核心变量如何在不同条件下走出不同路径。'
         }
       : undefined,
-    notice: experience.notice
+    notice: experience.notice,
+    thesisStatement:
+      experience.report?.thesisStatement ??
+      `本视频的${experience.concepts.length}个核心概念构成了一个连贯的经济推理框架。`,
+    causalPaths: extractCausalPaths(experience),
+    counterForce: extractCounterForce(experience),
+    conceptTags: experience.concepts.slice(0, 6).map((c) => c.name),
+    mastery: {
+      observed: summary.observed.map((item) => ({
+        triggerId: item.triggerId,
+        title: item.title,
+        detail: item.evidenceIds.join(', ')
+      })),
+      pending: summary.notObserved.map((item) => ({
+        triggerId: item.triggerId,
+        title: item.title,
+        detail: '尚未触达',
+        revisitMs:
+          experience.triggers.find((t) => t.triggerId === item.triggerId)?.startMs ?? 0
+      }))
+    },
+    suggestions: generateSuggestions(experience, summary),
+    recommendedExtension: extractRecommendedExtension(experience)
+  }
+}
+
+function extractCausalPaths(experience: ApprovedExperience) {
+  const provided = experience.report?.causalPaths
+  if (Array.isArray(provided) && provided.length > 0) {
+    return provided.map((path) => ({
+      root: path.root ?? experience.title,
+      category: path.category ?? '核心传导',
+      steps: path.steps ?? ['条件一', '条件二', '机制'],
+      outcome: path.outcome ?? '结果'
+    }))
+  }
+  return [
+    {
+      root: experience.title,
+      category: '核心传导',
+      steps: ['条件一', '条件二', '机制'],
+      outcome: '结果'
+    }
+  ]
+}
+
+function extractCounterForce(experience: ApprovedExperience) {
+  const provided = experience.report?.counterForce
+  if (provided) {
+    return {
+      statement: provided.statement ?? '结果仍受其他边界条件影响',
+      factors: provided.factors ?? ['经济周期', '通胀水平', '避险情绪']
+    }
+  }
+  return {
+    statement: '结果仍受其他边界条件影响',
+    factors: ['经济周期', '通胀水平', '避险情绪']
+  }
+}
+
+function extractRecommendedExtension(experience: ApprovedExperience) {
+  const provided = experience.report?.recommendedExtension
+  if (provided) {
+    return {
+      title: provided.title ?? `为什么${experience.concepts[0]?.name ?? '关键概念'}是核心`,
+      reason: provided.reason ?? '结合上述主路径，反向力量指出了条件依赖',
+      startMs: provided.startMs ?? experience.report?.replayAt ?? 0,
+      durationMs: provided.durationMs ?? 20000
+    }
+  }
+  return {
+    title: `为什么${experience.concepts[0]?.name ?? '关键概念'}是核心`,
+    reason: '结合上述主路径，反向力量指出了条件依赖',
+    startMs: experience.report?.replayAt ?? 0,
+    durationMs: 20000
   }
 }
 

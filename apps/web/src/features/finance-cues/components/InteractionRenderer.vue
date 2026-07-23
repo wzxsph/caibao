@@ -88,10 +88,10 @@ function dismissCue() {
 
 <template>
   <div class="interaction" data-testid="finance-interaction">
-    <section
+    <aside
       v-if="trigger.backgroundContext"
       class="trigger-background"
-      data-testid="finance-interaction-background"
+      data-testid="trigger-background"
     >
       <small>背景</small>
       <b>{{ trigger.backgroundContext.setting }}</b>
@@ -101,7 +101,7 @@ function dismissCue() {
       <p v-if="trigger.backgroundContext.relevance">
         与本触点的关联：{{ trigger.backgroundContext.relevance }}
       </p>
-    </section>
+    </aside>
     <template v-if="trigger.kind === 'context_card'">
       <p class="lead">{{ trigger.payload.body }}</p>
       <div class="key-point">

@@ -45,6 +45,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: 'L4自动驾驶技术栈分为感知、规划、控制三层，各层成熟度差异显著。',
+        keyFacts: ['感知层已成熟', '规划层仍在迭代', '控制层依赖车规'],
+        relevance: '在讨论商业化之前，先看清技术栈的分层和成熟度。'
+      },
       kind: 'context_card' as const,
       payload: {
         title: '自动驾驶的商业化技术栈',
@@ -68,6 +73,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '萝卜快跑运营数据成为自动驾驶公司估值的关键支撑。',
+        keyFacts: ['萝卜累计单量大', '运营数据可量化', '盈利模型可推'],
+        relevance: '让IPO链条回到"可验证运营"这一现实约束。'
+      },
       kind: 'causal_stitch' as const,
       payload: {
         title: '补全商业化到IPO的中间环节',
@@ -93,6 +103,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '北京、深圳等地率先发放L4级别测试与运营许可，监管节奏分化。',
+        keyFacts: ['北京发放许可', '深圳先行示范', '地方节奏不一'],
+        relevance: '用监管变量校准商业化时间表，避免高估IPO速度。'
+      },
       kind: 'condition_slider' as const,
       payload: {
         title: '监管速度如何影响IPO估值',
@@ -126,6 +141,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: 'L4在限定场景（园区、港口）已落地，但在全域开放道路仍有差距。',
+        keyFacts: ['限定场景已落地', '全域开放困难', '政策与成本并行'],
+        relevance: '把"大规模落地"具体拆为不同场景，技术乐观主义需要限定。'
+      },
       kind: 'quick_judgment' as const,
       payload: {
         title: 'L4大规模落地：三年内能实现吗？',
@@ -159,6 +179,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: 'Cruise因重大事故暂停运营，是行业黑天鹅事件的典型案例。',
+        keyFacts: ['Cruise暂停运营', '监管立刻收紧', '公众信任崩塌'],
+        relevance: '用反例提醒：自动驾驶估值对安全事件极度敏感。'
+      },
       kind: 'counterexample_flip' as const,
       payload: {
         title: '换个条件：重大事故的影响',

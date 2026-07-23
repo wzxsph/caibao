@@ -47,6 +47,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '1995-2019年美联储多次降息周期，资本曾在拉美、日本、亚洲与美国资产间反复切换。',
+        keyFacts: ['多次降息周期', '资本去向分散', '曾涌新兴市场'],
+        relevance: '建立历史样本，让"降息→资本流向"具备经验参照。'
+      },
       kind: 'context_card' as const,
       payload: {
         title: '财包先陪你认认"资本流动"',
@@ -71,6 +76,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '历史样本中降息与资产上涨常同时出现，但二者并非简单因果。',
+        keyFacts: ['样本有限', '背景差异大', '机制需独立验证'],
+        relevance: '保留对因果判断的边界，避免把历史共现直接当结论。'
+      },
       kind: 'quick_judgment' as const,
       payload: {
         title: '历史同时出现，就一定是因果吗？',
@@ -107,6 +117,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '美元作为国际储备货币与主要融资货币，形成独特的传导链路。',
+        keyFacts: ['美元是储备货币', '美元是融资货币', '汇率受影响'],
+        relevance: '理解美元外溢前，先把"美元的特殊角色"作为底色。'
+      },
       kind: 'causal_stitch' as const,
       payload: {
         title: '财包陪你补上中间这一步',
@@ -134,6 +149,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '欧元区与日本处于不同经济周期，与美联储的政策节奏经常错位。',
+        keyFacts: ['欧日周期不同', '政策节奏错位', '市场联动有限'],
+        relevance: '把"政策分化"放回各自经济周期，理解其必然性。'
+      },
       kind: 'condition_slider' as const,
       payload: {
         title: '换掉本国条件，政策方向会变吗？',
@@ -169,6 +189,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'automatic' as const,
+      backgroundContext: {
+        setting: '1998年日美利差曾短暂反转，但日元并未如理论预期持续升值。',
+        keyFacts: ['98年利差反转', '干预改变路径', '预期主导走势'],
+        relevance: '用历史反例提醒：利差不是汇率走势的唯一决定因素。'
+      },
       kind: 'counterexample_flip' as const,
       payload: {
         title: '政策方向对了，汇率就一定照着走吗？',
@@ -205,6 +230,11 @@ const rawExperience = {
       reviewStatus: 'approved' as const,
       fallbackBehavior: 'collapse_to_timeline' as const,
       delivery: 'timeline_only' as const,
+      backgroundContext: {
+        setting: '资本流向由多重因素共同决定，并非单一利率变量。',
+        keyFacts: ['多重因素驱动', '政策只是其一', '汇率联动复杂'],
+        relevance: '让复述聚焦多因素视角，避免单变量思维。'
+      },
       kind: 'retell' as const,
       payload: {
         title: '轮到你带财包走一遍逻辑',

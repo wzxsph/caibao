@@ -229,7 +229,34 @@ export const approvedExperienceSchema = z
           )
           .min(1),
         transferQuestion: z.string().min(1),
-        replayAt: z.number().int().nonnegative()
+        replayAt: z.number().int().nonnegative(),
+        thesisStatement: z.string().min(1).optional(),
+        causalPaths: z
+          .array(
+            z.object({
+              root: z.string().min(1),
+              category: z.string().min(1),
+              steps: z.array(z.string().min(1)).min(1),
+              outcome: z.string().min(1)
+            })
+          )
+          .optional(),
+        counterForce: z
+          .object({
+            statement: z.string().min(1),
+            factors: z.array(z.string().min(1)).min(1)
+          })
+          .strict()
+          .optional(),
+        recommendedExtension: z
+          .object({
+            title: z.string().min(1),
+            reason: z.string().min(1),
+            startMs: z.number().int().nonnegative(),
+            durationMs: z.number().int().positive()
+          })
+          .strict()
+          .optional()
       })
       .optional(),
     chapters: z
@@ -362,6 +389,35 @@ export interface ReportPerspective {
   response: string
 }
 
+export interface CausalPath {
+  root: string
+  category: string
+  steps: string[]
+  outcome: string
+}
+
+export interface CounterForce {
+  statement: string
+  factors: string[]
+}
+
+export interface MasteryObserved {
+  triggerId: string
+  title: string
+  detail: string
+}
+
+export interface MasteryPending extends MasteryObserved {
+  revisitMs: number
+}
+
+export interface RecommendedExtension {
+  title: string
+  reason: string
+  startMs: number
+  durationMs: number
+}
+
 export interface EvidenceReport {
   videoId: string
   title: string
@@ -375,6 +431,17 @@ export interface EvidenceReport {
   perspectives: ReportPerspective[]
   openingBrief: OpeningBrief
   notice: string
+  // V2.5 dashboard fields
+  thesisStatement: string
+  causalPaths: CausalPath[]
+  counterForce: CounterForce
+  conceptTags: string[]
+  mastery: {
+    observed: MasteryObserved[]
+    pending: MasteryPending[]
+  }
+  suggestions: string[]
+  recommendedExtension: RecommendedExtension
   reasoning?: {
     handWrittenNote: string
     coreVariable: string
