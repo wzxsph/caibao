@@ -15,7 +15,7 @@
 5. 最新 Review Candidate；当前为 V2.7。
 6. 历史候选、PM 原型、旧 Demo 和口头示例。
 
-用户 2026-07-23 直接裁决的 25 条展示、公开 Pages、逐条归属、入口曝光不停播、点击暂停、退出恢复和取消自动触点固定数量上限即时覆盖旧文档中的相反条款，但不会自动批准 V2.7 其他内容。
+用户 2026-07-23 最新直接裁决的“25 条完整输入与生成、10 条公开展示”、公开 Pages、逐条归属、入口曝光不停播、点击暂停、退出恢复和取消自动触点固定数量上限即时覆盖旧文档中的相反条款，但不会自动批准 V2.7 其他内容。
 
 ## 2. PRD 生命周期
 
@@ -41,30 +41,30 @@ V2.7 批准标签只能是 `prd-v2.7-approved`，当前不得创建。
 
 ## 3. 版本升级规则
 
-| 变化 | 动作 |
-|---|---|
-| 错字、链接、纯排版 | Patch |
+| 变化                                              | 动作  |
+| ------------------------------------------------- | ----- |
+| 错字、链接、纯排版                                | Patch |
 | 功能范围、交互、API、数据源、部署、门禁或验收改变 | Minor |
-| 产品形态或技术栈断代 | Major |
+| 产品形态或技术栈断代                              | Major |
 
-从固定四条、本地-only 到 25 条公开展示，以及取消数量上限，是 Minor 级规范变化，因此 V2.6→V2.7。
+从固定四条、本地-only 到完整 25 条生成、公开 10 条展示，以及取消数量上限，是 Minor 级规范变化，因此 V2.6→V2.7。V2.7 尚未批准，用户将公开集合由 25 调整为 10 作为同一候选的审阅修订记录，不另建 Approved 版本。
 
 单个内容文案、证据修订、审核人变化、媒体替换或规则表在已批准接口内扩展，不自动升级 PRD；升级对应内容/媒体/规则版本。
 
 ## 4. 独立版本向量
 
-| 字段 | 示例 | 目的 |
-|---|---|---|
-| `prdBaseline` | `prd-v2.7-approved@<sha>` | 已批准规范；当前不能使用 |
-| `contentVersion` | `showcase-mock@2026.07.23.1` | 内容不可变修订 |
-| `schemaVersion` | `showcase-bundle/1.0.0` | 契约兼容 |
-| `ruleVersion` | `finance-causal/1.0.0` | 确定性方向 |
-| `plannerVersion` | `cue-planner/1.0.0` | 触点选择复现 |
-| `promptVersion` | `showcase-mock-prompt/1.0.0` | 生成差异 |
-| `appCommit` | `e85de2b...` | 运行实现 |
-| `mediaFingerprint` | SHA-256 | 媒体一致性 |
-| `subtitleVersion` | 内容 ID | 字幕/时间码追溯 |
-| `mediaRelease` | `showcase-media-20260723-v1` | 公网媒体批次与下架 |
+| 字段               | 示例                         | 目的                     |
+| ------------------ | ---------------------------- | ------------------------ |
+| `prdBaseline`      | `prd-v2.7-approved@<sha>`    | 已批准规范；当前不能使用 |
+| `contentVersion`   | `showcase-mock@2026.07.23.1` | 内容不可变修订           |
+| `schemaVersion`    | `showcase-bundle/1.0.0`      | 契约兼容                 |
+| `ruleVersion`      | `finance-causal/1.0.0`       | 确定性方向               |
+| `plannerVersion`   | `cue-planner/1.0.0`          | 触点选择复现             |
+| `promptVersion`    | `showcase-mock-prompt/1.0.0` | 生成差异                 |
+| `appCommit`        | `9b5bd025...`                | 运行实现                 |
+| `mediaFingerprint` | SHA-256                      | 媒体一致性               |
+| `subtitleVersion`  | 内容 ID                      | 字幕/时间码追溯          |
+| `mediaRelease`     | `showcase-media-20260723-v1` | 公网媒体批次与下架       |
 
 不得将所有对象统称为“V2.7”。
 
@@ -82,7 +82,7 @@ generated → draft → in_review → reviewed → approved → published → re
 - 回滚切换发布指针，不回写历史 Approved 内容。
 - 权利到期或撤回立即 retire，不等待 PRD 升级。
 
-当前 25 个 Experience 的真实状态：`internal_poc`、`estimated_mock`、`deterministic_llm_mock`；不能改写为 Approved。
+当前完整 25 个 Experience 的真实状态：`internal_poc`、`estimated_mock`、`deterministic_llm_mock`；公开运行时只选择 10 个，二者都不能改写为 Approved。
 
 ## 6. 自动触点治理
 
@@ -98,16 +98,16 @@ generated → draft → in_review → reviewed → approved → published → re
 
 每个可批准内容版本至少记录：
 
-| 维度 | 必需证据 |
-|---|---|
-| 权利 | 来源、作者、用途、期限、环境、下架方式、证据 ID |
-| 媒体 | 源/派生指纹、时长、编码、封面和作者一致性 |
-| ASR/OCR/视觉 | 字幕版本、时间窗、术语/数值人工复核 |
-| 财经内容 | 概念、因果、条件、反例、方向、边界 |
-| 交互 | CueKind、选项、反馈、45 秒间隔、单并发、≤12 秒、≤48vh |
-| 安全 | 投资建议、提示注入、数据最小化、日志/费用 |
-| 测试 | Schema、规则、播放器、恢复、报告、发布负向用例 |
-| 版本 | 完整独立版本向量 |
+| 维度         | 必需证据                                              |
+| ------------ | ----------------------------------------------------- |
+| 权利         | 来源、作者、用途、期限、环境、下架方式、证据 ID       |
+| 媒体         | 源/派生指纹、时长、编码、封面和作者一致性             |
+| ASR/OCR/视觉 | 字幕版本、时间窗、术语/数值人工复核                   |
+| 财经内容     | 概念、因果、条件、反例、方向、边界                    |
+| 交互         | CueKind、选项、反馈、45 秒间隔、单并发、≤12 秒、≤48vh |
+| 安全         | 投资建议、提示注入、数据最小化、日志/费用             |
+| 测试         | Schema、规则、播放器、恢复、报告、发布负向用例        |
+| 版本         | 完整独立版本向量                                      |
 
 每条结论包含 reviewer、role、reviewedAt、outcome、evidenceRef、comment。自动化结果只能作 evidenceRef，不能代签。
 
@@ -115,9 +115,9 @@ generated → draft → in_review → reviewed → approved → published → re
 
 ### 8.1 当前工程展示
 
-- App：`wzxsph/douyin@e85de2bfa1743aaea5204f6e1513de6d56c2e310`。
+- App：`wzxsph/douyin@9b5bd02503c951a8b416e66bdd81f48ba89931d5`。
 - Pages：<https://wzxsph.github.io/douyin/#/home>。
-- Media：Release `showcase-media-20260723-v1`。
+- Media：Release `showcase-media-20260723-v1` 保存完整派生源；Pages artifact 同域暂存公开 10 条。
 - 发布是用户直接要求的工程展示，不代表生产内容审批或权利独立核验。
 
 ### 8.2 生产发布门
@@ -131,8 +131,8 @@ generated → draft → in_review → reviewed → approved → published → re
 当前窗口截至 2026-08-22（Asia/Shanghai）。未续期的 retire 顺序：
 
 1. 下架或删除 GitHub Release 资产；
-2. 发布移除目录/空态；
-3. 验证 Release 直链不可访问；
+2. 部署不含媒体的 Pages artifact 与移除目录/空态；
+3. 验证 Release 和 Pages 媒体直链均不可访问；
 4. 保存最小审计记录。
 
 仅让页面不再引用媒体并不能满足撤权，因为直链仍可能访问。
@@ -149,8 +149,8 @@ generated → draft → in_review → reviewed → approved → published → re
 ### 应用仓
 
 - `origin=wzxsph/douyin`，`upstream=zyronon/douyin`；绝不 push upstream。
-- 25 条展示通过 PR #3 合并；`master=e85de2bf`。
-- 媒体不进 Git，只进独立 Release；密钥和模型原始响应不进 Git。
+- 25 条生成基线通过 PR #3；10 条同域公开展示通过 PR #4，当前 `master=9b5bd025`。
+- 媒体不进 Git；Release 保存完整派生，Actions 只把 10 条复制进临时 Pages artifact；密钥和模型原始响应不进 Git。
 - 新变更走功能分支、意图明确的提交、PR 和精确 head SHA 合并。
 
 ## 10. PDF 与文档

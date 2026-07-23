@@ -6,7 +6,7 @@
 
 - 已批准产品基线仍是 `财经推演室_PRD_V2.0.md`。
 - 最新 Review Candidate 是 `财经推演室_PRD_V2.7.md`；V2.3–V2.6 均为历史候选，不得写成 Approved。
-- 用户 2026-07-23 的直接裁决立即覆盖旧文档的相反条款：推荐使用清单全部 25 条、入口曝光继续播放、点击财包后暂停、退出恢复、公开 GitHub Pages 并标注来源、自动触点不设固定数量上限。
+- 用户 2026-07-23 的最新直接裁决立即覆盖旧文档的相反条款：完整清单与生成管线保留 25 条，公开推荐只展示清单内显式选出的 10 条（两位作者各 5 条）；入口曝光继续播放、点击财包后暂停、退出恢复、公开 GitHub Pages 并标注来源、自动触点不设固定数量上限。
 - 不得创建 `prd-v2.7-approved` 标签；没有真实签字时不得把 Mock 内容写成财经审核通过。
 
 ## 5 分钟接手
@@ -36,21 +36,22 @@ git rev-parse HEAD
 ## 三仓边界
 
 - 产品仓：`/home/samsong/Desktop/maybe/caibao`，`main`，远端 `wzxsph/caibao`。只跟踪 PRD、研究、架构、测试、交接和配图。
-- 应用仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`，远端 `origin=wzxsph/douyin`、`upstream=zyronon/douyin`。当前线上 `master=e85de2bfa1743aaea5204f6e1513de6d56c2e310`。
+- 应用仓：`/home/samsong/Desktop/maybe/caibao/refer/douyin`，远端 `origin=wzxsph/douyin`、`upstream=zyronon/douyin`。当前线上 `master=9b5bd02503c951a8b416e66bdd81f48ba89931d5`。
 - PM 参考仓：`/home/samsong/Desktop/maybe/caibao/refer/moneybaby`，固定参考 `7db765bab9efe1064321f03d992df42e62413a7c`，只用于视觉与信息结构取证。
 - 产品仓忽略两个 `refer/` 子仓。媒体、依赖、缓存、运行输出、模型产物和密钥不得借父仓提交。
 
 ## 已上线工程事实
 
 - Pages：<https://wzxsph.github.io/douyin/#/home>
-- 应用 PR：<https://github.com/wzxsph/douyin/pull/3>
+- 应用展示 PR：<https://github.com/wzxsph/douyin/pull/3>
+- 同域媒体修复 PR：<https://github.com/wzxsph/douyin/pull/4>
 - 媒体 Release：<https://github.com/wzxsph/douyin/releases/tag/showcase-media-20260723-v1>
-- 目录 25 条：小Lin说 15、大陆姓陆 10；首页 25 个原作链接，作者页分别只展示该作者清单子集。
-- 25 个浏览器视频 + 25 张封面位于 Release，约 167 MiB；源视频和派生媒体均不进 Git。
+- 完整生成目录 25 条：小Lin说 15、大陆姓陆 10；公开 Pages 由 `src/showcase/public-video-ids.json` 固定选择 10 条，两位作者各 5 条。
+- 25 个浏览器视频 + 25 张封面仍位于 Release，约 167 MiB；Pages workflow 校验后只把所选 10 个视频与封面暂存进同域 `dist/media/`，媒体不进 Git。
 - 25 个 Experience、141 个 `automatic` 触点；每视频 3–6 个是当前六模板生成结果，不是产品上限。
 - 内容标记为 `internal_poc`、`deterministic_llm_mock`、`estimated_mock`，只依据标题与 manifest 元数据，未执行最终 ASR/OCR 或财经人审。
-- 门禁：前端 44/44、服务端 131/131、Playwright 8/8、两套 type-check、build、production audit、diff-check 通过。
-- 线上浏览器已验证 Release 视频可播放；点击财包暂停，关闭后恢复；作者页计数正确。
+- 门禁：前端 45/45、服务端 131/131、Playwright 8/8、两套 type-check、build、production audit、diff-check 通过。
+- 线上浏览器已验证 10 条/10 个来源链接、作者页 5/5；首条视频使用 Pages 同域 URL，`readyState=4` 且连续播放。媒体响应为 `video/mp4`，完整请求 200、Range 请求 206。
 
 ## 产品不变量
 
@@ -59,14 +60,14 @@ git rev-parse HEAD
 - 不自动 seek，不修改 `muted`、`volume`、`playbackRate`；重复 pause/release 必须幂等。
 - 半屏最高 48vh、无蒙层；作者头像永不被财包替换；触控目标至少 44×44px。
 - 自动触点不设 4 个或 6 个等固定上限。编排按证据、视频时长、学习价值和至少 45 秒间隔决定，同时最多一个。
-- 当前推荐源只允许由 `download-manifest.json` 生成的 25 条目录；失败时空态，不回退 `posts6.json`、`videos.md`、旧媒体 URL 或随机评论。
+- 当前推荐源只允许 `download-manifest.json` 的有效条目；公开集合必须严格等于其中由 `src/showcase/public-video-ids.json` 指定的 10 条。失败时空态，不回退 `posts6.json`、`videos.md`、旧媒体 URL 或随机评论。
 - 线上每条必须展示真实清单标题、作者和抖音原作品链接；不伪造点赞、评论、远程头像或官方认证。
 - 学习内容不得给出买什么、仓位、目标价、稳赚等交易建议；报告无总分、虚假精度、财富画像。
 
 ## 媒体与权利红线
 
 - 公网发布来自用户本轮直接要求，但项目未独立完成权利链法律核验；不得写成抖音或作者官方授权。
-- 清单窗口截至 2026-08-22（Asia/Shanghai）。未续期必须删除/下架 `showcase-media-20260723-v1` 并停止推荐；仅让前端显示空态不足以阻止 Release 直链。
+- 清单窗口截至 2026-08-22（Asia/Shanghai）。未续期必须删除/下架 `showcase-media-20260723-v1`、部署不含媒体的 Pages artifact 并停止推荐；仅让前端显示空态不足以阻止已有 Release 或 Pages 媒体 URL。
 - 不提交 `media-import/`、`.analysis-work/`、`public/demo` 大视频、Cookie、临时下载地址、字幕原文、关键帧或模型原始响应。
 - 不绕过登录、验证码、签名、风控或平台限制。遇到撤权、指纹失败或期限到期，fail closed。
 
@@ -89,7 +90,7 @@ pnpm audit --prod
 git diff --check
 ```
 
-涉及清单或媒体时还要验证 25 个 ID、SHA/bytes/时长、H.264/AAC、HTTP HEAD/Range、空目录 fail-closed 与来源链接。涉及触点时验证曝光继续播放、点击暂停、退出恢复、45 秒间隔、单并发和无数字上限。
+涉及清单或媒体时还要验证 25 个源 ID 与生成映射、10 个公开 ID、SHA/bytes/时长、H.264/AAC、Pages 同域 `video/mp4`、HTTP HEAD/Range、空目录 fail-closed 与来源链接。涉及触点时验证曝光继续播放、点击暂停、退出恢复、45 秒间隔、单并发和无数字上限。
 
 ## 文档与 PDF
 

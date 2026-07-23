@@ -2,7 +2,7 @@
 
 状态：PRD V2.7 Review Candidate 配套架构  
 日期：2026-07-23  
-应用线上基线：`wzxsph/douyin@e85de2bfa1743aaea5204f6e1513de6d56c2e310`
+应用线上基线：`wzxsph/douyin@9b5bd02503c951a8b416e66bdd81f48ba89931d5`
 
 ## 1. 架构目标
 
@@ -13,12 +13,15 @@
 ```mermaid
 flowchart TD
   Browser["浏览器"] --> Pages["GitHub Pages · Vue/Vite"]
-  Pages --> Bundle["showcase-bundle.json · 25 Catalog + 25 Experience"]
-  Pages --> Release["GitHub Release · 25 MP4 + 25 JPG"]
-  Pages --> Source["25 个抖音原作品链接"]
+  Pages --> Bundle["公开子集 · 10 Catalog + 10 Experience"]
+  Pages --> Media["Pages 同域 media · 10 MP4 + 10 JPG"]
+  Pages --> Source["10 个抖音原作品链接"]
   Manifest["本地 download-manifest.json"] --> Prepare["FFmpeg 派生 + SHA/时长校验"]
-  Manifest --> Mock["确定性 LLM Mock generator"]
+  Manifest --> Mock["完整 25 条确定性 Mock generator"]
+  Public["public-video-ids.json · 5+5"] --> Bundle
   Prepare --> Release
+  Release["GitHub Release · 25 MP4 + 25 JPG"] --> Stage["Actions 校验并暂存 10 条"]
+  Stage --> Media
   Mock --> Bundle
 ```
 
@@ -27,8 +30,9 @@ flowchart TD
 - Pages：<https://wzxsph.github.io/douyin/#/home>
 - App：`Vue 3 + Vite + TypeScript`，仅推荐流和作者页。
 - Release：`showcase-media-20260723-v1`，50 个资产、174,689,523 bytes。
-- Bundle：提交内静态 JSON，25 条目录、25 个 `internal_poc` Experience、141 个 automatic 触点。
-- 作者页：`xiaolin=15`、`dalu-xing-lu=10`。
+- Bundle：提交内生成 JSON 保留 25 条目录、25 个 `internal_poc` Experience、141 个 automatic 触点；运行时按配置过滤为 10 条。
+- 作者页：公开 `xiaolin=5`、`dalu-xing-lu=5`；完整源分布仍为 15/10。
+- Delivery：浏览器只请求 Pages 同域 `/douyin/media/*.mp4`；Release 作为 Actions 构建源，不再是运行时媒体域。
 
 ### 2.2 内容边界
 
@@ -63,16 +67,16 @@ flowchart LR
 
 ## 4. 分层责任
 
-| 层 | 责任 | 不允许 |
-|---|---|---|
-| Source/Rights | 来源 URL、作者、用途、期限、下架、指纹 | 以“公开可见”代替权利证据 |
-| Media | 容器、编码、时长、Range、派生指纹 | 覆盖源文件、把视频提交 Git |
-| Evidence | ASR/OCR/视觉证据与时间窗 | 无 evidenceId 的财经结论 |
-| Generation | 生成 Draft 概念、因果、条件、反例、Payload | 直接批准或改变确定性规则 |
-| Planner | 证据/价值/间隔/重复度优化 | 固定截断为最多 4/6 个 |
-| Review | 权利、时间码、财经、安全、测试签字 | 模型代签或 generated→published 跳级 |
-| Runtime | 播放状态、Cue、会话、事件、报告 | 自动 seek、改音量、伪造掌握证据 |
-| Delivery | Pages/API/媒体分发与回滚 | 到期后保留可访问 Release 直链 |
+| 层            | 责任                                       | 不允许                                     |
+| ------------- | ------------------------------------------ | ------------------------------------------ |
+| Source/Rights | 来源 URL、作者、用途、期限、下架、指纹     | 以“公开可见”代替权利证据                   |
+| Media         | 容器、编码、时长、Range、派生指纹          | 覆盖源文件、把视频提交 Git                 |
+| Evidence      | ASR/OCR/视觉证据与时间窗                   | 无 evidenceId 的财经结论                   |
+| Generation    | 生成 Draft 概念、因果、条件、反例、Payload | 直接批准或改变确定性规则                   |
+| Planner       | 证据/价值/间隔/重复度优化                  | 固定截断为最多 4/6 个                      |
+| Review        | 权利、时间码、财经、安全、测试签字         | 模型代签或 generated→published 跳级        |
+| Runtime       | 播放状态、Cue、会话、事件、报告            | 自动 seek、改音量、伪造掌握证据            |
+| Delivery      | Pages/API/媒体分发与回滚                   | 到期后保留可访问 Release 或 Pages 媒体直链 |
 
 ## 5. 播放交互协议
 
@@ -97,8 +101,9 @@ stateDiagram-v2
 
 1. `prepare:showcase-media` 读取忽略的 manifest，生成 H.264/AAC `yuv420p` fast-start 视频和 JPG。
 2. `generate:showcase-content` 生成 Schema 校验的静态 bundle。
-3. 视频/封面上传 Release；bundle 和代码进入 Git。
-4. Pages 通过 `VITE_SHOWCASE_MEDIA_BASE_URL` 解析 Release URL。
+3. 25 组视频/封面上传 Release；bundle、10 条公开配置和代码进入 Git，媒体不进入 Git。
+4. Pages 构建设置 `VITE_SHOWCASE_MEDIA_BASE_URL=./media/`，再由 `stage:showcase-pages-media` 校验公开 10 条 SHA/bytes/格式并写入临时 artifact。
+5. 浏览器从 Pages 同域读取 `video/mp4`，必须支持 200/206 和 `Accept-Ranges`，不再经历 Release 302 与 attachment 响应。
 
 ### 6.2 本地 Express 路径
 
@@ -110,7 +115,7 @@ Catalog 校验 Schema、授权状态、路径 containment、bytes、SHA-256、FF
 
 ### 6.3 到期差异
 
-本地 API 可在期限到达后返回空目录/410，但静态 Release 不会自动删除。生产运行手册必须把“删除/下架 Release 资产”列为撤权和到期的第一动作，前端空态是第二动作。
+本地 API 可在期限到达后返回空目录/410，但静态 Release 与现有 Pages artifact 不会自动删除。生产运行手册必须先删除/下架 Release，再部署不含媒体的 Pages artifact 与空目录，最后验证两类直链不可访问。
 
 ## 7. 内容、会话与发布 API
 
@@ -151,13 +156,13 @@ P0 可用 Express 内存态 + `localStorage` 镜像；事件以 `eventId` 幂等
 - 单媒体失败：剔除并记录，不替补旧视频。
 - 模型失败：模板反馈，用户仍可完成/退出。
 - 播放恢复失败：保持暂停，不伪造 `resumed`。
-- 权利撤回/到期：先下架 Release，再发布目录移除/空态。
-- Pages 故障：回滚到上一成功 commit；Release 与页面版本独立审计。
+- 权利撤回/到期：下架 Release，并重新部署不含媒体的 Pages artifact 与目录移除/空态。
+- Pages 故障：回滚到已验证的同域媒体版本；不得回滚到浏览器直连 Release 的旧提交。
 
 ## 11. 当前技术债
 
 - 静态 `internal_poc` bundle 与未来 Approved API 尚未硬隔离为部署策略。
 - 真实 ASR/OCR/视觉证据链未在 25 条上建立。
 - Review/Publish 与 Session/Event/Report 未闭环。
-- Release 到期下架仍需负责人、提醒和操作手册。
-- 25 条全量六类 E2E 尚未逐条执行；当前 8 项 E2E 覆盖代表路径与四视口。
+- Release 与 Pages 媒体到期下架仍需负责人、提醒和操作手册。
+- 公开 10 条逐媒体与六类 E2E 尚未完整执行；当前 8 项 E2E 覆盖代表路径与四视口。

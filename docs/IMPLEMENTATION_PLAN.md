@@ -7,7 +7,7 @@
 
 在不混淆工程原型与生产审批的前提下，完成三层交付：
 
-1. 可公开访问的 25 条清单视频展示与轻交互；
+1. 完整处理 25 条清单内容，并公开展示其中 10 条及轻交互；
 2. 可复现、可审核的真实 ASR/OCR/视觉内容生成链；
 3. Draft→Review→Approved→Published 与学习报告闭环。
 
@@ -20,21 +20,22 @@
 - [x] 自动触点固定数量上限取消。
 - [x] 密钥、媒体、运行产物与子仓隔离。
 
-### M1｜25 条目录与 Mock 内容
+### M1｜25 条生成目录与 10 条公开子集
 
 - [x] manifest 25 条全部进入 Catalog。
 - [x] `finance-showcase-<videoId>` 一一映射 25 个 Experience。
-- [x] 两作者分布 15/10，逐条原作品链接。
+- [x] 完整作者分布 15/10；公开配置固定 10 条、两位作者各 5 条并逐条提供原作品链接。
 - [x] 六类确定性 LLM Mock；141 个 automatic 触点。
 - [x] 当前 3–6 个/视频仅为生成结果，不作为产品上限。
 
-完成证据：应用提交 `70e05e70`，同步合并提交 `dd6cfa0b`，最终 `master=e85de2bf`。
+完成证据：25 条基础提交 `70e05e70`；10 条同域播放修复 `88fe726d`；最终 `master=9b5bd025`。
 
 ### M2｜浏览器媒体
 
 - [x] 25 条 HEVC 源生成 H.264/AAC、`yuv420p`、fast-start 派生。
 - [x] 源/派生 SHA、bytes、时长校验。
 - [x] 25 MP4 + 25 JPG 上传 Release `showcase-media-20260723-v1`。
+- [x] Actions 对公开 10 条重新校验 SHA/bytes/格式并暂存进 Pages artifact；浏览器只用同域 `video/mp4`。
 - [x] Git 不跟踪源或派生视频。
 
 ### M3｜前端产品壳
@@ -47,11 +48,11 @@
 
 ### M4｜测试、PR 与部署
 
-- [x] Client 44、Server 131、Playwright 8。
+- [x] Client 45、Server 131、Playwright 8。
 - [x] 两套 type-check、build、production audit、diff-check。
-- [x] PR #3 合并到 `wzxsph/douyin/master`。
-- [x] Pages workflow run `29955704172` 成功。
-- [x] 线上 25 条/来源/播放/暂停恢复/作者页浏览器验证。
+- [x] PR #3（产品壳）与 PR #4（10 条同域媒体）合并到 `wzxsph/douyin/master`。
+- [x] Pages workflow run `29970251130` 成功。
+- [x] 线上 10 条来源、作者 5/5、同域播放与媒体 200/206 验证；暂停恢复由既有 E2E 锁定。
 
 ## 3. 下一阶段：真实多模态垂直切片
 
@@ -101,9 +102,9 @@
 
 ### M9｜到期/撤权 Runbook（最高优先级）
 
-- [ ] 指定 Release Owner 和替补责任人。
+- [ ] 指定 Release/Pages 媒体交付 Owner 和替补责任人。
 - [ ] 在 2026-08-22 前确认续期或 retire 决策。
-- [ ] retire 顺序：下架 Release → 发布移除/空目录 → 验证直链不可访问 → 保存审计记录。
+- [ ] retire 顺序：下架 Release → 部署无媒体 Pages artifact 与移除/空目录 → 验证两类直链不可访问 → 保存审计记录。
 - [ ] 不把前端到期判断当成媒体删除。
 
 ### M10｜生产批准
@@ -136,9 +137,9 @@
 - 不批量爬取或绕过抖音限制。
 - 不把标题 Mock 批量送审为正式财经内容。
 - 不在 GitHub Pages 暴露服务端密钥或审核写接口。
-- 不在未续期时继续保留 Release 资产。
+- 不在未续期时继续保留 Release 或 Pages 媒体资产。
 - 不生成 V2.7 PDF；若未来生成，不做 PDF 视觉验收。
 
 ## 7. 下一位 Agent 第一任务
 
-先做 M9：为 `showcase-media-20260723-v1` 写可执行 retire/续期 Runbook 与负责人字段，并验证 Release 资产可以完整枚举和删除。随后才进入 M5，选择 2–3 条黄金视频搭建真实证据链。
+先做 M9：为 `showcase-media-20260723-v1` 和 Pages media artifact 写可执行 retire/续期 Runbook 与负责人字段，并验证两类资产都能停止分发。随后才进入 M5，选择 2–3 条黄金视频搭建真实证据链。
