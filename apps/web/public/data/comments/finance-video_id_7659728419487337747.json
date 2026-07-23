@@ -1,0 +1,122 @@
+[
+  {
+    "comment_id": "c-ai-capital-001",
+    "aweme_id": "7659728419487337747",
+    "content": "硅谷的资本游戏真的太残酷了，OpenAI那场宫斗比电视剧还精彩",
+    "digg_count": 4500,
+    "nickname": "硅谷吃瓜人",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-001.jpeg",
+    "user_id": "user-cn-sv-001",
+    "sub_comment_count": 72,
+    "is_hot": true,
+    "create_time": 1752220000
+  },
+  {
+    "comment_id": "c-ai-capital-002",
+    "aweme_id": "7659728419487337747",
+    "content": "小Lin讲故事的能力全平台第一，把复杂的AI资本博弈讲得跟权谋剧似的",
+    "digg_count": 3800,
+    "nickname": "B站逃难用户",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-002.jpeg",
+    "user_id": "user-cn-bili-002",
+    "sub_comment_count": 41,
+    "is_hot": true,
+    "create_time": 1752225000
+  },
+  {
+    "comment_id": "c-ai-capital-003",
+    "aweme_id": "7659728419487337747",
+    "content": "马斯克和Altman的恩怨太有意思了，两个天才创业者为了AI的未来走向分道扬镳",
+    "digg_count": 3200,
+    "nickname": "科技圈老司机",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-003.jpeg",
+    "user_id": "user-cn-tech-003",
+    "sub_comment_count": 55,
+    "is_hot": true,
+    "create_time": 1752230000
+  },
+  {
+    "comment_id": "c-ai-capital-004",
+    "aweme_id": "7659728419487337747",
+    "content": "感觉AI行业已经被巨头垄断了，小公司根本玩不起，硬件成本太高了",
+    "digg_count": 2500,
+    "nickname": "独立开发者阿强",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-004.jpeg",
+    "user_id": "user-cn-dev-004",
+    "sub_comment_count": 63,
+    "is_hot": true,
+    "create_time": 1752235000
+  },
+  {
+    "comment_id": "c-ai-capital-005",
+    "aweme_id": "7659728419487337747",
+    "content": "这期有点偏向美国视角了，中国的AI资本格局也值得好好讲讲，大模型六小虎的竞争也不小",
+    "digg_count": 1800,
+    "nickname": "中国AI观察者",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-005.jpeg",
+    "user_id": "user-cn-ai-005",
+    "sub_comment_count": 91,
+    "is_hot": false,
+    "create_time": 1752240000
+  },
+  {
+    "comment_id": "c-ai-capital-006",
+    "aweme_id": "7659728419487337747",
+    "content": "VC圈的人表示，现在AI项目估值高得离谱，泡沫迟早要破的",
+    "digg_count": 1500,
+    "nickname": "风投从业者",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-006.jpeg",
+    "user_id": "user-cn-vc-006",
+    "sub_comment_count": 44,
+    "is_hot": false,
+    "create_time": 1752245000
+  },
+  {
+    "comment_id": "c-ai-capital-007",
+    "aweme_id": "7659728419487337747",
+    "content": "小Lin什么时候讲讲英伟达？这家公司才是AI资本局里最大赢家",
+    "digg_count": 2800,
+    "nickname": "显卡党",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-007.jpeg",
+    "user_id": "user-cn-game-007",
+    "sub_comment_count": 33,
+    "is_hot": true,
+    "create_time": 1752250000
+  },
+  {
+    "comment_id": "c-ai-capital-008",
+    "aweme_id": "7659728419487337747",
+    "content": "说实话看完这个视频我更焦虑了，AI发展这么快，我们普通人怎么办？",
+    "digg_count": 1200,
+    "nickname": "焦虑的上班族",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-008.jpeg",
+    "user_id": "user-cn-life-008",
+    "sub_comment_count": 78,
+    "is_hot": false,
+    "create_time": 1752260000
+  },
+  {
+    "comment_id": "c-ai-capital-009",
+    "aweme_id": "7659728419487337747",
+    "content": "Altman回归OpenAI的操作简直是教科书级别的公司治理案例，值得创业公司学习",
+    "digg_count": 1900,
+    "nickname": "创业中的老李",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-009.jpeg",
+    "user_id": "user-cn-biz-009",
+    "sub_comment_count": 27,
+    "is_hot": false,
+    "create_time": 1752270000
+  },
+  {
+    "comment_id": "c-ai-capital-010",
+    "aweme_id": "7659728419487337747",
+    "content": "这期内容密度太高了，建议分上下集，5分钟根本消化不了这么多信息量",
+    "digg_count": 2200,
+    "nickname": "笔记狂魔",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-010.jpeg",
+    "user_id": "user-cn-study-010",
+    "sub_comment_count": 16,
+    "is_hot": true,
+    "create_time": 1752280000
+  }
+]

@@ -4,6 +4,7 @@ import { financeXiaolinFifaExperience } from './fixtures/finance-xiaolin-fifa'
 import { financeXiaolinAiPowerExperience } from './fixtures/finance-xiaolin-ai-power'
 import { financeXiaolinAutopilotExperience } from './fixtures/finance-xiaolin-autopilot'
 import { financeXiaolinAiCapitalExperience } from './fixtures/finance-xiaolin-ai-capital'
+import { financeFedRate001Experience } from './fixtures/finance-fed-rate-001'
 import { showcaseExperiences } from '@/showcase/catalog'
 
 export interface ExperienceRepository {
@@ -11,6 +12,7 @@ export interface ExperienceRepository {
 }
 
 const staticExperiences: Record<string, ApprovedExperience> = {
+  [financeFedRate001Experience.experienceId]: financeFedRate001Experience,
   [financeFedExperience.experienceId]: financeFedExperience,
   [financeXiaolinFifaExperience.experienceId]: financeXiaolinFifaExperience,
   [financeXiaolinAiPowerExperience.experienceId]: financeXiaolinAiPowerExperience,

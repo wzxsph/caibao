@@ -6,7 +6,7 @@ const triggerBase = {
   endMs: z.number().int().positive(),
   priority: z.number().int().min(0).max(100).default(50),
   cueDurationMs: z.number().int().min(4000).max(6000),
-  expectedInteractionMs: z.number().int().positive().max(12000),
+  expectedInteractionMs: z.number().int().positive().max(30000),
   halfSheetMaxRatio: z.number().positive().max(0.48),
   cueLabel: z.string().min(1).max(8),
   prompt: z.string().min(1).max(40),
@@ -99,6 +99,29 @@ const counterexampleFlipTriggerSchema = z.object({
   })
 })
 
+const retellTriggerSchema = z.object({
+  ...triggerBase,
+  kind: z.literal('retell'),
+  payload: z.object({
+    title: z.string().min(1),
+    prompt: z.string().min(1),
+    placeholder: z.string().min(1),
+    minLength: z.number().int().min(10).default(24),
+    maxLength: z.number().int().max(500).default(220),
+    example: z.string().min(1),
+    rubrics: z
+      .array(
+        z.object({
+          label: z.string().min(1),
+          keywords: z.array(z.string().min(1)).min(1)
+        })
+      )
+      .min(1)
+      .max(5),
+    feedback: z.string().min(1).max(80).optional()
+  })
+})
+
 const conceptCompareTriggerSchema = z.object({
   ...triggerBase,
   kind: z.literal('concept_compare'),
@@ -122,7 +145,8 @@ export const timelineTriggerSchema = z.discriminatedUnion('kind', [
   causalStitchTriggerSchema,
   quickJudgmentTriggerSchema,
   counterexampleFlipTriggerSchema,
-  conceptCompareTriggerSchema
+  conceptCompareTriggerSchema,
+  retellTriggerSchema
 ])
 
 export const approvedExperienceSchema = z
@@ -163,7 +187,54 @@ export const approvedExperienceSchema = z
         name: z.string().min(1),
         evidenceIds: z.array(z.string().min(1)).min(1)
       })
-    )
+    ),
+    report: z
+      .object({
+        eyebrow: z.string().min(1),
+        title: z.string().min(1),
+        coreVariable: z.string().min(1),
+        paths: z
+          .array(
+            z.object({
+              tone: z.enum(['teal', 'gold', 'blue']),
+              top: z.string().min(1),
+              bottom: z.string().min(1),
+              icon: z.string().min(1)
+            })
+          )
+          .min(1)
+          .max(5),
+        counterPath: z.array(z.string().min(1)).min(1),
+        skillStamps: z
+          .array(
+            z.object({
+              icon: z.string().min(1),
+              label: z.string().min(1)
+            })
+          )
+          .min(1),
+        transferQuestion: z.string().min(1),
+        replayAt: z.number().int().nonnegative()
+      })
+      .optional(),
+    chapters: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          startMs: z.number().int().nonnegative(),
+          endMs: z.number().int().positive(),
+          title: z.string().min(1)
+        })
+      )
+      .optional(),
+    transcriptCues: z
+      .array(
+        z.object({
+          atMs: z.number().int().nonnegative(),
+          text: z.string().min(1)
+        })
+      )
+      .optional()
   })
   .superRefine((experience, context) => {
     const triggers = [...experience.triggers].sort((a, b) => a.startMs - b.startMs)

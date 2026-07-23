@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { TimelineTrigger } from '../contracts'
+import RetellInteraction from './RetellInteraction.vue'
 
 const props = defineProps<{
   trigger: TimelineTrigger
 }>()
 
 const emit = defineEmits<{
-  complete: [payload: { response: string; feedback: string }]
+  complete: [payload: { response: string; feedback: string; kind?: string }]
 }>()
 
 function completeContext() {
@@ -70,6 +71,18 @@ function completeCompare() {
     response: props.trigger.payload.left.term + ' vs ' + props.trigger.payload.right.term,
     feedback: props.trigger.payload.keyDistinction
   })
+}
+
+function completeRetell(payload: { response: string; hitRubrics: string[] }) {
+  emit('complete', {
+    kind: 'retell',
+    response: payload.response,
+    feedback: payload.hitRubrics.join('；')
+  })
+}
+
+function dismissCue() {
+  emit('complete', { kind: 'retell', response: '已跳过', feedback: '' })
 }
 </script>
 
@@ -176,6 +189,20 @@ function completeCompare() {
       </div>
       <button class="primary" type="button" @click.stop="completeCompare">我能区分了</button>
     </template>
+
+    <div v-else-if="trigger.kind === 'retell'" class="interaction-renderer__body">
+      <RetellInteraction
+        :title="trigger.payload.title"
+        :prompt="trigger.payload.prompt"
+        :placeholder="trigger.payload.placeholder"
+        :minLength="trigger.payload.minLength"
+        :maxLength="trigger.payload.maxLength"
+        :example="trigger.payload.example"
+        :rubrics="trigger.payload.rubrics"
+        @complete="completeRetell"
+        @dismiss="dismissCue"
+      />
+    </div>
   </div>
 </template>
 

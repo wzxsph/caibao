@@ -1,0 +1,122 @@
+[
+  {
+    "comment_id": "c-ai-power-001",
+    "aweme_id": "7660817965343870248",
+    "content": "太震撼了！原来AI训练要消耗这么多电，一个数据中心抵得上一个小城市的用电量",
+    "digg_count": 5200,
+    "nickname": "程序猿小明",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-001.jpeg",
+    "user_id": "user-cn-tech-001",
+    "sub_comment_count": 67,
+    "is_hot": true,
+    "create_time": 1749620000
+  },
+  {
+    "comment_id": "c-ai-power-002",
+    "aweme_id": "7660817965343870248",
+    "content": "这期选题太绝了，电力确实是AI发展的隐形天花板，之前都没人认真讲过这个",
+    "digg_count": 4800,
+    "nickname": "能源行业老兵",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-002.jpeg",
+    "user_id": "user-cn-energy-002",
+    "sub_comment_count": 34,
+    "is_hot": true,
+    "create_time": 1749625000
+  },
+  {
+    "comment_id": "c-ai-power-003",
+    "aweme_id": "7660817965343870248",
+    "content": "我在国家电网工作，确实感受到了数据中心的用电压力，未来电价可能因此上涨",
+    "digg_count": 3500,
+    "nickname": "电网一线工人",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-003.jpeg",
+    "user_id": "user-cn-power-003",
+    "sub_comment_count": 89,
+    "is_hot": true,
+    "create_time": 1749630000
+  },
+  {
+    "comment_id": "c-ai-power-004",
+    "aweme_id": "7660817965343870248",
+    "content": "所以核聚变才是终极解决方案？感觉AI发展的瓶颈不是算力而是电力",
+    "digg_count": 2800,
+    "nickname": "理科爱好者",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-004.jpeg",
+    "user_id": "user-cn-sci-004",
+    "sub_comment_count": 45,
+    "is_hot": true,
+    "create_time": 1749635000
+  },
+  {
+    "comment_id": "c-ai-power-005",
+    "aweme_id": "7660817965343870248",
+    "content": "小Lin这些数据是从哪来的？我查了一下，有些数字好像跟公开数据对不上",
+    "digg_count": 1200,
+    "nickname": "数据侠",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-005.jpeg",
+    "user_id": "user-cn-data-005",
+    "sub_comment_count": 92,
+    "is_hot": false,
+    "create_time": 1749640000
+  },
+  {
+    "comment_id": "c-ai-power-006",
+    "aweme_id": "7660817965343870248",
+    "content": "美国的电网比我们想象的老旧，真的是制约因素。难怪微软要投资核电站",
+    "digg_count": 3100,
+    "nickname": "海外工程哥",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-006.jpeg",
+    "user_id": "user-cn-eng-006",
+    "sub_comment_count": 28,
+    "is_hot": true,
+    "create_time": 1749645000
+  },
+  {
+    "comment_id": "c-ai-power-007",
+    "aweme_id": "7660817965343870248",
+    "content": "搞笑的是，AI消耗的电，最后用来生成更多的AI，然后消耗更多电……这不就是永动机悖论吗🤣",
+    "digg_count": 6200,
+    "nickname": "互联网乐子人",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-007.jpeg",
+    "user_id": "user-cn-fun-007",
+    "sub_comment_count": 134,
+    "is_hot": true,
+    "create_time": 1749650000
+  },
+  {
+    "comment_id": "c-ai-power-008",
+    "aweme_id": "7660817965343870248",
+    "content": "难怪中国要大力发展光伏和风电，不光是环保，更是为了未来的算力竞争",
+    "digg_count": 2600,
+    "nickname": "碳中和先锋",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-008.jpeg",
+    "user_id": "user-cn-env-008",
+    "sub_comment_count": 51,
+    "is_hot": false,
+    "create_time": 1749660000
+  },
+  {
+    "comment_id": "c-ai-power-009",
+    "aweme_id": "7660817965343870248",
+    "content": "小Lin讲得真好，但我还想知道：中国有没有类似的电力瓶颈？情况跟美国比怎么样？",
+    "digg_count": 2200,
+    "nickname": "关心时事的大叔",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-009.jpeg",
+    "user_id": "user-cn-news-009",
+    "sub_comment_count": 38,
+    "is_hot": false,
+    "create_time": 1749670000
+  },
+  {
+    "comment_id": "c-ai-power-010",
+    "aweme_id": "7660817965343870248",
+    "content": "做AI的人都知道GPU有多贵，但很少人关注GPU背后需要的电力成本，这才是隐形成本大头",
+    "digg_count": 1700,
+    "nickname": "AI创业狗",
+    "avatar": "https://p3-pc.douyinpic.com/aweme/100x100/avatar-010.jpeg",
+    "user_id": "user-cn-startup-010",
+    "sub_comment_count": 23,
+    "is_hot": false,
+    "create_time": 1749680000
+  }
+]

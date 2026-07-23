@@ -1,0 +1,177 @@
+[
+  {
+    "aweme_id": "fed-rate-global-capital-001",
+    "desc": "经济泡沫 or 大牛市？美联储降息后会发生什么？",
+    "create_time": 1752400000,
+    "author_user_id": "xiaolin-shuo",
+    "video": {
+      "play_addr": {
+        "url_list": ["./demo/fed-rate-global-capital-001.mp4"]
+      },
+      "duration": 256167,
+      "cover": "https://p3-pc.douyinpic.com/img/fed-rate-cover.jpeg",
+      "height": 1920,
+      "width": 1080
+    },
+    "statistics": {
+      "digg_count": 220000,
+      "comment_count": 28000,
+      "share_count": 85000,
+      "collect_count": 55000
+    },
+    "music": {
+      "id": "music-fed-rate-001",
+      "title": "@小Lin说创作的原声",
+      "author": "小Lin说",
+      "cover_hd": "https://p3-pc.douyinpic.com/img/music-bg-001.jpeg"
+    },
+    "type": "recommend-video",
+    "financeExperienceId": "finance-fed-rate-001",
+    "share_url": "https://www.douyin.com/video/fed-rate-global-capital-001",
+    "status": {
+      "is_reviewed": true,
+      "reviewed_result": "approved",
+      "is_prohibited": false
+    }
+  },
+  {
+    "aweme_id": "7664748624454192393",
+    "desc": "大家看的是比赛，FIFA看的是生意",
+    "create_time": 1747000000,
+    "author_user_id": "xiaolin-shuo",
+    "video": {
+      "play_addr": {
+        "url_list": ["./demo/7664748624454192393.mp4"]
+      },
+      "duration": 173710,
+      "cover": "https://p3-pc.douyinpic.com/img/xiaolin-fifa-cover.jpeg",
+      "height": 1920,
+      "width": 1080
+    },
+    "statistics": {
+      "digg_count": 125000,
+      "comment_count": 15000,
+      "share_count": 35000,
+      "collect_count": 25000
+    },
+    "music": {
+      "id": "music-xiaolin-bg-001",
+      "title": "经济学背景音乐",
+      "author": "小Lin说",
+      "cover_hd": "https://p3-pc.douyinpic.com/img/music-bg-001.jpeg"
+    },
+    "type": "recommend-video",
+    "financeExperienceId": "finance-xiaolin-fifa",
+    "share_url": "https://www.douyin.com/video/7664748624454192393",
+    "status": {
+      "is_reviewed": true,
+      "reviewed_result": "approved",
+      "is_prohibited": false
+    }
+  },
+  {
+    "aweme_id": "7660817965343870248",
+    "desc": "电，怎么卡住了AI的脖子？",
+    "create_time": 1749600000,
+    "author_user_id": "xiaolin-shuo",
+    "video": {
+      "play_addr": {
+        "url_list": ["./demo/7660817965343870248.mp4"]
+      },
+      "duration": 341260,
+      "cover": "https://p3-pc.douyinpic.com/img/xiaolin-ai-power-cover.jpeg",
+      "height": 1920,
+      "width": 1080
+    },
+    "statistics": {
+      "digg_count": 180000,
+      "comment_count": 20000,
+      "share_count": 60000,
+      "collect_count": 45000
+    },
+    "music": {
+      "id": "music-xiaolin-bg-001",
+      "title": "经济学背景音乐",
+      "author": "小Lin说",
+      "cover_hd": "https://p3-pc.douyinpic.com/img/music-bg-001.jpeg"
+    },
+    "type": "recommend-video",
+    "financeExperienceId": "finance-xiaolin-ai-power",
+    "share_url": "https://www.douyin.com/video/7660817965343870248",
+    "status": {
+      "is_reviewed": true,
+      "reviewed_result": "approved",
+      "is_prohibited": false
+    }
+  },
+  {
+    "aweme_id": "7660177158400216347",
+    "desc": "港股自动驾驶or物理AI IPO？",
+    "create_time": 1750900000,
+    "author_user_id": "xiaolin-shuo",
+    "video": {
+      "play_addr": {
+        "url_list": ["./demo/7660177158400216347.mp4"]
+      },
+      "duration": 354480,
+      "cover": "https://p3-pc.douyinpic.com/img/xiaolin-autopilot-cover.jpeg",
+      "height": 1920,
+      "width": 1080
+    },
+    "statistics": {
+      "digg_count": 95000,
+      "comment_count": 12000,
+      "share_count": 25000,
+      "collect_count": 18000
+    },
+    "music": {
+      "id": "music-xiaolin-bg-001",
+      "title": "经济学背景音乐",
+      "author": "小Lin说",
+      "cover_hd": "https://p3-pc.douyinpic.com/img/music-bg-001.jpeg"
+    },
+    "type": "recommend-video",
+    "financeExperienceId": "finance-xiaolin-autopilot",
+    "share_url": "https://www.douyin.com/video/7660177158400216347",
+    "status": {
+      "is_reviewed": true,
+      "reviewed_result": "approved",
+      "is_prohibited": false
+    }
+  },
+  {
+    "aweme_id": "7659728419487337747",
+    "desc": "美国AI资本牌桌上的斗争",
+    "create_time": 1752200000,
+    "author_user_id": "xiaolin-shuo",
+    "video": {
+      "play_addr": {
+        "url_list": ["./demo/7659728419487337747.mp4"]
+      },
+      "duration": 233480,
+      "cover": "https://p3-pc.douyinpic.com/img/xiaolin-ai-capital-cover.jpeg",
+      "height": 1080,
+      "width": 1920
+    },
+    "statistics": {
+      "digg_count": 65000,
+      "comment_count": 8000,
+      "share_count": 18000,
+      "collect_count": 12000
+    },
+    "music": {
+      "id": "music-xiaolin-bg-001",
+      "title": "经济学背景音乐",
+      "author": "小Lin说",
+      "cover_hd": "https://p3-pc.douyinpic.com/img/music-bg-001.jpeg"
+    },
+    "type": "recommend-video",
+    "financeExperienceId": "finance-xiaolin-ai-capital",
+    "share_url": "https://www.douyin.com/video/7659728419487337747",
+    "status": {
+      "is_reviewed": true,
+      "reviewed_result": "approved",
+      "is_prohibited": false
+    }
+  }
+]

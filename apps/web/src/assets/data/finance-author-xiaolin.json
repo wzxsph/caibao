@@ -1,0 +1,27 @@
+{
+  "uid": "xiaolin-shuo",
+  "nickname": "小Lin说",
+  "unique_id": "xiaolinshuo",
+  "signature": "用经济学看懂世界｜每期一个财经话题拆解",
+  "follower_count": 2850000,
+  "avatar_168x168": {
+    "url_list": ["https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_xiaolinshuo.jpeg"]
+  },
+  "avatar_300x300": {
+    "url_list": ["https://p3-pc.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_xiaolinshuo.jpeg"]
+  },
+  "cover_url": [{"url_list": ["https://p3-pc.douyinpic.com/img/xiaolin-cover.jpeg"]}],
+  "white_cover_url": [{"url_list": ["https://p3-pc.douyinpic.com/img/xiaolin-cover-white.jpeg"]}],
+  "total_favorited": 0,
+  "story_count": 0,
+  "following_count": 42,
+  "aweme_count": 287,
+  "province": "北京",
+  "city": "北京市",
+  "birthday": "1994-08-15",
+  "gender": 2,
+  "is_star": true,
+  "custom_verify": "财经领域创作者",
+  "enterprise_verify_reason": "",
+  "secret": 0
+}

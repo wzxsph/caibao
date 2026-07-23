@@ -58,3 +58,31 @@ export function buildLearningSummary(
     revisitableCueIds
   }
 }
+
+export interface ReportData {
+  eyebrow: string
+  title: string
+  coreVariable: string
+  paths: Array<{ tone: 'teal' | 'gold' | 'blue'; top: string; bottom: string; icon: string }>
+  counterPath: string[]
+  skillStamps: Array<{ icon: string; label: string }>
+  transferQuestion: string
+  replayAt: number
+  disclaimer: string
+}
+
+export function buildReport(experience: ApprovedExperience): ReportData | null {
+  if (!experience.report) return null
+  const r = experience.report
+  return {
+    eyebrow: r.eyebrow,
+    title: r.title,
+    coreVariable: r.coreVariable,
+    paths: r.paths.map((p) => ({ tone: p.tone, top: p.top, bottom: p.bottom, icon: p.icon })),
+    counterPath: [...r.counterPath],
+    skillStamps: r.skillStamps.map((s) => ({ icon: s.icon, label: s.label })),
+    transferQuestion: r.transferQuestion,
+    replayAt: r.replayAt,
+    disclaimer: '知识情景推演，不构成投资建议或市场预测。'
+  }
+}

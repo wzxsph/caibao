@@ -87,4 +87,33 @@ describe('InteractionRenderer', () => {
     expectSingleComplete(wrapper)
     wrapper.unmount()
   })
+
+  it('renders retell interaction and emits complete with rubric results', async () => {
+    const { default: RetellInteraction } = await import(
+      '@/features/finance-cues/components/RetellInteraction.vue'
+    )
+    const wrapper = mount(RetellInteraction, {
+      props: {
+        title: 'Test Retell',
+        prompt: 'Explain capital flow',
+        placeholder: 'I would explain...',
+        minLength: 24,
+        maxLength: 220,
+        example: 'Sample explanation text',
+        rubrics: [
+          { label: '美元外溢', keywords: ['美元', '美联储'] },
+          { label: '本国条件', keywords: ['通胀', '增长'] }
+        ]
+      }
+    })
+
+    const textarea = wrapper.find('textarea')
+    await textarea.setValue('美联储降息导致美元外溢，各国通胀和增长不同，这是全球经济的重要现象')
+    await wrapper.find('.btn-submit').trigger('click')
+
+    expect(wrapper.emitted('complete')).toBeTruthy()
+    expect(wrapper.emitted('complete')![0][0].response).toContain('美联储')
+    expect(wrapper.emitted('complete')![0][0].hitRubrics).toContain('美元外溢')
+    expect(wrapper.emitted('complete')![0][0].hitRubrics).toContain('本国条件')
+  })
 })
