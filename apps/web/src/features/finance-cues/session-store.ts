@@ -58,6 +58,9 @@ export const useFinanceCueStore = defineStore('finance-cues', {
         action: TraceAction
         playbackPositionMs: number
         response?: string
+        answerId?: string
+        isCorrect?: boolean
+        coinsAwarded?: number
         evidenceIds?: string[]
       }
     ): LearningTraceEvent {
@@ -72,6 +75,9 @@ export const useFinanceCueStore = defineStore('finance-cues', {
         playbackPositionMs: Math.max(0, Math.round(input.playbackPositionMs)),
         occurredAt: Date.now(),
         response: input.response,
+        answerId: input.answerId,
+        isCorrect: input.isCorrect,
+        coinsAwarded: input.coinsAwarded,
         evidenceIds: input.evidenceIds || []
       }
 

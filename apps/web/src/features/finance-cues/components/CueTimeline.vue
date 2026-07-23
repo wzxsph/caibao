@@ -1,19 +1,35 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import type { TimelineTrigger, TraceAction } from '../contracts'
 
 const props = defineProps<{
   triggers: TimelineTrigger[]
   statuses: Record<string, TraceAction | undefined>
   durationMs: number
+  currentTimeMs?: number
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   revisit: [triggerId: string]
+  'request-seek': [positionMs: number]
 }>()
+
+const trackRef = ref<HTMLElement | null>(null)
+const dragging = ref(false)
+
+const effectiveDuration = computed(() => {
+  if (props.durationMs > 0) return props.durationMs
+  const fallback = props.triggers.reduce((max, item) => Math.max(max, item.endMs), 0)
+  return Math.max(fallback, 1)
+})
+
+const progressPercent = computed(() => {
+  const safeCurrent = Math.max(0, props.currentTimeMs ?? 0)
+  return Math.min(100, Math.max(0, (safeCurrent / effectiveDuration.value) * 100))
+})
 
 function position(trigger: TimelineTrigger): string {
-  const duration = props.durationMs || Math.max(...props.triggers.map((item) => item.endMs), 1)
-  return Math.min(98, Math.max(2, (trigger.startMs / duration) * 100)) + '%'
+  return Math.min(98, Math.max(2, (trigger.startMs / effectiveDuration.value) * 100)) + '%'
 }
 
 function statusClass(triggerId: string): string {
@@ -22,6 +38,33 @@ function statusClass(triggerId: string): string {
   if (status === 'dismissed' || status === 'missed') return 'pending'
   if (status) return 'seen'
   return 'scheduled'
+}
+
+function positionFromEvent(event: PointerEvent): number {
+  const track = trackRef.value
+  if (!track) return 0
+  const rect = track.getBoundingClientRect()
+  const ratio = Math.min(1, Math.max(0, (event.clientX - rect.left) / Math.max(rect.width, 1)))
+  return Math.round(ratio * effectiveDuration.value)
+}
+
+function startDrag(event: PointerEvent) {
+  if (!trackRef.value) return
+  dragging.value = true
+  trackRef.value.setPointerCapture?.(event.pointerId)
+  emit('request-seek', positionFromEvent(event))
+}
+
+function moveDrag(event: PointerEvent) {
+  if (!dragging.value) return
+  emit('request-seek', positionFromEvent(event))
+}
+
+function endDrag(event: PointerEvent) {
+  if (!dragging.value) return
+  dragging.value = false
+  trackRef.value?.releasePointerCapture?.(event.pointerId)
+  emit('request-seek', positionFromEvent(event))
 }
 </script>
 
@@ -35,7 +78,24 @@ function statusClass(triggerId: string): string {
     @pointercancel.stop
     @click.stop
   >
-    <i class="track"></i>
+    <i
+      ref="trackRef"
+      class="track"
+      data-testid="finance-cue-timeline-track"
+      @pointerdown="startDrag"
+      @pointermove="moveDrag"
+      @pointerup="endDrag"
+      @pointercancel="endDrag"
+    >
+      <i class="fill" :style="{ width: progressPercent + '%' }"></i>
+      <i
+        class="handle"
+        :style="{ left: progressPercent + '%' }"
+        aria-label="拖动进度"
+        role="slider"
+        :aria-valuenow="progressPercent"
+      ></i>
+    </i>
     <button
       v-for="trigger in triggers"
       :key="trigger.triggerId"
@@ -65,8 +125,35 @@ function statusClass(triggerId: string): string {
     top: 21px;
     right: 0;
     left: 0;
-    height: 2px;
+    display: block;
+    height: 6px;
     background: rgba(255, 255, 255, 0.28);
+    border-radius: 3px;
+    touch-action: none;
+
+    .fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      height: 100%;
+      background: #ffd541;
+      border-radius: 3px;
+      pointer-events: none;
+    }
+
+    .handle {
+      position: absolute;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      background: #fff;
+      border: 2px solid #ffd541;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
   }
 
   button {

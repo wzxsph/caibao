@@ -88,6 +88,20 @@ function dismissCue() {
 
 <template>
   <div class="interaction" data-testid="finance-interaction">
+    <section
+      v-if="trigger.backgroundContext"
+      class="trigger-background"
+      data-testid="finance-interaction-background"
+    >
+      <small>背景</small>
+      <b>{{ trigger.backgroundContext.setting }}</b>
+      <ul v-if="trigger.backgroundContext.keyFacts && trigger.backgroundContext.keyFacts.length">
+        <li v-for="fact in trigger.backgroundContext.keyFacts" :key="fact">{{ fact }}</li>
+      </ul>
+      <p v-if="trigger.backgroundContext.relevance">
+        与本触点的关联：{{ trigger.backgroundContext.relevance }}
+      </p>
+    </section>
     <template v-if="trigger.kind === 'context_card'">
       <p class="lead">{{ trigger.payload.body }}</p>
       <div class="key-point">
@@ -219,6 +233,43 @@ function dismissCue() {
   color: #5e594f;
   font-size: 14px;
   line-height: 1.65;
+}
+
+.trigger-background {
+  display: grid;
+  gap: 6px;
+  padding: 10px 14px;
+  background: #efe9dc;
+  border-left: 4px solid #b88a2b;
+  border-radius: 12px;
+
+  small {
+    color: #8a681b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  b {
+    color: #2c2a25;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 18px;
+    color: #4e493f;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  p {
+    margin: 0;
+    color: #6b6559;
+    font-size: 12px;
+    line-height: 1.55;
+  }
 }
 
 .key-point,

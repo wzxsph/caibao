@@ -12,7 +12,9 @@ import { advanceCueOrchestrator } from '../orchestrator'
 import { experienceRepository } from '../repository'
 import { useFinanceCueStore } from '../session-store'
 import { buildLearningSummary, latestActions } from '../summary'
+import { awardDemoCoins, DEMO_FINANCE_LEVEL, DEMO_WALLET_EVENT, loadDemoWallet } from '../wallet'
 import CaibaoHalfSheet from './CaibaoHalfSheet.vue'
+import CaibaoChat from './CaibaoChat.vue'
 import CuePill from './CuePill.vue'
 import CueTimeline from './CueTimeline.vue'
 import InteractionRenderer from './InteractionRenderer.vue'
@@ -25,10 +27,10 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  'request-seek': [positionMs: number]
   'sheet-open-change': [open: boolean]
   'pause-for-interaction': [request: PauseForInteractionRequest]
   'release-interaction': [request: ReleaseInteractionRequest]
+  'request-seek': [positionMs: number]
 }>()
 
 const store = useFinanceCueStore()
@@ -36,9 +38,15 @@ const experience = ref<ApprovedExperience | null>(null)
 const activeCue = ref<TimelineTrigger | null>(null)
 const expandedCue = ref<TimelineTrigger | null>(null)
 const feedback = ref('')
+const feedbackAllowsRetry = ref(false)
+const walletCoins = ref(loadDemoWallet().coins)
+const coinPulse = ref(false)
 const summaryOpen = ref(false)
+const chatOpen = ref(false)
+const briefVisible = ref(false)
 const previousTimeMs = ref(0)
 let cueTimer: ReturnType<typeof setTimeout> | null = null
+let briefTimer: ReturnType<typeof setTimeout> | null = null
 let interactionSequence = 0
 let playbackInteractionId: string | null = null
 
@@ -56,17 +64,27 @@ const summary = computed(() => {
   return buildLearningSummary(experience.value, session.value)
 })
 
-const sheetOpen = computed(() => Boolean(expandedCue.value || summaryOpen.value))
-const hasTrace = computed(() => Boolean(session.value?.events.length))
+const sheetOpen = computed(() => Boolean(expandedCue.value || summaryOpen.value || chatOpen.value))
+const hasTrace = computed(() =>
+  Boolean(
+    experience.value &&
+      session.value?.events.some((event) =>
+        experience.value?.triggers.some((trigger) => trigger.triggerId === event.triggerId)
+      )
+  )
+)
 
 watch(
   () => [props.context.videoId, props.context.financeExperienceId] as const,
   async ([videoId, experienceId]) => {
     releasePlaybackInteraction('context-change', false)
     clearCueTimer()
+    clearBriefTimer()
     activeCue.value = null
     expandedCue.value = null
     summaryOpen.value = false
+    chatOpen.value = false
+    briefVisible.value = false
     experience.value = null
     previousTimeMs.value = props.clock.currentTimeMs
     if (!experienceId) return
@@ -82,7 +100,25 @@ watch(
       return
     }
     experience.value = loadedExperience
-    if (experience.value) store.hydrate(experience.value)
+    if (experience.value) {
+      const hydrated = store.hydrate(experience.value)
+      const alreadyShown = hydrated.events.some(
+        (event) => event.triggerId === 'opening-brief' && event.action === 'surfaced'
+      )
+      if (!alreadyShown && experience.value.openingBrief) {
+        briefVisible.value = true
+        store.record(experience.value, {
+          triggerId: 'opening-brief',
+          action: 'surfaced',
+          playbackPositionMs: props.clock.currentTimeMs,
+          evidenceIds: []
+        })
+        briefTimer = setTimeout(() => {
+          briefVisible.value = false
+          briefTimer = null
+        }, 8_000)
+      }
+    }
   },
   { immediate: true }
 )
@@ -128,13 +164,31 @@ watch(sheetOpen, (open) => emit('sheet-open-change', open), { immediate: true })
 
 onBeforeUnmount(() => {
   clearCueTimer()
+  clearBriefTimer()
   releasePlaybackInteraction('unmounted', false)
   emit('sheet-open-change', false)
+  if (typeof window !== 'undefined') window.removeEventListener(DEMO_WALLET_EVENT, syncWallet)
 })
+
+if (typeof window !== 'undefined') window.addEventListener(DEMO_WALLET_EVENT, syncWallet)
+
+function syncWallet() {
+  walletCoins.value = loadDemoWallet().coins
+}
 
 function clearCueTimer() {
   if (cueTimer) clearTimeout(cueTimer)
   cueTimer = null
+}
+
+function clearBriefTimer() {
+  if (briefTimer) clearTimeout(briefTimer)
+  briefTimer = null
+}
+
+function dismissBrief() {
+  clearBriefTimer()
+  briefVisible.value = false
 }
 
 function record(
@@ -168,9 +222,11 @@ function openCue(trigger: TimelineTrigger) {
   clearCueTimer()
   activeCue.value = null
   feedback.value = ''
+  feedbackAllowsRetry.value = false
   ensurePlaybackPaused(trigger.triggerId)
   expandedCue.value = trigger
   summaryOpen.value = false
+  chatOpen.value = false
   record(trigger, 'expanded')
 }
 
@@ -184,15 +240,67 @@ function closeCue(recordDismissal = true) {
 function closeSheet(reason: InteractionExitReason = feedback.value ? 'completed' : 'closed') {
   expandedCue.value = null
   summaryOpen.value = false
+  chatOpen.value = false
   feedback.value = ''
+  feedbackAllowsRetry.value = false
   releasePlaybackInteraction(reason, true)
 }
 
-function complete(payload: { response: string; feedback: string }) {
+function complete(payload: {
+  response: string
+  feedback: string
+  answerId?: string
+  isCorrect?: boolean
+}) {
   const trigger = expandedCue.value
-  if (!trigger) return
-  record(trigger, 'completed', payload.response, trigger.evidenceIds)
-  feedback.value = payload.feedback
+  const currentExperience = experience.value
+  if (!trigger || !currentExperience) return
+  const evaluation = trigger.evaluation
+  if (evaluation?.mode === 'objective' && payload.isCorrect !== true) {
+    store.record(currentExperience, {
+      triggerId: trigger.triggerId,
+      action: 'attempted',
+      playbackPositionMs: props.clock.currentTimeMs,
+      response: payload.response,
+      answerId: payload.answerId,
+      isCorrect: false,
+      coinsAwarded: 0,
+      evidenceIds: trigger.evidenceIds
+    })
+    feedback.value = payload.feedback
+    feedbackAllowsRetry.value = true
+    return
+  }
+
+  const reward =
+    evaluation?.mode === 'objective' && payload.isCorrect === true
+      ? awardDemoCoins(
+          `${currentExperience.videoId}:${currentExperience.contentVersion}:${trigger.triggerId}`,
+          evaluation.rewardCoins
+        )
+      : { awarded: false, coins: walletCoins.value }
+  store.record(currentExperience, {
+    triggerId: trigger.triggerId,
+    action: 'completed',
+    playbackPositionMs: props.clock.currentTimeMs,
+    response: payload.response,
+    answerId: payload.answerId,
+    isCorrect: evaluation?.mode === 'objective' ? true : undefined,
+    coinsAwarded: reward.awarded ? (evaluation?.rewardCoins ?? 0) : 0,
+    evidenceIds: trigger.evidenceIds
+  })
+  walletCoins.value = reward.coins
+  if (reward.awarded) {
+    coinPulse.value = true
+    window.setTimeout(() => (coinPulse.value = false), 700)
+  }
+  feedback.value = evaluation?.explanation ?? payload.feedback
+  feedbackAllowsRetry.value = false
+}
+
+function retryInteraction() {
+  feedback.value = ''
+  feedbackAllowsRetry.value = false
 }
 
 function skipInteraction() {
@@ -206,7 +314,6 @@ function revisit(triggerId: string) {
   if (!trigger) return
   closeCue(false)
   record(trigger, 'revisited')
-  emit('request-seek', trigger.startMs)
   openCue(trigger)
 }
 
@@ -214,7 +321,24 @@ function openSummary() {
   closeCue(false)
   ensurePlaybackPaused('summary')
   expandedCue.value = null
+  chatOpen.value = false
   summaryOpen.value = true
+}
+
+function openChat() {
+  if (!experience.value) return
+  dismissBrief()
+  closeCue(false)
+  ensurePlaybackPaused('chat')
+  expandedCue.value = null
+  summaryOpen.value = false
+  chatOpen.value = true
+}
+
+function openReport() {
+  if (!experience.value) return
+  closeSheet('completed')
+  window.location.hash = `/report/${experience.value.videoId}`
 }
 
 function ensurePlaybackPaused(sourceId: string) {
@@ -241,7 +365,22 @@ function releasePlaybackInteraction(reason: InteractionExitReason, allowResume: 
 
 <template>
   <div v-if="experience" class="finance-extension" data-testid="finance-cue-extension">
-    <div class="prototype-badge">财经推演 · 工程原型</div>
+    <div class="agent-bar" :class="{ 'coin-pulse': coinPulse }">
+      <img :src="caibaoImage" alt="" />
+      <span>
+        <b>财包 Agent</b>
+        <small>财经等级 {{ DEMO_FINANCE_LEVEL }} 级 · 社交标识 Demo</small>
+      </span>
+      <em>🪙 {{ walletCoins }}</em>
+      <button type="button" @click.stop="openChat">问财包</button>
+    </div>
+    <aside v-if="briefVisible && experience.openingBrief" class="opening-brief" role="status">
+      <button type="button" aria-label="关闭财包导读" @click.stop="dismissBrief">×</button>
+      <small>{{ experience.openingBrief.contentType }}</small>
+      <b>{{ experience.openingBrief.summary }}</b>
+      <p>{{ experience.openingBrief.viewpointNotice }}</p>
+      <footer>{{ experience.openingBrief.verificationBoundary }}</footer>
+    </aside>
     <CuePill
       v-if="activeCue"
       :trigger="activeCue"
@@ -266,7 +405,9 @@ function releasePlaybackInteraction(reason: InteractionExitReason, allowResume: 
       :triggers="experience.triggers"
       :statuses="statuses"
       :duration-ms="clock.durationMs"
+      :current-time-ms="clock.currentTimeMs"
       @revisit="revisit"
+      @request-seek="(positionMs) => emit('request-seek', positionMs)"
     />
 
     <CaibaoHalfSheet
@@ -278,7 +419,10 @@ function releasePlaybackInteraction(reason: InteractionExitReason, allowResume: 
       <div v-if="feedback" class="feedback" data-testid="finance-feedback">
         <b>财包的反馈</b>
         <p>{{ feedback }}</p>
-        <button type="button" @click.stop="closeSheet()">收好，继续看</button>
+        <button v-if="feedbackAllowsRetry" type="button" @click.stop="retryInteraction">
+          再想一次
+        </button>
+        <button v-else type="button" @click.stop="closeSheet()">收好，继续看</button>
       </div>
       <div v-else class="interaction-task">
         <InteractionRenderer :trigger="expandedCue" @complete="complete" />
@@ -294,12 +438,26 @@ function releasePlaybackInteraction(reason: InteractionExitReason, allowResume: 
     </CaibaoHalfSheet>
 
     <CaibaoHalfSheet
+      v-else-if="chatOpen && session"
+      title="向财包追问"
+      eyebrow="实时问答 · MiniMax"
+      @close="closeSheet"
+    >
+      <CaibaoChat :experience="experience" :session-id="session.sessionId" />
+    </CaibaoHalfSheet>
+
+    <CaibaoHalfSheet
       v-else-if="summaryOpen && summary"
       title="这段视频，你实际看懂了什么"
       eyebrow="过程式学习总结"
       @close="closeSheet"
     >
-      <LearningSummaryView :experience="experience" :summary="summary" @revisit="revisit" />
+      <LearningSummaryView
+        :experience="experience"
+        :summary="summary"
+        @revisit="revisit"
+        @report="openReport"
+      />
     </CaibaoHalfSheet>
   </div>
 </template>
@@ -312,26 +470,137 @@ function releasePlaybackInteraction(reason: InteractionExitReason, allowResume: 
   pointer-events: none;
 }
 
-.prototype-badge {
+.agent-bar {
   position: absolute;
   top: calc(62px + env(safe-area-inset-top));
   left: 14px;
+  right: 14px;
   z-index: 12;
-  padding: 5px 9px;
+  display: flex;
+  min-height: 44px;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px 5px 6px;
   color: rgba(255, 255, 255, 0.86);
   background: rgba(0, 0, 0, 0.46);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 999px;
-  font-size: 10px;
-  letter-spacing: 0.03em;
   backdrop-filter: blur(8px);
+
+  img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #fff4c2;
+  }
+
+  span {
+    display: grid;
+    min-width: 0;
+    flex: 1;
+  }
+
+  b {
+    font-size: 11px;
+  }
+
+  small {
+    overflow: hidden;
+    font-size: 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  em {
+    color: #ffd541;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 800;
+  }
+
+  button {
+    min-width: 64px;
+    min-height: 44px;
+    color: #272217;
+    background: #ffd541;
+    border: 0;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  pointer-events: auto;
+}
+
+.agent-bar.coin-pulse {
+  animation: coin-pulse 0.7s ease;
+}
+
+.opening-brief {
+  position: absolute;
+  top: calc(116px + env(safe-area-inset-top));
+  left: 14px;
+  right: 14px;
+  z-index: 16;
+  display: grid;
+  gap: 5px;
+  box-sizing: border-box;
+  padding: 12px 38px 12px 14px;
+  color: #29271f;
+  background: rgba(255, 249, 231, 0.97);
+  border-left: 4px solid #ffd541;
+  border-radius: 14px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+
+  button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 44px;
+    height: 44px;
+    color: #6b6559;
+    background: transparent;
+    border: 0;
+    font-size: 24px;
+  }
+
+  small,
+  footer {
+    color: #8a681b;
+    font-size: 10px;
+  }
+
+  b {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  p,
+  footer {
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  p {
+    font-size: 11px;
+  }
+}
+
+@keyframes coin-pulse {
+  50% {
+    transform: scale(1.035);
+    box-shadow: 0 0 0 4px rgba(255, 213, 65, 0.25);
+  }
 }
 
 .trace-shortcut {
   position: absolute;
   z-index: 17;
   right: 14px;
-  bottom: 104px;
+  bottom: 56px;
   display: flex;
   min-height: 44px;
   align-items: center;

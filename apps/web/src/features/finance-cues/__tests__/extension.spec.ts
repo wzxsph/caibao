@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 import FinanceCueExtension from '../components/FinanceCueExtension.vue'
+import { loadDemoWallet } from '../wallet'
 import type { MediaClockState, VideoContext } from '@/features/video-extensions/contracts'
 
 const context: VideoContext = {
@@ -92,6 +93,47 @@ describe('FinanceCueExtension', () => {
       expect.objectContaining({ reason: 'skipped', allowResume: true })
     ])
     expect(wrapper.find('[data-testid="caibao-half-sheet"]').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('opens a timeline revisit without requesting a seek', async () => {
+    localStorage.clear()
+    const wrapper = mount(FinanceCueExtension, {
+      props: { context, clock: clock(42_000) },
+      global: { plugins: [createPinia()] }
+    })
+    await flushPromises()
+
+    await wrapper.get('button[aria-label^="回看："]').trigger('click')
+
+    expect(wrapper.find('[data-testid="caibao-half-sheet"]').exists()).toBe(true)
+    expect(wrapper.emitted('request-seek')).toBeUndefined()
+    expect(wrapper.emitted('pause-for-interaction')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
+  it('awards a coin only after an objective answer is correct', async () => {
+    localStorage.clear()
+    const wrapper = mount(FinanceCueExtension, {
+      props: { context, clock: clock(0) },
+      global: { plugins: [createPinia()] }
+    })
+    await flushPromises()
+    await wrapper
+      .get('button[aria-label="回看：从降息到股票估值，中间缺了哪一步？"]')
+      .trigger('click')
+
+    const initialAnswers = wrapper.findAll('.option-list button')
+    await initialAnswers[1].trigger('click')
+    expect(loadDemoWallet().coins).toBe(0)
+    expect(wrapper.text()).toContain('再想一次')
+
+    await wrapper.get('.feedback button').trigger('click')
+    const answers = wrapper.findAll('.option-list button')
+    await answers[0].trigger('click')
+
+    expect(loadDemoWallet().coins).toBe(1)
+    expect(wrapper.text()).toContain('融资成本与折现率')
     wrapper.unmount()
   })
 })

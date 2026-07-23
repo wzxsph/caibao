@@ -14,6 +14,32 @@ const rawExperience = {
   timecodeQuality: 'estimated_accepted',
   title: '美联储降息如何影响股票、黄金和汇率',
   notice: '当前媒体为工程占位，六种触点结构已审核；发布前替换真实视频、字幕与时间码。',
+  openingBrief: {
+    contentType: '财经知识科普与机制推演',
+    summary: '这段内容解释美联储降息如何通过融资成本、实际利率和相对利差影响股票、黄金与汇率。',
+    viewpointNotice: '资产方向属于条件推演，不是已经发生的事实，也不构成投资建议。',
+    verificationBoundary: '该内部样例使用估算时间码，仍需真实字幕、证据和财经审核。'
+  },
+  reportPerspectives: [
+    {
+      audience: '国家与公共部门',
+      impact: '利率变化会影响资本流动、汇率与宏观稳定。',
+      reason: '政策利率经金融条件和预期向经济传导。',
+      response: '结合通胀、增长和跨境资本数据判断。'
+    },
+    {
+      audience: '企业',
+      impact: '融资成本和盈利预期可能变化。',
+      reason: '利率会改变借款成本与未来现金流折现。',
+      response: '关注现金流、负债期限与需求变化。'
+    },
+    {
+      audience: '居民',
+      impact: '存款、贷款和就业预期可能逐步变化。',
+      reason: '银行定价和企业经营会把政策变化传到家庭。',
+      response: '区分宏观机制与个人交易决定。'
+    }
+  ],
   constraints: {
     minGapMs: 45000,
     maxConcurrent: 1,
@@ -72,6 +98,12 @@ const rawExperience = {
       fallbackBehavior: 'collapse_to_timeline',
       delivery: 'automatic',
       kind: 'context_card',
+      evaluation: {
+        mode: 'acknowledgement',
+        correctOptionIds: [],
+        rewardCoins: 0,
+        explanation: '背景卡不设置唯一正确答案。'
+      },
       payload: {
         title: '政策利率不是所有利率的开关',
         body: '央行直接调整的是政策工具利率。贷款、债券和企业融资成本还要经过市场预期、信用风险与期限结构传导。',
@@ -95,6 +127,12 @@ const rawExperience = {
       fallbackBehavior: 'collapse_to_timeline',
       delivery: 'automatic',
       kind: 'quick_judgment',
+      evaluation: {
+        mode: 'objective',
+        correctOptionIds: ['depends'],
+        rewardCoins: 1,
+        explanation: '降息只是条件，股价还取决于盈利、估值和预期。'
+      },
       payload: {
         title: '降息就等于股票上涨吗？',
         options: [
@@ -128,6 +166,12 @@ const rawExperience = {
       fallbackBehavior: 'collapse_to_timeline',
       delivery: 'automatic',
       kind: 'causal_stitch',
+      evaluation: {
+        mode: 'objective',
+        correctOptionIds: ['企业融资成本可能下降'],
+        rewardCoins: 1,
+        explanation: '融资成本与折现率是连接政策利率和估值的中间机制。'
+      },
       payload: {
         title: '补全中间机制',
         before: '政策利率下降',
@@ -153,6 +197,12 @@ const rawExperience = {
       fallbackBehavior: 'collapse_to_timeline',
       delivery: 'automatic',
       kind: 'condition_slider',
+      evaluation: {
+        mode: 'exploratory',
+        correctOptionIds: [],
+        rewardCoins: 0,
+        explanation: '条件推演没有唯一正确选项。'
+      },
       payload: {
         title: '把通胀条件拨一下',
         variable: '通胀水平',
@@ -186,6 +236,12 @@ const rawExperience = {
       fallbackBehavior: 'collapse_to_timeline',
       delivery: 'timeline_only',
       kind: 'counterexample_flip',
+      evaluation: {
+        mode: 'objective',
+        correctOptionIds: ['other-cuts-more'],
+        rewardCoins: 1,
+        explanation: '其他经济体降息更多会改变相对利差，是直接反例。'
+      },
       payload: {
         title: '换个条件看汇率的主导路径',
         baseClaim: '本国降息会让本币走弱',
@@ -220,6 +276,12 @@ const rawExperience = {
       fallbackBehavior: 'collapse_to_timeline',
       delivery: 'timeline_only',
       kind: 'concept_compare',
+      evaluation: {
+        mode: 'acknowledgement',
+        correctOptionIds: [],
+        rewardCoins: 0,
+        explanation: '概念卡用于辨析，不设置唯一答案。'
+      },
       payload: {
         title: '名义利率 vs 实际利率',
         left: {

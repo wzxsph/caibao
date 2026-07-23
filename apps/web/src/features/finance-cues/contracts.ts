@@ -14,7 +14,22 @@ const triggerBase = {
   evidenceIds: z.array(z.string().min(1)).min(1),
   reviewStatus: z.enum(['approved', 'mock']),
   fallbackBehavior: z.literal('collapse_to_timeline'),
-  delivery: z.enum(['automatic', 'timeline_only'])
+  delivery: z.enum(['automatic', 'timeline_only']),
+  backgroundContext: z
+    .object({
+      setting: z.string().min(1),
+      keyFacts: z.array(z.string()).optional(),
+      relevance: z.string().optional()
+    })
+    .optional(),
+  evaluation: z
+    .object({
+      mode: z.enum(['objective', 'exploratory', 'acknowledgement']),
+      correctOptionIds: z.array(z.string().min(1)).default([]),
+      rewardCoins: z.number().int().min(0).max(10).default(0),
+      explanation: z.string().min(1).max(160)
+    })
+    .optional()
 }
 
 const contextCardTriggerSchema = z.object({
@@ -234,6 +249,24 @@ export const approvedExperienceSchema = z
           text: z.string().min(1)
         })
       )
+      .optional(),
+    openingBrief: z
+      .object({
+        contentType: z.string().min(1),
+        summary: z.string().min(1),
+        viewpointNotice: z.string().min(1),
+        verificationBoundary: z.string().min(1)
+      })
+      .optional(),
+    perspectives: z
+      .array(
+        z.object({
+          audience: z.enum(['国家与公共部门', '企业', '居民']),
+          impact: z.string().min(1),
+          reason: z.string().min(1),
+          response: z.string().min(1)
+        }).strict()
+      )
       .optional()
   })
   .superRefine((experience, context) => {
@@ -269,6 +302,7 @@ export type TriggerKind = TimelineTrigger['kind']
 export type TraceAction =
   | 'surfaced'
   | 'expanded'
+  | 'attempted'
   | 'completed'
   | 'dismissed'
   | 'missed'
@@ -284,6 +318,9 @@ export interface LearningTraceEvent {
   playbackPositionMs: number
   occurredAt: number
   response?: string
+  answerId?: string
+  isCorrect?: boolean
+  coinsAwarded?: number
   evidenceIds: string[]
 }
 
@@ -309,4 +346,46 @@ export interface LearningSummary {
     title: string
   }>
   revisitableCueIds: string[]
+}
+
+export interface OpeningBrief {
+  contentType: string
+  summary: string
+  viewpointNotice: string
+  verificationBoundary: string
+}
+
+export interface ReportPerspective {
+  audience: '国家与公共部门' | '企业' | '居民'
+  impact: string
+  reason: string
+  response: string
+}
+
+export interface EvidenceReport {
+  videoId: string
+  title: string
+  contentVersion: string
+  completedNodes: number
+  correctAnswers: number
+  skippedNodes: number
+  coinsCollected: number
+  observed: Array<{ triggerId: string; title: string; evidenceIds: string[] }>
+  notObserved: Array<{ triggerId: string; title: string }>
+  perspectives: ReportPerspective[]
+  openingBrief: OpeningBrief
+  notice: string
+  reasoning?: {
+    handWrittenNote: string
+    coreVariable: string
+    paths: Array<{ tone: 'teal' | 'gold' | 'blue'; top: string; bottom: string; icon: string }>
+    counterPath: string[]
+    replayAtMs?: number
+  }
+  suggestedWatch?: {
+    label: string
+    startMs: number
+    durationMs?: number
+    note?: string
+  }
 }

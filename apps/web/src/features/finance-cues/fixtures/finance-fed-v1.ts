@@ -57,6 +57,12 @@ const rawExperience = {
       fallbackBehavior: 'collapse_to_timeline',
       delivery: 'automatic',
       kind: 'context_card',
+      evaluation: {
+        mode: 'acknowledgement',
+        correctOptionIds: [],
+        rewardCoins: 0,
+        explanation: '背景卡用于补齐概念，不设置唯一正确答案。'
+      },
       payload: {
         title: '政策利率不是所有利率的开关',
         body: '央行直接调整的是政策工具利率。贷款、债券和企业融资成本还要经过市场预期、信用风险与期限结构传导。',
@@ -80,6 +86,12 @@ const rawExperience = {
       fallbackBehavior: 'collapse_to_timeline',
       delivery: 'automatic',
       kind: 'condition_slider',
+      evaluation: {
+        mode: 'exploratory',
+        correctOptionIds: [],
+        rewardCoins: 0,
+        explanation: '条件推演用于比较路径，不设置唯一正确答案。'
+      },
       payload: {
         title: '把增长条件拨一下',
         variable: '经济增长',
@@ -113,6 +125,12 @@ const rawExperience = {
       fallbackBehavior: 'collapse_to_timeline',
       delivery: 'automatic',
       kind: 'causal_stitch',
+      evaluation: {
+        mode: 'objective',
+        correctOptionIds: ['企业融资成本可能下降'],
+        rewardCoins: 1,
+        explanation: '融资成本与折现率是连接政策利率和估值的中间机制。'
+      },
       payload: {
         title: '补全中间机制',
         before: '政策利率下降',

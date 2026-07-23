@@ -1,18 +1,31 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import caibaoImage from '../assets/caibao.png'
 
-defineProps<{
-  title: string
-  eyebrow?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    title: string
+    eyebrow?: string
+    fullscreen?: boolean
+  }>(),
+  { fullscreen: false }
+)
 
 const emit = defineEmits<{
   close: []
+  'update:fullscreen': [value: boolean]
 }>()
 
 const startY = ref(0)
 const offsetY = ref(0)
+const isFullscreen = ref(Boolean(props.fullscreen))
+
+watch(
+  () => props.fullscreen,
+  (value) => {
+    isFullscreen.value = Boolean(value)
+  }
+)
 
 function pointerDown(event: PointerEvent) {
   startY.value = event.clientY
@@ -30,11 +43,18 @@ function pointerUp() {
   startY.value = 0
   offsetY.value = 0
 }
+
+function toggleFullscreen() {
+  const next = !isFullscreen.value
+  isFullscreen.value = next
+  emit('update:fullscreen', next)
+}
 </script>
 
 <template>
   <section
     class="caibao-half-sheet"
+    :class="{ fullscreen: isFullscreen }"
     data-testid="caibao-half-sheet"
     data-max-viewport-ratio="0.48"
     :style="{ transform: 'translate3d(0,' + offsetY + 'px,0)' }"
@@ -58,6 +78,17 @@ function pointerUp() {
         <small>{{ eyebrow || '财包知识触点' }}</small>
         <h2>{{ title }}</h2>
       </div>
+      <button
+        type="button"
+        class="fullscreen-toggle"
+        :aria-label="isFullscreen ? '退出全屏' : '进入全屏'"
+        :aria-pressed="isFullscreen"
+        data-testid="caibao-half-sheet-fullscreen"
+        @click.stop="toggleFullscreen"
+      >
+        <span v-if="isFullscreen">⤡</span>
+        <span v-else>⤢</span>
+      </button>
       <button type="button" aria-label="关闭" @click.stop="$emit('close')">×</button>
     </header>
     <div class="sheet-body">
@@ -86,8 +117,16 @@ function pointerUp() {
   border-radius: 24px 24px 0 0;
   box-shadow: 0 -14px 36px rgba(0, 0, 0, 0.28);
   pointer-events: auto;
-  transition: transform 200ms ease;
+  transition: transform 200ms ease, height 200ms ease, max-height 200ms ease, border-radius 200ms ease;
   animation: sheet-enter 220ms ease-out;
+
+  &.fullscreen {
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+  }
 }
 
 .drag-handle {
@@ -108,8 +147,8 @@ function pointerUp() {
 
 header {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr) 44px;
-  gap: 10px;
+  grid-template-columns: 42px minmax(0, 1fr) 44px 44px;
+  gap: 8px;
   align-items: center;
   padding: 0 16px 12px;
   text-align: left;
@@ -142,8 +181,13 @@ header {
     background: #f1eadc;
     border: 0;
     border-radius: 50%;
-    font-size: 26px;
+    font-size: 22px;
     cursor: pointer;
+  }
+
+  .fullscreen-toggle {
+    font-size: 18px;
+    background: #fdf3d8;
   }
 }
 

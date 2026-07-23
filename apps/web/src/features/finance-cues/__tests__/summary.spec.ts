@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { CueSession, LearningTraceEvent, TraceAction } from '../contracts'
 import { financeFedExperience } from '../fixtures/finance-fed-v1'
-import { buildLearningSummary, latestActions } from '../summary'
+import { buildLearningSummary, buildReport, latestActions } from '../summary'
 
 function event(triggerId: string, action: TraceAction, sequence: number): LearningTraceEvent {
   return {
@@ -43,5 +43,32 @@ describe('learning summary', () => {
     expect(summary.observed).toEqual([])
     expect(summary.notObserved).toHaveLength(3)
     expect(summary).not.toHaveProperty('score')
+  })
+})
+
+describe('buildReport', () => {
+  it('builds report data from experience', () => {
+    const experience = {
+      report: {
+        eyebrow: 'Test report',
+        title: 'Test title',
+        coreVariable: 'test variable',
+        paths: [{ tone: 'teal' as const, top: 'path top', bottom: 'path bottom', icon: '↗' }],
+        counterPath: ['step1', 'step2'],
+        skillStamps: [{ icon: '✓', label: 'test skill' }],
+        transferQuestion: 'test question?',
+        replayAt: 100,
+      }
+    } as any
+    const report = buildReport(experience)
+    expect(report).not.toBeNull()
+    expect(report!.title).toBe('Test title')
+    expect(report!.paths.length).toBe(1)
+    expect(report!.disclaimer).toContain('不构成投资建议')
+  })
+
+  it('returns null when experience has no report', () => {
+    const experience = {} as any
+    expect(buildReport(experience)).toBeNull()
   })
 })

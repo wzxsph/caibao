@@ -1,0 +1,379 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
+import caibaoImage from '@/features/finance-cues/assets/caibao.png'
+import CaibaoChat from '@/features/finance-cues/components/CaibaoChat.vue'
+import { buildEvidenceReport, reportShareText } from '@/features/finance-cues/report'
+import { renderReportShareCard } from '@/features/finance-cues/share-card'
+import { useFinanceCueStore } from '@/features/finance-cues/session-store'
+import { DEMO_FINANCE_LEVEL, loadDemoWallet } from '@/features/finance-cues/wallet'
+import { showcaseBundle, showcaseExperiences } from '@/showcase/catalog'
+
+const route = useRoute()
+const store = useFinanceCueStore()
+const actionStatus = ref('')
+const item = computed(() =>
+  showcaseBundle.catalog.find((candidate) => candidate.videoId === String(route.params.videoId))
+)
+const experience = computed(() =>
+  item.value ? showcaseExperiences[item.value.financeExperienceId] : undefined
+)
+const reportSession = computed(() =>
+  experience.value ? store.hydrate(experience.value) : undefined
+)
+const report = computed(() => {
+  if (!experience.value || !reportSession.value) return undefined
+  return buildEvidenceReport(experience.value, reportSession.value, loadDemoWallet().coins)
+})
+
+async function createFile() {
+  if (!report.value) throw new Error('Report is unavailable')
+  const blob = await renderReportShareCard(report.value)
+  return new File([blob], `caibao-${report.value.videoId}.png`, { type: 'image/png' })
+}
+
+async function shareReport() {
+  if (!report.value) return
+  try {
+    const file = await createFile()
+    if (navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
+      await navigator.share({
+        title: report.value.title,
+        text: reportShareText(report.value),
+        files: [file]
+      })
+      actionStatus.value = '已打开系统分享'
+      return
+    }
+    await saveReport()
+  } catch (error) {
+    if ((error as DOMException).name !== 'AbortError')
+      actionStatus.value = '分享未完成，可保存图片或复制摘要'
+  }
+}
+
+async function saveReport() {
+  try {
+    const file = await createFile()
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(file)
+    link.download = file.name
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.setTimeout(() => URL.revokeObjectURL(link.href), 0)
+    actionStatus.value = '总结卡片已生成'
+  } catch {
+    actionStatus.value = '图片生成失败，请复制文字摘要'
+  }
+}
+
+async function copyReport() {
+  if (!report.value) return
+  try {
+    await navigator.clipboard.writeText(reportShareText(report.value))
+    actionStatus.value = '文字摘要已复制'
+  } catch {
+    actionStatus.value = '复制失败，请使用系统分享或保存长图'
+  }
+}
+
+function formatTimestamp(ms: number): string {
+  const safe = Math.max(0, Math.round(ms / 1000))
+  const minutes = Math.floor(safe / 60)
+  const seconds = safe % 60
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+}
+</script>
+
+<template>
+  <main class="report-page">
+    <RouterLink class="back" to="/home">← 返回推荐</RouterLink>
+    <section v-if="report && item" class="report-card" data-testid="evidence-report">
+      <header>
+        <img :src="caibaoImage" alt="财包" />
+        <div>
+          <small>本期推演复盘 · Mock</small>
+          <h1>{{ report.title }}</h1>
+          <p>财经等级 {{ DEMO_FINANCE_LEVEL }} 级 · 社交标识 Demo</p>
+        </div>
+      </header>
+
+      <div class="metrics" aria-label="本次学习记录">
+        <span
+          >完成关键点 <b>{{ report.completedNodes }}</b></span
+        >
+        <span
+          >正确答题 <b>{{ report.correctAnswers }}</b></span
+        >
+        <span
+          >主动跳过 <b>{{ report.skippedNodes }}</b></span
+        >
+        <span
+          >金币 <b>🪙 {{ report.coinsCollected }}</b></span
+        >
+      </div>
+
+      <section class="opening">
+        <small>{{ report.openingBrief.contentType }}</small>
+        <h2>主题与事实/观点提醒</h2>
+        <p>{{ report.openingBrief.summary }}</p>
+        <strong>{{ report.openingBrief.viewpointNotice }}</strong>
+        <footer>{{ report.openingBrief.verificationBoundary }}</footer>
+      </section>
+
+      <section>
+        <h2>掌握情况</h2>
+        <div class="mastery-grid">
+          <article v-for="entry in report.observed" :key="entry.triggerId">
+            <b>✓ 已观察</b><span>{{ entry.title }}</span>
+          </article>
+          <article v-for="entry in report.notObserved" :key="entry.triggerId" class="pending">
+            <b>待加强</b><span>{{ entry.title }}</span>
+          </article>
+        </div>
+      </section>
+
+      <section v-if="report.reasoning" class="reasoning">
+        <h2>推演思路</h2>
+        <p class="hand-written-note">{{ report.reasoning.handWrittenNote }}</p>
+        <small>核心变量：{{ report.reasoning.coreVariable }}</small>
+        <div class="reasoning-paths">
+          <article
+            v-for="(path, index) in report.reasoning.paths"
+            :key="index"
+            :class="['reasoning-path', 'tone-' + path.tone]"
+          >
+            <header>
+              <span class="icon">{{ path.icon }}</span>
+              <b>路径 {{ index + 1 }}</b>
+            </header>
+            <p class="top">{{ path.top }}</p>
+            <p class="bottom">{{ path.bottom }}</p>
+          </article>
+        </div>
+        <div v-if="report.reasoning.counterPath.length" class="counter-path">
+          <small>反例路径</small>
+          <ol>
+            <li v-for="(step, index) in report.reasoning.counterPath" :key="index">{{ step }}</li>
+          </ol>
+        </div>
+      </section>
+
+      <section>
+        <h2>财经事件影响到谁</h2>
+        <div class="perspective-grid">
+          <article v-for="entry in report.perspectives" :key="entry.audience">
+            <h3>{{ entry.audience }}</h3>
+            <p><b>影响：</b>{{ entry.impact }}</p>
+            <p><b>原因：</b>{{ entry.reason }}</p>
+            <p><b>观察与应对：</b>{{ entry.response }}</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="suggestions">
+        <h2>建议补充</h2>
+        <p v-if="report.notObserved.length">回到时间轴补看尚未观察的关键点，再检查条件与反例。</p>
+        <p v-else>关键点均已观察，可以尝试用三句话复述“原因—机制—结果”。</p>
+      </section>
+
+      <section v-if="report.suggestedWatch" class="suggested-watch">
+        <h2>推荐进一步拓展观看</h2>
+        <div class="suggested-watch-card">
+          <div>
+            <b>{{ report.suggestedWatch.label }}</b>
+            <p v-if="report.suggestedWatch.note">{{ report.suggestedWatch.note }}</p>
+          </div>
+          <span class="timestamp">{{ formatTimestamp(report.suggestedWatch.startMs) }}</span>
+        </div>
+      </section>
+
+      <section v-if="experience && reportSession" class="report-chat">
+        <h2>继续问财包</h2>
+        <CaibaoChat :experience="experience" :session-id="reportSession.sessionId" />
+      </section>
+
+      <div class="actions">
+        <button type="button" @click="shareReport">系统分享</button>
+        <button type="button" @click="saveReport">保存长图</button>
+        <button type="button" @click="copyReport">复制摘要</button>
+      </div>
+      <p v-if="actionStatus" class="status" role="status">{{ actionStatus }}</p>
+      <footer class="notice">
+        {{ report.notice }}
+        <a :href="item.sourceUrl" target="_blank" rel="noopener noreferrer">查看抖音原作品 ↗</a>
+      </footer>
+    </section>
+    <section v-else class="missing">
+      <h1>这份报告不可用</h1>
+      <p>仅公开清单内的视频可以生成本地学习报告。</p>
+    </section>
+  </main>
+</template>
+
+<style scoped>
+.report-page {
+  min-height: 100vh;
+  padding: 20px;
+  color: #28261f;
+  background: #eee8dc;
+}
+.back {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: #5e543e;
+  text-decoration: none;
+}
+.report-card {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #fffaf0;
+  border-radius: 28px;
+  box-shadow: 0 18px 60px rgba(66, 50, 20, 0.14);
+}
+header {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+header img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #fff0b2;
+}
+header h1 {
+  margin: 5px 0;
+  font-size: clamp(24px, 5vw, 44px);
+}
+header p,
+header small {
+  margin: 0;
+  color: #9a7521;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 20px 0;
+}
+.metrics span,
+.mastery-grid article,
+.perspective-grid article {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e7dcc6;
+  border-radius: 14px;
+}
+.opening,
+.suggestions {
+  padding: 18px;
+  background: #f8efd9;
+  border-left: 4px solid #d9aa2c;
+  border-radius: 16px;
+}
+.opening h2,
+section h2 {
+  margin: 4px 0 12px;
+}
+.opening p,
+.opening footer {
+  line-height: 1.65;
+}
+.opening strong {
+  display: block;
+  color: #8b5d21;
+}
+.opening footer,
+.notice {
+  margin-top: 10px;
+  color: #8c7963;
+  font-size: 12px;
+}
+.mastery-grid,
+.perspective-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.mastery-grid article {
+  display: grid;
+  gap: 6px;
+}
+.mastery-grid article b {
+  color: #338768;
+}
+.mastery-grid article.pending b {
+  color: #c2772b;
+}
+.perspective-grid article h3 {
+  color: #8a681b;
+}
+.perspective-grid article p {
+  line-height: 1.55;
+}
+.report-chat {
+  margin-top: 18px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e7dcc6;
+  border-radius: 16px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+.actions button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  background: #ffd541;
+  color: #29261e;
+  font-weight: 700;
+}
+.status {
+  color: #6d604d;
+}
+.notice {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.notice a {
+  color: #8a681b;
+}
+.missing {
+  max-width: 560px;
+  margin: 20vh auto;
+  text-align: center;
+}
+@media (max-width: 720px) {
+  .report-page {
+    padding: 10px;
+  }
+  .report-card {
+    padding: 16px;
+    border-radius: 20px;
+  }
+  header img {
+    width: 72px;
+    height: 72px;
+  }
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mastery-grid,
+  .perspective-grid {
+    grid-template-columns: 1fr;
+  }
+  .notice {
+    display: grid;
+  }
+}
+</style>
