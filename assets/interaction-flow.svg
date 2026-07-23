@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 360" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <linearGradient id="phone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1B1F1E"/>
+      <stop offset="100%" stop-color="#0b0d12"/>
+    </linearGradient>
+    <linearGradient id="sheet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFB400"/>
+      <stop offset="100%" stop-color="#FFCB4D"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/>
+    </marker>
+    <marker id="arrowGold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B07700"/>
+    </marker>
+  </defs>
+
+  <!-- Step 1: Vertical video -->
+  <g transform="translate(20,30)">
+    <rect width="120" height="180" rx="14" fill="url(#phone)" stroke="#FFB400" stroke-width="1.5"/>
+    <rect x="8" y="8" width="104" height="164" rx="9" fill="#111"/>
+    <text x="60" y="35" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">Step 1</text>
+    <text x="60" y="55" text-anchor="middle" fill="#fff" opacity="0.85" font-size="10">竖屏视频</text>
+    <text x="60" y="70" text-anchor="middle" fill="#fff" opacity="0.55" font-size="9">Vertical Video</text>
+    <polygon points="50,95 50,135 78,115" fill="#FFB400" opacity="0.85"/>
+    <rect x="20" y="148" width="80" height="6" rx="3" fill="#222"/>
+    <rect x="20" y="148" width="30" height="6" rx="3" fill="#FFB400"/>
+    <text x="60" y="170" text-anchor="middle" fill="#fff" opacity="0.6" font-size="8">▶ 播放中</text>
+    <text x="60" y="200" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">PASSIVE</text>
+  </g>
+  <line x1="145" y1="120" x2="185" y2="120" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="165" y="110" text-anchor="middle" fill="#666" font-size="9">继续播放</text>
+
+  <!-- Step 2: POI chip pops up -->
+  <g transform="translate(190,30)">
+    <rect width="160" height="180" rx="14" fill="url(#phone)" stroke="#FFB400" stroke-width="1.5"/>
+    <rect x="8" y="8" width="144" height="164" rx="9" fill="#111"/>
+    <text x="80" y="35" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">Step 2</text>
+    <text x="80" y="55" text-anchor="middle" fill="#fff" opacity="0.85" font-size="10">POI 浮出</text>
+    <text x="80" y="70" text-anchor="middle" fill="#fff" opacity="0.55" font-size="9">POI Chip Pop-up</text>
+    <polygon points="70,90 70,130 98,110" fill="#FFB400" opacity="0.85"/>
+    <rect x="20" y="135" width="120" height="26" rx="13" fill="url(#sheet)" stroke="#1B1F1E" stroke-width="1"/>
+    <circle cx="34" cy="148" r="6" fill="#1B1F1E"/>
+    <text x="44" y="152" fill="#1B1F1E" font-size="10" font-weight="700">财包·因果推演</text>
+    <text x="80" y="180" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">FOCUS NUDGE</text>
+  </g>
+  <line x1="355" y1="120" x2="395" y2="120" stroke="#B07700" stroke-width="2" marker-end="url(#arrowGold)"/>
+  <text x="375" y="110" text-anchor="middle" fill="#B07700" font-size="9">点击</text>
+
+  <!-- Step 3: Half-sheet slides up -->
+  <g transform="translate(400,30)">
+    <rect width="180" height="180" rx="14" fill="url(#phone)" stroke="#FFB400" stroke-width="1.5"/>
+    <rect x="8" y="8" width="164" height="164" rx="9" fill="#111"/>
+    <text x="90" y="35" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">Step 3</text>
+    <text x="90" y="55" text-anchor="middle" fill="#fff" opacity="0.85" font-size="10">半屏互动</text>
+    <text x="90" y="70" text-anchor="middle" fill="#fff" opacity="0.55" font-size="9">Half-sheet (≤48vh)</text>
+    <rect x="14" y="78" width="152" height="20" rx="4" fill="#000" opacity="0.6"/>
+    <polygon points="80,82 80,96 92,89" fill="#FFB400" opacity="0.7"/>
+    <line x1="16" y1="98" x2="164" y2="98" stroke="#FFB400" stroke-width="1"/>
+    <rect x="14" y="100" width="152" height="64" rx="6" fill="#FFB400"/>
+    <rect x="20" y="106" width="40" height="40" rx="3" fill="#1B1F1E" opacity="0.15"/>
+    <text x="66" y="116" fill="#1B1F1E" font-size="9" font-weight="700">因果拼接</text>
+    <text x="66" y="128" fill="#1B1F1E" opacity="0.75" font-size="7">tariff ↑ → 出口 ↓ ?</text>
+    <rect x="66" y="134" width="92" height="8" rx="2" fill="#1B1F1E" opacity="0.15"/>
+    <rect x="66" y="146" width="40" height="14" rx="3" fill="#1B1F1E"/>
+    <text x="86" y="156" text-anchor="middle" fill="#FFB400" font-size="7" font-weight="700">完成</text>
+    <rect x="110" y="146" width="40" height="14" rx="3" fill="none" stroke="#1B1F1E"/>
+    <text x="130" y="156" text-anchor="middle" fill="#1B1F1E" font-size="7">跳过</text>
+    <text x="90" y="180" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">INTERACTIVE</text>
+  </g>
+  <line x1="585" y1="120" x2="625" y2="120" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="605" y="110" text-anchor="middle" fill="#666" font-size="9">完成/跳过</text>
+
+  <!-- Step 4: Resume -->
+  <g transform="translate(630,30)">
+    <rect width="160" height="180" rx="14" fill="url(#phone)" stroke="#FFB400" stroke-width="1.5"/>
+    <rect x="8" y="8" width="144" height="164" rx="9" fill="#111"/>
+    <text x="80" y="35" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">Step 4</text>
+    <text x="80" y="55" text-anchor="middle" fill="#fff" opacity="0.85" font-size="10">关闭恢复</text>
+    <text x="80" y="70" text-anchor="middle" fill="#fff" opacity="0.55" font-size="9">Close &amp; Resume</text>
+    <polygon points="70,90 70,130 98,110" fill="#FFB400" opacity="0.85"/>
+    <rect x="20" y="148" width="120" height="6" rx="3" fill="#222"/>
+    <rect x="20" y="148" width="55" height="6" rx="3" fill="#FFB400"/>
+    <text x="80" y="170" text-anchor="middle" fill="#fff" opacity="0.6" font-size="8">▶ 继续播放</text>
+    <text x="80" y="180" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">RESUME</text>
+  </g>
+
+  <g transform="translate(20,230)">
+    <rect width="770" height="110" rx="10" fill="#fafafa" stroke="#ddd"/>
+    <text x="20" y="24" fill="#1B1F1E" font-size="12" font-weight="700">不变量 · Invariants</text>
+    <text x="20" y="44" fill="#333" font-size="10">▸ POI 曝光时视频继续播放，点开才暂停；财包不得改变静音/音量/倍速</text>
+    <text x="20" y="60" fill="#333" font-size="10">▸ 半屏 ≤ 48vh；同时仅 1 个交互；相邻自动触点 ≥ 45 秒</text>
+    <text x="20" y="76" fill="#333" font-size="10">▸ 关闭/跳过/完成 → 按进入前状态恢复（同位置、同静音、同声音入口状态）</text>
+    <text x="20" y="92" fill="#333" font-size="10">▸ 作者头像与财包身份严格分离；不显示总分/伪精度/投资建议</text>
+  </g>
+</svg>
