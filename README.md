@@ -60,10 +60,12 @@
 
 ## 快速预览 · Preview
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 720'&gt;&lt;rect width='360' height='720' rx='28' fill='%230b0d12'/&gt;&lt;rect x='12' y='12' width='336' height='696' rx='20' fill='%23111' stroke='%23FFB400' stroke-width='1.5'/&gt;&lt;rect x='0' y='0' width='360' height='80' fill='%23000' opacity='0.4'/&gt;&lt;text x='180' y='40' text-anchor='middle' fill='%23FFB400' font-family='sans-serif' font-size='14' font-weight='700'&gt;财包 · 推荐流&lt;/text&gt;&lt;text x='180' y='60' text-anchor='middle' fill='%23fff' opacity='0.6' font-family='sans-serif' font-size='10'&gt;Caibao · Showcase Feed&lt;/text&gt;&lt;rect x='30' y='100' width='300' height='420' rx='12' fill='%2318171f' stroke='%23222' stroke-width='1'/&gt;&lt;polygon points='160,260 160,360 220,310' fill='%23FFB400' opacity='0.8'/&gt;&lt;rect x='30' y='100' width='300' height='34' fill='%23000' opacity='0.45'/&gt;&lt;circle cx='50' cy='117' r='12' fill='%23FFB400'/&gt;&lt;text x='64' y='121' fill='%23fff' font-family='sans-serif' font-size='11' font-weight='600'&gt;小Lin说&lt;/text&gt;&lt;text x='280' y='121' text-anchor='end' fill='%23fff' opacity='0.85' font-family='sans-serif' font-size='10'&gt;▶ 12.4w&lt;/text&gt;&lt;rect x='140' y='480' width='200' height='44' rx='22' fill='%23FFB400' stroke='%231B1F1E' stroke-width='1.5'/&gt;&lt;circle cx='170' cy='502' r='8' fill='%231B1F1E'/&gt;&lt;text x='180' y='506' fill='%231B1F1E' font-family='sans-serif' font-size='13' font-weight='700'&gt;财包·因果推演&lt;/text&gt;&lt;text x='240' y='506' fill='%231B1F1E' font-family='sans-serif' font-size='10' opacity='0.7'&gt;▶&lt;/text&gt;&lt;rect x='30' y='540' width='40' height='40' rx='20' fill='%23FFB400' stroke='%231B1F1E' stroke-width='1' opacity='0.95'/&gt;&lt;text x='50' y='566' text-anchor='middle' fill='%231B1F1E' font-family='sans-serif' font-size='22' font-weight='800'&gt;财&lt;/text&gt;&lt;rect x='30' y='600' width='300' height='80' rx='8' fill='%2318171f' stroke='%23222'/&gt;&lt;text x='180' y='640' text-anchor='middle' fill='%23fff' opacity='0.5' font-family='sans-serif' font-size='11'&gt;财务自由≠有钱&lt;/text&gt;&lt;text x='180' y='658' text-anchor='middle' fill='%23FFB400' font-family='sans-serif' font-size='10'&gt;--- 悬停POI逻辑 ---&lt;/text&gt;&lt;/svg&gt;" />
-  <img alt="Caibao 视频播放器 + POI 轻触点 预览" src="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 720'&gt;&lt;rect width='360' height='720' rx='28' fill='%23fafafa'/&gt;&lt;rect x='12' y='12' width='336' height='696' rx='20' fill='%23fff' stroke='%23FFB400' stroke-width='1.5'/&gt;&lt;rect x='0' y='0' width='360' height='80' fill='%23f3f3f3'/&gt;&lt;text x='180' y='40' text-anchor='middle' fill='%23B07700' font-family='sans-serif' font-size='14' font-weight='700'&gt;财包 · 推荐流&lt;/text&gt;&lt;text x='180' y='60' text-anchor='middle' fill='%23333' opacity='0.6' font-family='sans-serif' font-size='10'&gt;Caibao · Showcase Feed&lt;/text&gt;&lt;rect x='30' y='100' width='300' height='420' rx='12' fill='%23eee' stroke='%23ccc'/&gt;&lt;polygon points='160,260 160,360 220,310' fill='%23FFB400' opacity='0.8'/&gt;&lt;rect x='30' y='100' width='300' height='34' fill='%23000' opacity='0.25'/&gt;&lt;circle cx='50' cy='117' r='12' fill='%23FFB400'/&gt;&lt;text x='64' y='121' fill='%23fff' font-family='sans-serif' font-size='11' font-weight='600'&gt;小Lin说&lt;/text&gt;&lt;text x='280' y='121' text-anchor='end' fill='%23fff' font-family='sans-serif' font-size='10'&gt;▶ 12.4w&lt;/text&gt;&lt;rect x='140' y='480' width='200' height='44' rx='22' fill='%23FFB400' stroke='%231B1F1E' stroke-width='1.5'/&gt;&lt;circle cx='170' cy='502' r='8' fill='%231B1F1E'/&gt;&lt;text x='180' y='506' fill='%231B1F1E' font-family='sans-serif' font-size='12' font-weight='700'&gt;财包·因果推演&lt;/text&gt;&lt;text x='240' y='506' fill='%231B1F1E' font-family='sans-serif' font-size='10' opacity='0.7'&gt;▶&lt;/text&gt;&lt;rect x='30' y='540' width='40' height='40' rx='20' fill='%23FFB400' stroke='%231B1F1E' stroke-width='1'/&gt;&lt;text x='50' y='566' text-anchor='middle' fill='%231B1F1E' font-family='sans-serif' font-size='22' font-weight='800'&gt;财&lt;/text&gt;&lt;rect x='30' y='600' width='300' height='80' rx='8' fill='%23f3f3f3' stroke='%23ccc'/&gt;&lt;text x='180' y='640' text-anchor='middle' fill='%23333' font-family='sans-serif' font-size='11'&gt;财务自由≠有钱&lt;/text&gt;&lt;text x='180' y='658' text-anchor='middle' fill='%23B07700' font-family='sans-serif' font-size='10'&gt;--- 悬停POI逻辑 ---&lt;/text&gt;&lt;/svg&gt;" />
-</picture>
+<table align="center">
+<tr>
+<td align="center"><img alt="Caibao 视频播放器 + POI 轻触点 预览（深色主题）" src="assets/player-preview-dark.svg" width="280" /><br/><sub><b>Dark · 深色主题</b></sub></td>
+<td align="center"><img alt="Caibao 视频播放器 + POI 轻触点 预览（浅色主题）" src="assets/player-preview-light.svg" width="280" /><br/><sub><b>Light · 浅色主题</b></sub></td>
+</tr>
+</table>
 
 <div align="center">
 <sub>金色「财包·因果推演」胶囊 = POI 轻触点 (CuePill)，可视、可忽略、点击才暂停。右下角「财」FAB = 财包身份标识（与作者头像严格分离）。</sub>
@@ -75,105 +77,7 @@
 
 <div align="center">
 
-```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 360" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-  <defs>
-    <linearGradient id="phone" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#1B1F1E"/>
-      <stop offset="100%" stop-color="#0b0d12"/>
-    </linearGradient>
-    <linearGradient id="sheet" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#FFB400"/>
-      <stop offset="100%" stop-color="#FFCB4D"/>
-    </linearGradient>
-    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/>
-    </marker>
-    <marker id="arrowGold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B07700"/>
-    </marker>
-  </defs>
-
-  <!-- Step 1: Vertical video -->
-  <g transform="translate(20,30)">
-    <rect width="120" height="180" rx="14" fill="url(#phone)" stroke="#FFB400" stroke-width="1.5"/>
-    <rect x="8" y="8" width="104" height="164" rx="9" fill="#111"/>
-    <text x="60" y="35" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">Step 1</text>
-    <text x="60" y="55" text-anchor="middle" fill="#fff" opacity="0.85" font-size="10">竖屏视频</text>
-    <text x="60" y="70" text-anchor="middle" fill="#fff" opacity="0.55" font-size="9">Vertical Video</text>
-    <polygon points="50,95 50,135 78,115" fill="#FFB400" opacity="0.85"/>
-    <rect x="20" y="148" width="80" height="6" rx="3" fill="#222"/>
-    <rect x="20" y="148" width="30" height="6" rx="3" fill="#FFB400"/>
-    <text x="60" y="170" text-anchor="middle" fill="#fff" opacity="0.6" font-size="8">▶ 播放中</text>
-    <text x="60" y="200" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">PASSIVE</text>
-  </g>
-  <line x1="145" y1="120" x2="185" y2="120" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="165" y="110" text-anchor="middle" fill="#666" font-size="9">继续播放</text>
-
-  <!-- Step 2: POI chip pops up -->
-  <g transform="translate(190,30)">
-    <rect width="160" height="180" rx="14" fill="url(#phone)" stroke="#FFB400" stroke-width="1.5"/>
-    <rect x="8" y="8" width="144" height="164" rx="9" fill="#111"/>
-    <text x="80" y="35" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">Step 2</text>
-    <text x="80" y="55" text-anchor="middle" fill="#fff" opacity="0.85" font-size="10">POI 浮出</text>
-    <text x="80" y="70" text-anchor="middle" fill="#fff" opacity="0.55" font-size="9">POI Chip Pop-up</text>
-    <polygon points="70,90 70,130 98,110" fill="#FFB400" opacity="0.85"/>
-    <rect x="20" y="135" width="120" height="26" rx="13" fill="url(#sheet)" stroke="#1B1F1E" stroke-width="1"/>
-    <circle cx="34" cy="148" r="6" fill="#1B1F1E"/>
-    <text x="44" y="152" fill="#1B1F1E" font-size="10" font-weight="700">财包·因果推演</text>
-    <text x="80" y="180" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">FOCUS NUDGE</text>
-  </g>
-  <line x1="355" y1="120" x2="395" y2="120" stroke="#B07700" stroke-width="2" marker-end="url(#arrowGold)"/>
-  <text x="375" y="110" text-anchor="middle" fill="#B07700" font-size="9">点击</text>
-
-  <!-- Step 3: Half-sheet slides up -->
-  <g transform="translate(400,30)">
-    <rect width="180" height="180" rx="14" fill="url(#phone)" stroke="#FFB400" stroke-width="1.5"/>
-    <rect x="8" y="8" width="164" height="164" rx="9" fill="#111"/>
-    <text x="90" y="35" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">Step 3</text>
-    <text x="90" y="55" text-anchor="middle" fill="#fff" opacity="0.85" font-size="10">半屏互动</text>
-    <text x="90" y="70" text-anchor="middle" fill="#fff" opacity="0.55" font-size="9">Half-sheet (≤48vh)</text>
-    <rect x="14" y="78" width="152" height="20" rx="4" fill="#000" opacity="0.6"/>
-    <polygon points="80,82 80,96 92,89" fill="#FFB400" opacity="0.7"/>
-    <line x1="16" y1="98" x2="164" y2="98" stroke="#FFB400" stroke-width="1"/>
-    <rect x="14" y="100" width="152" height="64" rx="6" fill="#FFB400"/>
-    <rect x="20" y="106" width="40" height="40" rx="3" fill="#1B1F1E" opacity="0.15"/>
-    <text x="66" y="116" fill="#1B1F1E" font-size="9" font-weight="700">因果拼接</text>
-    <text x="66" y="128" fill="#1B1F1E" opacity="0.75" font-size="7">tariff ↑ → 出口 ↓ ?</text>
-    <rect x="66" y="134" width="92" height="8" rx="2" fill="#1B1F1E" opacity="0.15"/>
-    <rect x="66" y="146" width="40" height="14" rx="3" fill="#1B1F1E"/>
-    <text x="86" y="156" text-anchor="middle" fill="#FFB400" font-size="7" font-weight="700">完成</text>
-    <rect x="110" y="146" width="40" height="14" rx="3" fill="none" stroke="#1B1F1E"/>
-    <text x="130" y="156" text-anchor="middle" fill="#1B1F1E" font-size="7">跳过</text>
-    <text x="90" y="180" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">INTERACTIVE</text>
-  </g>
-  <line x1="585" y1="120" x2="625" y2="120" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="605" y="110" text-anchor="middle" fill="#666" font-size="9">完成/跳过</text>
-
-  <!-- Step 4: Resume -->
-  <g transform="translate(630,30)">
-    <rect width="160" height="180" rx="14" fill="url(#phone)" stroke="#FFB400" stroke-width="1.5"/>
-    <rect x="8" y="8" width="144" height="164" rx="9" fill="#111"/>
-    <text x="80" y="35" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">Step 4</text>
-    <text x="80" y="55" text-anchor="middle" fill="#fff" opacity="0.85" font-size="10">关闭恢复</text>
-    <text x="80" y="70" text-anchor="middle" fill="#fff" opacity="0.55" font-size="9">Close &amp; Resume</text>
-    <polygon points="70,90 70,130 98,110" fill="#FFB400" opacity="0.85"/>
-    <rect x="20" y="148" width="120" height="6" rx="3" fill="#222"/>
-    <rect x="20" y="148" width="55" height="6" rx="3" fill="#FFB400"/>
-    <text x="80" y="170" text-anchor="middle" fill="#fff" opacity="0.6" font-size="8">▶ 继续播放</text>
-    <text x="80" y="180" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">RESUME</text>
-  </g>
-
-  <g transform="translate(20,230)">
-    <rect width="770" height="110" rx="10" fill="#fafafa" stroke="#ddd"/>
-    <text x="20" y="24" fill="#1B1F1E" font-size="12" font-weight="700">不变量 · Invariants</text>
-    <text x="20" y="44" fill="#333" font-size="10">▸ POI 曝光时视频继续播放，点开才暂停；财包不得改变静音/音量/倍速</text>
-    <text x="20" y="60" fill="#333" font-size="10">▸ 半屏 ≤ 48vh；同时仅 1 个交互；相邻自动触点 ≥ 45 秒</text>
-    <text x="20" y="76" fill="#333" font-size="10">▸ 关闭/跳过/完成 → 按进入前状态恢复（同位置、同静音、同声音入口状态）</text>
-    <text x="20" y="92" fill="#333" font-size="10">▸ 作者头像与财包身份严格分离；不显示总分/伪精度/投资建议</text>
-  </g>
-</svg>
-```
+![用户视角四步：被动暴露 → 主动点开 → 半屏互动 → 关闭恢复](assets/interaction-flow.svg)
 
 </div>
 
@@ -189,134 +93,7 @@
 
 <div align="center">
 
-```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 280" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-  <defs>
-    <linearGradient id="stage" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#1B1F1E"/>
-      <stop offset="100%" stop-color="#0b0d12"/>
-    </linearGradient>
-    <linearGradient id="llm" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#FFB400"/>
-      <stop offset="100%" stop-color="#FFCB4D"/>
-    </linearGradient>
-    <linearGradient id="rule" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#3b6cd6"/>
-      <stop offset="100%" stop-color="#5a85e6"/>
-    </linearGradient>
-    <marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
-    </marker>
-    <marker id="paGold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B07700"/>
-    </marker>
-  </defs>
-
-  <g transform="translate(20,60)">
-    <rect width="140" height="100" rx="8" fill="url(#stage)" stroke="#FFB400"/>
-    <text x="70" y="22" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">1 · media_prepare</text>
-    <text x="70" y="42" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">媒体准备</text>
-    <text x="70" y="60" text-anchor="middle" fill="#aaa" font-size="8">ffmpeg / ffprobe</text>
-    <text x="70" y="76" text-anchor="middle" fill="#aaa" font-size="8">音轨 · 帧 · 派生</text>
-    <text x="70" y="92" text-anchor="middle" fill="#FFB400" font-size="8">确定性 / Deterministic</text>
-  </g>
-
-  <g transform="translate(180,20)">
-    <rect width="120" height="80" rx="8" fill="url(#stage)" stroke="#FFB400"/>
-    <text x="60" y="20" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">2 · ASR</text>
-    <text x="60" y="38" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">语音转写</text>
-    <text x="60" y="54" text-anchor="middle" fill="#aaa" font-size="8">火山 Flash ASR</text>
-    <text x="60" y="68" text-anchor="middle" fill="#FFB400" font-size="8">→ evidence timeline</text>
-  </g>
-
-  <g transform="translate(180,120)">
-    <rect width="120" height="80" rx="8" fill="url(#stage)" stroke="#FFB400"/>
-    <text x="60" y="20" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">3 · OCR</text>
-    <text x="60" y="38" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">关键帧文字</text>
-    <text x="60" y="54" text-anchor="middle" fill="#aaa" font-size="8">火山 OCR</text>
-    <text x="60" y="68" text-anchor="middle" fill="#FFB400" font-size="8">→ evidence timeline</text>
-  </g>
-
-  <g transform="translate(320,60)">
-    <rect width="140" height="100" rx="8" fill="url(#llm)" stroke="#1B1F1E"/>
-    <text x="70" y="22" text-anchor="middle" fill="#1B1F1E" font-size="9" font-weight="700">4 · semantic_graph</text>
-    <text x="70" y="42" text-anchor="middle" fill="#1B1F1E" font-size="10" font-weight="700">语义图谱</text>
-    <text x="70" y="60" text-anchor="middle" fill="#1B1F1E" opacity="0.85" font-size="8">LLM (MiniMax)</text>
-    <text x="70" y="76" text-anchor="middle" fill="#1B1F1E" opacity="0.85" font-size="8">因果边 from/to</text>
-    <text x="70" y="92" text-anchor="middle" fill="#1B1F1E" font-size="8">tool_choice: required</text>
-  </g>
-
-  <g transform="translate(480,30)">
-    <rect width="120" height="70" rx="8" fill="url(#rule)" stroke="#1B1F1E"/>
-    <text x="60" y="18" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">5 · cue_scorer</text>
-    <text x="60" y="36" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">评分代理</text>
-    <text x="60" y="52" text-anchor="middle" fill="#fff" opacity="0.85" font-size="8">subSignal · 规则归并</text>
-    <text x="60" y="66" text-anchor="middle" fill="#fff" opacity="0.85" font-size="8">priority 规则表</text>
-  </g>
-
-  <g transform="translate(480,120)">
-    <rect width="120" height="70" rx="8" fill="url(#rule)" stroke="#1B1F1E"/>
-    <text x="60" y="18" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">6 · cue_planner</text>
-    <text x="60" y="36" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">排程规划</text>
-    <text x="60" y="52" text-anchor="middle" fill="#fff" opacity="0.85" font-size="8">间距 ≥ 45s</text>
-    <text x="60" y="66" text-anchor="middle" fill="#fff" opacity="0.85" font-size="8">同时仅 1 个</text>
-  </g>
-
-  <g transform="translate(620,60)">
-    <rect width="140" height="100" rx="8" fill="url(#rule)" stroke="#1B1F1E"/>
-    <text x="70" y="22" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">7 · direction_rules</text>
-    <text x="70" y="42" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">方向规则引擎</text>
-    <text x="70" y="60" text-anchor="middle" fill="#fff" opacity="0.85" font-size="8">support / pressure</text>
-    <text x="70" y="76" text-anchor="middle" fill="#fff" opacity="0.85" font-size="8">conflict / insufficient</text>
-    <text x="70" y="92" text-anchor="middle" fill="#FFD700" font-size="8">先于授权</text>
-  </g>
-
-  <g transform="translate(780,30)">
-    <rect width="140" height="70" rx="8" fill="url(#llm)" stroke="#1B1F1E"/>
-    <text x="70" y="18" text-anchor="middle" fill="#1B1F1E" font-size="9" font-weight="700">8 · payload_author</text>
-    <text x="70" y="36" text-anchor="middle" fill="#1B1F1E" font-size="10" font-weight="700">文案授权</text>
-    <text x="70" y="52" text-anchor="middle" fill="#1B1F1E" opacity="0.85" font-size="8">LLM 消费锁定方向</text>
-    <text x="70" y="66" text-anchor="middle" fill="#FFB400" font-size="8">RENDERABLE_KINDS</text>
-  </g>
-
-  <g transform="translate(780,120)">
-    <rect width="140" height="70" rx="8" fill="url(#stage)" stroke="#FFB400"/>
-    <text x="70" y="18" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="700">9 · coverage_report</text>
-    <text x="70" y="36" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">覆盖报告</text>
-    <text x="70" y="52" text-anchor="middle" fill="#aaa" font-size="8">确定性 / 非 LLM</text>
-    <text x="70" y="66" text-anchor="middle" fill="#FFB400" font-size="8">DraftExperience</text>
-  </g>
-
-  <line x1="160" y1="110" x2="180" y2="60" stroke="#444" stroke-width="1.5" marker-end="url(#pa)"/>
-  <line x1="160" y1="110" x2="180" y2="160" stroke="#444" stroke-width="1.5" marker-end="url(#pa)"/>
-  <line x1="300" y1="60" x2="320" y2="110" stroke="#444" stroke-width="1.5" marker-end="url(#pa)"/>
-  <line x1="300" y1="160" x2="320" y2="110" stroke="#444" stroke-width="1.5" marker-end="url(#pa)"/>
-  <line x1="460" y1="110" x2="480" y2="65" stroke="#444" stroke-width="1.5" marker-end="url(#pa)"/>
-  <line x1="460" y1="110" x2="480" y2="155" stroke="#444" stroke-width="1.5" marker-end="url(#pa)"/>
-  <line x1="600" y1="65" x2="620" y2="110" stroke="#444" stroke-width="1.5" marker-end="url(#pa)"/>
-  <line x1="600" y1="155" x2="620" y2="110" stroke="#444" stroke-width="1.5" marker-end="url(#pa)"/>
-  <line x1="760" y1="110" x2="780" y2="65" stroke="#B07700" stroke-width="2" marker-end="url(#paGold)"/>
-  <line x1="760" y1="110" x2="780" y2="155" stroke="#444" stroke-width="1.5" marker-end="url(#pa)"/>
-
-  <path d="M 390 50 Q 410 30 430 50" fill="none" stroke="#B07700" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#paGold)"/>
-  <text x="410" y="22" text-anchor="middle" fill="#B07700" font-size="8" font-weight="700">定向修复 ≤ 2</text>
-
-  <g transform="translate(20,210)">
-    <rect width="900" height="56" rx="8" fill="#fafafa" stroke="#ddd"/>
-    <text x="20" y="22" fill="#1B1F1E" font-size="11" font-weight="700">管线不变量 · Pipeline Invariants</text>
-    <text x="20" y="40" fill="#333" font-size="9">▸ 离线运行 / 终点恒为 draft + BLOCKED:HUMAN_REVIEW_REQUIRED / 模型输出仅候选 / 方向规则先于授权 / 终检正则封禁词</text>
-  </g>
-
-  <g transform="translate(20,4)">
-    <rect x="0" y="0" width="14" height="14" fill="url(#stage)" stroke="#FFB400"/>
-    <text x="20" y="11" fill="#666" font-size="9">媒体层 / Deterministic</text>
-    <rect x="160" y="0" width="14" height="14" fill="url(#llm)"/>
-    <text x="180" y="11" fill="#666" font-size="9">LLM 阶段 / Guarded</text>
-    <rect x="290" y="0" width="14" height="14" fill="url(#rule)"/>
-    <text x="310" y="11" fill="#666" font-size="9">规则引擎 / Rule-first</text>
-  </g>
-</svg>
-```
+![8 阶段有界生成管线:媒体 → ASR/OCR → 语义图谱 → 评分/排程 → 方向规则 → 文案授权 → 覆盖报告](assets/pipeline-architecture.svg)
 
 </div>
 
@@ -437,56 +214,7 @@ pnpm dev                # 打开 http://127.0.0.1:3000/
 
 <div align="center">
 
-```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 180" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
-  <defs>
-    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#FFB400"/>
-      <stop offset="100%" stop-color="#FFCB4D"/>
-    </linearGradient>
-    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
-    </marker>
-  </defs>
-
-  <g transform="translate(20,30)">
-    <rect width="160" height="80" rx="8" fill="url(#g1)" stroke="#1B1F1E"/>
-    <text x="80" y="28" text-anchor="middle" fill="#1B1F1E" font-size="11" font-weight="700">本地构建</text>
-    <text x="80" y="46" text-anchor="middle" fill="#1B1F1E" font-size="9">pnpm build-gp-pages</text>
-    <text x="80" y="60" text-anchor="middle" fill="#1B1F1E" opacity="0.8" font-size="8">apps/web → dist/</text>
-  </g>
-
-  <line x1="185" y1="70" x2="225" y2="70" stroke="#444" stroke-width="2" marker-end="url(#a)"/>
-
-  <g transform="translate(230,20)">
-    <rect width="180" height="100" rx="8" fill="#1B1F1E" stroke="#FFB400"/>
-    <text x="90" y="24" text-anchor="middle" fill="#FFB400" font-size="11" font-weight="700">GitHub Actions</text>
-    <text x="90" y="42" text-anchor="middle" fill="#fff" font-size="9">pages.yml workflow</text>
-    <text x="90" y="58" text-anchor="middle" fill="#fff" opacity="0.7" font-size="8">校验 10 个 MP4</text>
-    <text x="90" y="74" text-anchor="middle" fill="#fff" opacity="0.7" font-size="8">SHA-256 / bytes</text>
-    <text x="90" y="90" text-anchor="middle" fill="#FFB400" font-size="8">暂存到 Pages artifact</text>
-  </g>
-
-  <line x1="415" y1="70" x2="455" y2="70" stroke="#444" stroke-width="2" marker-end="url(#a)"/>
-
-  <g transform="translate(460,30)">
-    <rect width="160" height="80" rx="8" fill="#1B1F1E" stroke="#FFB400"/>
-    <text x="80" y="28" text-anchor="middle" fill="#FFB400" font-size="11" font-weight="700">wzxsph/caibao</text>
-    <text x="80" y="46" text-anchor="middle" fill="#fff" font-size="9">GitHub Pages</text>
-    <text x="80" y="62" text-anchor="middle" fill="#fff" opacity="0.7" font-size="8">wzxsph.github.io/caibao</text>
-  </g>
-
-  <line x1="625" y1="70" x2="665" y2="70" stroke="#444" stroke-width="2" marker-end="url(#a)"/>
-
-  <g transform="translate(670,30)">
-    <rect width="80" height="80" rx="40" fill="#FFB400" stroke="#1B1F1E"/>
-    <text x="40" y="38" text-anchor="middle" fill="#1B1F1E" font-size="11" font-weight="700">用户</text>
-    <text x="40" y="52" text-anchor="middle" fill="#1B1F1E" font-size="9">▶ 播放</text>
-  </g>
-
-  <text x="380" y="160" text-anchor="middle" fill="#666" font-size="9">同域 video/mp4 + HTTP Range 206</text>
-</svg>
-```
+![部署流程:本地构建 → GitHub Actions → GitHub Pages → 用户,同域 video/mp4 + HTTP Range 206](assets/deployment-flow.svg)
 
 </div>
 
