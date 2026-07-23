@@ -56,11 +56,12 @@ describe('public showcase catalog', () => {
     )
   })
 
-  it('exposes only recommendation and author product routes', () => {
+  it('exposes recommendation, author and evidence-report product routes', () => {
     expect(routes.map((route) => route.path)).toEqual([
       '/',
       '/home',
       '/author/:authorSlug',
+      '/report/:videoId',
       '/:pathMatch(.*)*'
     ])
   })

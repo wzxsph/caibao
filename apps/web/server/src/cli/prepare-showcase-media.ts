@@ -1,4 +1,4 @@
-import { access, readFile } from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { AuthorizedMediaPreparer } from '../media/authorized-media.js'
 
@@ -16,19 +16,30 @@ const preparedManifestPath = path.join(
   'prepared-manifest.json'
 )
 
-try {
-  await access(preparedManifestPath)
-  process.stdout.write(`${JSON.stringify({ status: 'already_prepared', preparedManifestPath })}\n`)
-} catch {
-  const result = await new AuthorizedMediaPreparer({
-    manifestPath,
-    preparedRoot,
-    maxLongEdge: 640,
-    videoPreset: 'veryfast',
-    videoCrf: 30,
-    maxVideoBitrateKbps: 550,
-    audioBitrate: '48k',
-    posterLongEdge: 640
-  }).prepare()
-  process.stdout.write(`${JSON.stringify({ status: 'prepared', ...result })}\n`)
-}
+const startedAt = Date.now()
+const result = await new AuthorizedMediaPreparer({
+  manifestPath,
+  preparedRoot,
+  maxLongEdge: 640,
+  videoPreset: 'veryfast',
+  videoCrf: 30,
+  maxVideoBitrateKbps: 550,
+  audioBitrate: '48k',
+  posterLongEdge: 640,
+  concurrency: 2,
+  reuseExisting: true,
+  // The existing 2026-07-23 batch predates profile fingerprints. It is accepted
+  // only after full source, derivative, poster and ffprobe verification.
+  allowLegacyProfileReuse: true
+}).prepare()
+process.stdout.write(
+  `${JSON.stringify({
+    status: result.reused ? 'reused' : 'prepared',
+    legacyProfile: result.legacyProfile ?? false,
+    itemCount: result.itemCount,
+    profileFingerprint: result.preparationProfile.fingerprint,
+    stages: result.timings,
+    elapsedMs: Date.now() - startedAt,
+    preparedManifestPath
+  })}\n`
+)

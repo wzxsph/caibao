@@ -1,0 +1,28 @@
+{
+  "name": "caibao-pipeline-skill",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone, runnable extraction of caibao's finance-video generation pipeline: parse video → ASR → semantic graph → cue payload authoring.",
+  "main": "src/agent/run-pipeline.ts",
+  "scripts": {
+    "run": "tsx src/agent/run-pipeline.ts",
+    "run:mock": "tsx src/agent/run-pipeline.ts --provider mock",
+    "loop": "tsx src/agent/loop.ts",
+    "demo": "tsx src/agent/run-pipeline.ts --input examples/demo-transcript.json --provider mock --out examples/demo-output.json",
+    "smoke": "tsx examples/smoke.spec.ts",
+    "type-check": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.28",
+    "tsx": "^4.23.1",
+    "typescript": "5.3.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

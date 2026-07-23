@@ -1,0 +1,38 @@
+[
+  {
+    "aweme_id": "fed-rate-global-capital-001",
+    "desc": "经济泡沫 or 大牛市？美联储降息后会发生什么？",
+    "create_time": 1750000000,
+    "author_user_id": "xiaolin-shuo",
+    "video": {
+      "play_addr": {
+        "url_list": ["./demo/fed-rate-global-capital-001.mp4"]
+      },
+      "duration": 256167,
+      "cover": {
+        "url_list": ["https://p3-pc.douyinpic.com/img/fed-rate-cover.jpeg"]
+      },
+      "height": 1920,
+      "width": 1080,
+      "ratio": "1080p",
+      "use_static_cover": true,
+      "loop": false
+    },
+    "statistics": {
+      "digg_count": 220000,
+      "comment_count": 28000,
+      "share_count": 85000,
+      "collect_count": 55000
+    },
+    "music": {
+      "id": "1700000001",
+      "title": "@小Lin说创作的原声",
+      "author": "小Lin说",
+      "cover_medium": { "url_list": [] },
+      "cover_thumb": { "url_list": [] }
+    },
+    "type": "recommend-video",
+    "financeExperienceId": "finance-fed-rate-001",
+    "share_url": "https://www.douyin.com/video/fed-rate-global-capital-001"
+  }
+]

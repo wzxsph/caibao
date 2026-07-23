@@ -12,6 +12,11 @@ const routes: RouteRecordRaw[] = [
     name: 'author',
     component: () => import('@/showcase/pages/AuthorPage.vue')
   },
+  {
+    path: '/report/:videoId',
+    name: 'evidence-report',
+    component: () => import('@/showcase/pages/ReportPage.vue')
+  },
   { path: '/:pathMatch(.*)*', redirect: '/home' }
 ]
 

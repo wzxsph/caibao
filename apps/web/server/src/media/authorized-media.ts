@@ -193,11 +193,36 @@ const preparedVideoSchema = preparedAssetSchema.extend({
   durationSeconds: z.number().positive()
 })
 
+const preparationSettingsSchema = z
+  .object({
+    maxLongEdge: z.number().int().positive().nullable(),
+    videoCodec: z.literal('libx264'),
+    pixelFormat: z.literal('yuv420p'),
+    videoPreset: z.string().min(1),
+    videoCrf: z.number().int().min(0).max(51),
+    maxVideoBitrateKbps: z.number().int().positive().nullable(),
+    audioCodec: z.literal('aac'),
+    audioBitrate: z.string().min(1),
+    fastStart: z.literal(true),
+    posterLongEdge: z.number().int().positive(),
+    posterQuality: z.literal(2)
+  })
+  .strict()
+
+const preparationProfileSchema = z
+  .object({
+    version: z.literal('authorized-browser-media.v1'),
+    fingerprint: sha256Schema,
+    settings: preparationSettingsSchema
+  })
+  .strict()
+
 const preparedManifestSchema = z
   .object({
     schemaVersion: z.literal(1),
     batchId: safeIdSchema,
     preparedAt: z.string().datetime(),
+    preparationProfile: preparationProfileSchema.optional(),
     items: z
       .array(
         z
@@ -216,6 +241,8 @@ const preparedManifestSchema = z
 type DownloadManifest = z.infer<typeof downloadManifestSchema>
 type DownloadManifestItem = z.infer<typeof mediaItemSchema>
 type PreparedManifest = z.infer<typeof preparedManifestSchema>
+
+export type AuthorizedMediaPreparationProfile = z.infer<typeof preparationProfileSchema>
 
 export interface ProbedMedia {
   durationSeconds: number
@@ -450,6 +477,7 @@ async function inspectManifest(options: {
   manifestPath: string
   probe: MediaProbe
   now: () => Date
+  concurrency?: number
 }): Promise<ManifestInspection> {
   let manifest: DownloadManifest
   try {
@@ -523,119 +551,122 @@ async function inspectManifest(options: {
     }
   }
 
+  const inspectedSources = await mapWithConcurrency(
+    manifest.items,
+    options.concurrency,
+    async (item): Promise<{ validSource?: ValidSource; exclusion?: AuthorizedMediaExclusion }> => {
+      if (!AUTHORIZED_FINANCE_EXPERIENCE_BY_VIDEO_ID[item.itemId]) {
+        return {
+          exclusion: exclusion(
+            'AUTHORIZED_MEDIA_EXPERIENCE_UNMAPPED',
+            'Authorized media has no reviewed finance experience mapping',
+            item.itemId
+          )
+        }
+      }
+      const sourceUrl = new URL(item.sourceUrl)
+      if (
+        !(sourceUrl.hostname === 'douyin.com' || sourceUrl.hostname.endsWith('.douyin.com')) ||
+        sourceUrl.pathname !== `/video/${item.itemId}`
+      ) {
+        return {
+          exclusion: exclusion(
+            'AUTHORIZED_MEDIA_SOURCE_URL_MISMATCH',
+            'Authorized media source URL does not match its video id',
+            item.itemId
+          )
+        }
+      }
+      const candidate = path.resolve(importRoot, item.relativePath)
+      if (path.isAbsolute(item.relativePath) || !isWithin(importRoot, candidate)) {
+        return {
+          exclusion: exclusion(
+            'MEDIA_PATH_OUTSIDE_ALLOWLIST_ROOT',
+            'Authorized media path is outside the allowlist root',
+            item.itemId
+          )
+        }
+      }
+      let sourcePath: string
+      let sourceStat
+      try {
+        sourcePath = await realpath(candidate)
+        sourceStat = await stat(sourcePath)
+      } catch {
+        return {
+          exclusion: exclusion(
+            'AUTHORIZED_MEDIA_SOURCE_MISSING',
+            'Authorized media source is missing',
+            item.itemId
+          )
+        }
+      }
+      if (!isWithin(realImportRoot, sourcePath) || !sourceStat.isFile()) {
+        return {
+          exclusion: exclusion(
+            'MEDIA_PATH_OUTSIDE_ALLOWLIST_ROOT',
+            'Authorized media path resolves outside the allowlist root',
+            item.itemId
+          )
+        }
+      }
+      if (sourceStat.size !== item.bytes) {
+        return {
+          exclusion: exclusion(
+            'AUTHORIZED_MEDIA_SOURCE_SIZE_MISMATCH',
+            'Authorized media source size does not match its manifest',
+            item.itemId
+          )
+        }
+      }
+      if ((await digestFile(sourcePath)) !== item.sha256) {
+        return {
+          exclusion: exclusion(
+            'AUTHORIZED_MEDIA_SOURCE_HASH_MISMATCH',
+            'Authorized media source fingerprint does not match its manifest',
+            item.itemId
+          )
+        }
+      }
+      let probed: ProbedMedia
+      try {
+        probed = await options.probe.probe(sourcePath)
+      } catch {
+        return {
+          exclusion: exclusion(
+            'AUTHORIZED_MEDIA_SOURCE_PROBE_FAILED',
+            'Authorized media source probe failed',
+            item.itemId
+          )
+        }
+      }
+      if (!metadataMatches(probed, item)) {
+        return {
+          exclusion: exclusion(
+            'AUTHORIZED_MEDIA_SOURCE_METADATA_MISMATCH',
+            'Authorized media source metadata does not match its manifest',
+            item.itemId
+          )
+        }
+      }
+      return {
+        validSource: {
+          item,
+          filePath: sourcePath,
+          bytes: sourceStat.size,
+          modifiedTimeMs: sourceStat.mtimeMs,
+          inode: sourceStat.ino
+        }
+      }
+    }
+  )
   const validSources = new Map<string, ValidSource>()
   const exclusions: AuthorizedMediaExclusion[] = []
-  for (const item of manifest.items) {
-    if (!AUTHORIZED_FINANCE_EXPERIENCE_BY_VIDEO_ID[item.itemId]) {
-      exclusions.push(
-        exclusion(
-          'AUTHORIZED_MEDIA_EXPERIENCE_UNMAPPED',
-          'Authorized media has no reviewed finance experience mapping',
-          item.itemId
-        )
-      )
-      continue
+  for (const inspectedSource of inspectedSources) {
+    if (inspectedSource.validSource) {
+      validSources.set(inspectedSource.validSource.item.itemId, inspectedSource.validSource)
     }
-    const sourceUrl = new URL(item.sourceUrl)
-    if (
-      !(sourceUrl.hostname === 'douyin.com' || sourceUrl.hostname.endsWith('.douyin.com')) ||
-      sourceUrl.pathname !== `/video/${item.itemId}`
-    ) {
-      exclusions.push(
-        exclusion(
-          'AUTHORIZED_MEDIA_SOURCE_URL_MISMATCH',
-          'Authorized media source URL does not match its video id',
-          item.itemId
-        )
-      )
-      continue
-    }
-    const candidate = path.resolve(importRoot, item.relativePath)
-    if (path.isAbsolute(item.relativePath) || !isWithin(importRoot, candidate)) {
-      exclusions.push(
-        exclusion(
-          'MEDIA_PATH_OUTSIDE_ALLOWLIST_ROOT',
-          'Authorized media path is outside the allowlist root',
-          item.itemId
-        )
-      )
-      continue
-    }
-    let sourcePath: string
-    let sourceStat
-    try {
-      sourcePath = await realpath(candidate)
-      sourceStat = await stat(sourcePath)
-    } catch {
-      exclusions.push(
-        exclusion(
-          'AUTHORIZED_MEDIA_SOURCE_MISSING',
-          'Authorized media source is missing',
-          item.itemId
-        )
-      )
-      continue
-    }
-    if (!isWithin(realImportRoot, sourcePath) || !sourceStat.isFile()) {
-      exclusions.push(
-        exclusion(
-          'MEDIA_PATH_OUTSIDE_ALLOWLIST_ROOT',
-          'Authorized media path resolves outside the allowlist root',
-          item.itemId
-        )
-      )
-      continue
-    }
-    if (sourceStat.size !== item.bytes) {
-      exclusions.push(
-        exclusion(
-          'AUTHORIZED_MEDIA_SOURCE_SIZE_MISMATCH',
-          'Authorized media source size does not match its manifest',
-          item.itemId
-        )
-      )
-      continue
-    }
-    if ((await digestFile(sourcePath)) !== item.sha256) {
-      exclusions.push(
-        exclusion(
-          'AUTHORIZED_MEDIA_SOURCE_HASH_MISMATCH',
-          'Authorized media source fingerprint does not match its manifest',
-          item.itemId
-        )
-      )
-      continue
-    }
-    let probed: ProbedMedia
-    try {
-      probed = await options.probe.probe(sourcePath)
-    } catch {
-      exclusions.push(
-        exclusion(
-          'AUTHORIZED_MEDIA_SOURCE_PROBE_FAILED',
-          'Authorized media source probe failed',
-          item.itemId
-        )
-      )
-      continue
-    }
-    if (!metadataMatches(probed, item)) {
-      exclusions.push(
-        exclusion(
-          'AUTHORIZED_MEDIA_SOURCE_METADATA_MISMATCH',
-          'Authorized media source metadata does not match its manifest',
-          item.itemId
-        )
-      )
-      continue
-    }
-    validSources.set(item.itemId, {
-      item,
-      filePath: sourcePath,
-      bytes: sourceStat.size,
-      modifiedTimeMs: sourceStat.mtimeMs,
-      inode: sourceStat.ino
-    })
+    if (inspectedSource.exclusion) exclusions.push(inspectedSource.exclusion)
   }
   return {
     manifest,
@@ -949,6 +980,80 @@ export interface PreparedAuthorizedMediaResult {
   batchId: string
   outputDirectory: string
   itemCount: number
+  reused: boolean
+  legacyProfile?: boolean
+  preparationProfile: AuthorizedMediaPreparationProfile
+  timings: {
+    inspectionMs: number
+    reuseValidationMs: number
+    preparationMs: number
+    totalMs: number
+  }
+}
+
+export interface AuthorizedMediaPreparerOptions {
+  manifestPath: string
+  preparedRoot: string
+  ffmpegPath?: string
+  ffprobePath?: string
+  runner?: CommandRunner
+  probe?: MediaProbe
+  now?: () => Date
+  maxLongEdge?: number
+  videoPreset?: string
+  videoCrf?: number
+  maxVideoBitrateKbps?: number
+  audioBitrate?: string
+  posterLongEdge?: number
+  concurrency?: number
+  reuseExisting?: boolean
+  allowLegacyProfileReuse?: boolean
+}
+
+function buildPreparationProfile(
+  options: AuthorizedMediaPreparerOptions
+): AuthorizedMediaPreparationProfile {
+  const settings: AuthorizedMediaPreparationProfile['settings'] = {
+    maxLongEdge: options.maxLongEdge ?? null,
+    videoCodec: 'libx264',
+    pixelFormat: 'yuv420p',
+    videoPreset: options.videoPreset ?? 'medium',
+    videoCrf: options.videoCrf ?? 23,
+    maxVideoBitrateKbps: options.maxVideoBitrateKbps ?? null,
+    audioCodec: 'aac',
+    audioBitrate: options.audioBitrate ?? '128k',
+    fastStart: true,
+    posterLongEdge: options.posterLongEdge ?? 720,
+    posterQuality: 2
+  }
+  return {
+    version: 'authorized-browser-media.v1',
+    fingerprint: createHash('sha256')
+      .update(JSON.stringify({ version: 'authorized-browser-media.v1', settings }))
+      .digest('hex'),
+    settings
+  }
+}
+
+async function mapWithConcurrency<T, R>(
+  items: readonly T[],
+  requestedConcurrency: number | undefined,
+  mapper: (item: T, index: number) => Promise<R>
+): Promise<R[]> {
+  const results = new Array<R>(items.length)
+  const concurrency = Math.max(1, Math.min(4, Math.floor(requestedConcurrency ?? 1)))
+  let nextIndex = 0
+  const worker = async () => {
+    while (nextIndex < items.length) {
+      const index = nextIndex
+      nextIndex += 1
+      results[index] = await mapper(items[index], index)
+    }
+  }
+  await Promise.all(
+    Array.from({ length: Math.min(concurrency, items.length) }, async () => worker())
+  )
+  return results
 }
 
 export class AuthorizedMediaPreparer {
@@ -957,23 +1062,7 @@ export class AuthorizedMediaPreparer {
   private readonly now: () => Date
   private readonly ffmpegPath: string
 
-  constructor(
-    private readonly options: {
-      manifestPath: string
-      preparedRoot: string
-      ffmpegPath?: string
-      ffprobePath?: string
-      runner?: CommandRunner
-      probe?: MediaProbe
-      now?: () => Date
-      maxLongEdge?: number
-      videoPreset?: string
-      videoCrf?: number
-      maxVideoBitrateKbps?: number
-      audioBitrate?: string
-      posterLongEdge?: number
-    }
-  ) {
+  constructor(private readonly options: AuthorizedMediaPreparerOptions) {
     this.runner = options.runner ?? new NodeCommandRunner()
     this.ffmpegPath = options.ffmpegPath ?? 'ffmpeg'
     this.probe =
@@ -982,11 +1071,15 @@ export class AuthorizedMediaPreparer {
   }
 
   async prepare(): Promise<PreparedAuthorizedMediaResult> {
+    const startedAt = Date.now()
+    const preparationProfile = buildPreparationProfile(this.options)
     const inspected = await inspectManifest({
       manifestPath: this.options.manifestPath,
       probe: this.probe,
-      now: this.now
+      now: this.now,
+      concurrency: this.options.concurrency
     })
+    const inspectedAt = Date.now()
     const fatalExclusions = inspected.exclusions.filter(
       (item) => item.code !== 'AUTHORIZED_MEDIA_EXPERIENCE_UNMAPPED'
     )
@@ -1017,6 +1110,29 @@ export class AuthorizedMediaPreparer {
     const outputDirectory = path.join(preparedRoot, inspected.manifest.batchId)
     try {
       await stat(outputDirectory)
+      if (this.options.reuseExisting) {
+        const reuseValidationStartedAt = Date.now()
+        const legacyProfile = await this.validateReusableBatch({
+          outputDirectory,
+          batchId: inspected.manifest.batchId,
+          mappedItems,
+          preparationProfile
+        })
+        return {
+          batchId: inspected.manifest.batchId,
+          outputDirectory,
+          itemCount: mappedItems.length,
+          reused: true,
+          ...(legacyProfile ? { legacyProfile: true } : {}),
+          preparationProfile,
+          timings: {
+            inspectionMs: inspectedAt - startedAt,
+            reuseValidationMs: Date.now() - reuseValidationStartedAt,
+            preparationMs: 0,
+            totalMs: Date.now() - startedAt
+          }
+        }
+      }
       throw new AppError(
         'AUTHORIZED_MEDIA_BATCH_EXISTS',
         'Prepared media batch already exists; refusing to overwrite it',
@@ -1028,6 +1144,7 @@ export class AuthorizedMediaPreparer {
     }
 
     await mkdir(preparedRoot, { recursive: true })
+    const preparationStartedAt = Date.now()
     const temporaryDirectory = path.join(
       preparedRoot,
       `.${inspected.manifest.batchId}.tmp-${randomUUID()}`
@@ -1037,126 +1154,131 @@ export class AuthorizedMediaPreparer {
     await mkdir(videoDirectory, { recursive: true })
     await mkdir(posterDirectory, { recursive: true })
 
-    const preparedItems: PreparedManifest['items'] = []
+    let preparedItems: PreparedManifest['items'] = []
     try {
-      for (const item of mappedItems) {
-        const source = inspected.validSources.get(item.itemId)
-        if (!source) throw new Error('Validated source unexpectedly missing')
-        const videoRelativePath = `video/${item.itemId}.mp4`
-        const posterRelativePath = `poster/${item.itemId}.jpg`
-        const videoPath = path.join(temporaryDirectory, videoRelativePath)
-        const posterPath = path.join(temporaryDirectory, posterRelativePath)
+      preparedItems = await mapWithConcurrency(
+        mappedItems,
+        this.options.concurrency,
+        async (item) => {
+          const source = inspected.validSources.get(item.itemId)
+          if (!source) throw new Error('Validated source unexpectedly missing')
+          const videoRelativePath = `video/${item.itemId}.mp4`
+          const posterRelativePath = `poster/${item.itemId}.jpg`
+          const videoPath = path.join(temporaryDirectory, videoRelativePath)
+          const posterPath = path.join(temporaryDirectory, posterRelativePath)
 
-        const maxLongEdge = this.options.maxLongEdge
-        const videoFilter = maxLongEdge
-          ? item.width >= item.height
-            ? `scale=${Math.min(item.width, maxLongEdge)}:-2`
-            : `scale=-2:${Math.min(item.height, maxLongEdge)}`
-          : undefined
-        const bitrateArgs = this.options.maxVideoBitrateKbps
-          ? [
-              '-maxrate',
-              `${this.options.maxVideoBitrateKbps}k`,
-              '-bufsize',
-              `${this.options.maxVideoBitrateKbps * 2}k`
-            ]
-          : []
-        await this.runner.run(this.ffmpegPath, [
-          '-nostdin',
-          '-y',
-          '-i',
-          source.filePath,
-          '-map',
-          '0:v:0',
-          '-map',
-          '0:a:0?',
-          '-c:v',
-          'libx264',
-          ...(videoFilter ? ['-vf', videoFilter] : []),
-          '-pix_fmt',
-          'yuv420p',
-          '-preset',
-          this.options.videoPreset ?? 'medium',
-          '-crf',
-          String(this.options.videoCrf ?? 23),
-          ...bitrateArgs,
-          '-c:a',
-          'aac',
-          '-b:a',
-          this.options.audioBitrate ?? '128k',
-          '-movflags',
-          '+faststart',
-          videoPath
-        ])
-        const posterSecond = Math.min(1, Math.max(0, item.durationSeconds / 2))
-        const posterLongEdge = this.options.posterLongEdge ?? 720
-        const posterFilter =
-          item.width >= item.height
-            ? `scale=${Math.min(item.width, posterLongEdge)}:-2`
-            : `scale=-2:${Math.min(item.height, posterLongEdge)}`
-        await this.runner.run(this.ffmpegPath, [
-          '-nostdin',
-          '-y',
-          '-ss',
-          posterSecond.toFixed(3),
-          '-i',
-          source.filePath,
-          '-frames:v',
-          '1',
-          '-vf',
-          posterFilter,
-          '-q:v',
-          '2',
-          posterPath
-        ])
+          const maxLongEdge = this.options.maxLongEdge
+          const videoFilter = maxLongEdge
+            ? item.width >= item.height
+              ? `scale=${Math.min(item.width, maxLongEdge)}:-2`
+              : `scale=-2:${Math.min(item.height, maxLongEdge)}`
+            : undefined
+          const bitrateArgs = this.options.maxVideoBitrateKbps
+            ? [
+                '-maxrate',
+                `${this.options.maxVideoBitrateKbps}k`,
+                '-bufsize',
+                `${this.options.maxVideoBitrateKbps * 2}k`
+              ]
+            : []
+          await this.runner.run(this.ffmpegPath, [
+            '-nostdin',
+            '-y',
+            '-i',
+            source.filePath,
+            '-map',
+            '0:v:0',
+            '-map',
+            '0:a:0?',
+            '-c:v',
+            'libx264',
+            ...(videoFilter ? ['-vf', videoFilter] : []),
+            '-pix_fmt',
+            'yuv420p',
+            '-preset',
+            this.options.videoPreset ?? 'medium',
+            '-crf',
+            String(this.options.videoCrf ?? 23),
+            ...bitrateArgs,
+            '-c:a',
+            'aac',
+            '-b:a',
+            this.options.audioBitrate ?? '128k',
+            '-movflags',
+            '+faststart',
+            videoPath
+          ])
+          const posterSecond = Math.min(1, Math.max(0, item.durationSeconds / 2))
+          const posterLongEdge = this.options.posterLongEdge ?? 720
+          const posterFilter =
+            item.width >= item.height
+              ? `scale=${Math.min(item.width, posterLongEdge)}:-2`
+              : `scale=-2:${Math.min(item.height, posterLongEdge)}`
+          await this.runner.run(this.ffmpegPath, [
+            '-nostdin',
+            '-y',
+            '-ss',
+            posterSecond.toFixed(3),
+            '-i',
+            source.filePath,
+            '-frames:v',
+            '1',
+            '-vf',
+            posterFilter,
+            '-q:v',
+            '2',
+            posterPath
+          ])
 
-        const videoStat = await stat(videoPath)
-        const posterStat = await stat(posterPath)
-        const probed = await this.probe.probe(videoPath)
-        const codecAndDurationMatch =
-          Math.abs(probed.durationSeconds - item.durationSeconds) <= 0.25 &&
-          probed.videoCodec.toLowerCase() === 'h264' &&
-          probed.audioCodec?.toLowerCase() === 'aac' &&
-          probed.pixelFormat === 'yuv420p'
-        const dimensionsMatch = maxLongEdge
-          ? Math.max(probed.width, probed.height) <= maxLongEdge &&
-            Math.abs(probed.width / probed.height - item.width / item.height) <= 0.02
-          : probed.width === item.width && probed.height === item.height
-        if (!codecAndDurationMatch || !dimensionsMatch) {
-          throw new AppError(
-            'AUTHORIZED_MEDIA_DERIVATIVE_METADATA_MISMATCH',
-            'Generated browser derivative failed validation',
-            { status: 422, details: { videoId: item.itemId } }
-          )
-        }
-        preparedItems.push({
-          itemId: item.itemId,
-          sourceSha256: item.sha256,
-          video: {
-            relativePath: videoRelativePath,
-            mimeType: 'video/mp4',
-            videoCodec: 'h264',
-            audioCodec: 'aac',
-            pixelFormat: 'yuv420p',
-            width: probed.width,
-            height: probed.height,
-            durationSeconds: probed.durationSeconds,
-            bytes: videoStat.size,
-            sha256: await digestFile(videoPath)
-          },
-          poster: {
-            relativePath: posterRelativePath,
-            mimeType: 'image/jpeg',
-            bytes: posterStat.size,
-            sha256: await digestFile(posterPath)
+          const videoStat = await stat(videoPath)
+          const posterStat = await stat(posterPath)
+          const probed = await this.probe.probe(videoPath)
+          const codecAndDurationMatch =
+            Math.abs(probed.durationSeconds - item.durationSeconds) <= 0.25 &&
+            probed.videoCodec.toLowerCase() === 'h264' &&
+            probed.audioCodec?.toLowerCase() === 'aac' &&
+            probed.pixelFormat === 'yuv420p'
+          const dimensionsMatch = maxLongEdge
+            ? Math.max(probed.width, probed.height) <= maxLongEdge &&
+              Math.abs(probed.width / probed.height - item.width / item.height) <= 0.02
+            : probed.width === item.width && probed.height === item.height
+          if (!codecAndDurationMatch || !dimensionsMatch) {
+            throw new AppError(
+              'AUTHORIZED_MEDIA_DERIVATIVE_METADATA_MISMATCH',
+              'Generated browser derivative failed validation',
+              { status: 422, details: { videoId: item.itemId } }
+            )
           }
-        })
-      }
+          return {
+            itemId: item.itemId,
+            sourceSha256: item.sha256,
+            video: {
+              relativePath: videoRelativePath,
+              mimeType: 'video/mp4',
+              videoCodec: 'h264',
+              audioCodec: 'aac',
+              pixelFormat: 'yuv420p',
+              width: probed.width,
+              height: probed.height,
+              durationSeconds: probed.durationSeconds,
+              bytes: videoStat.size,
+              sha256: await digestFile(videoPath)
+            },
+            poster: {
+              relativePath: posterRelativePath,
+              mimeType: 'image/jpeg',
+              bytes: posterStat.size,
+              sha256: await digestFile(posterPath)
+            }
+          }
+        }
+      )
 
       const preparedManifest: PreparedManifest = {
         schemaVersion: 1,
         batchId: inspected.manifest.batchId,
         preparedAt: this.now().toISOString(),
+        preparationProfile,
         items: preparedItems
       }
       await writeFile(
@@ -1173,7 +1295,96 @@ export class AuthorizedMediaPreparer {
     return {
       batchId: inspected.manifest.batchId,
       outputDirectory,
-      itemCount: preparedItems.length
+      itemCount: preparedItems.length,
+      reused: false,
+      preparationProfile,
+      timings: {
+        inspectionMs: inspectedAt - startedAt,
+        reuseValidationMs: 0,
+        preparationMs: Date.now() - preparationStartedAt,
+        totalMs: Date.now() - startedAt
+      }
     }
+  }
+
+  private async validateReusableBatch(input: {
+    outputDirectory: string
+    batchId: string
+    mappedItems: DownloadManifestItem[]
+    preparationProfile: AuthorizedMediaPreparationProfile
+  }): Promise<boolean> {
+    let prepared: PreparedManifest
+    try {
+      prepared = preparedManifestSchema.parse(
+        await readJson(path.join(input.outputDirectory, 'prepared-manifest.json'))
+      )
+    } catch (error) {
+      throw new AppError(
+        'AUTHORIZED_MEDIA_PREPARED_MANIFEST_INVALID',
+        'Existing prepared media manifest is invalid',
+        { status: 409, cause: error }
+      )
+    }
+    if (prepared.batchId !== input.batchId || prepared.items.length !== input.mappedItems.length) {
+      throw new AppError(
+        'AUTHORIZED_MEDIA_PREPARED_SOURCE_MISMATCH',
+        'Existing prepared media does not match the current source set',
+        { status: 409 }
+      )
+    }
+    const legacyProfile = !prepared.preparationProfile
+    if (
+      (!prepared.preparationProfile && !this.options.allowLegacyProfileReuse) ||
+      (prepared.preparationProfile &&
+        prepared.preparationProfile.fingerprint !== input.preparationProfile.fingerprint)
+    ) {
+      throw new AppError(
+        'AUTHORIZED_MEDIA_PREPARED_PROFILE_MISMATCH',
+        'Existing prepared media was created with a different preparation profile',
+        { status: 409 }
+      )
+    }
+
+    const sourceById = new Map(input.mappedItems.map((item) => [item.itemId, item]))
+    await mapWithConcurrency(prepared.items, this.options.concurrency, async (item) => {
+      const source = sourceById.get(item.itemId)
+      if (!source || source.sha256 !== item.sourceSha256) {
+        throw new AppError(
+          'AUTHORIZED_MEDIA_PREPARED_SOURCE_MISMATCH',
+          'Existing prepared media source fingerprint is stale',
+          { status: 409, details: { videoId: item.itemId } }
+        )
+      }
+      const [video, poster] = await Promise.all([
+        verifyPreparedAsset(input.outputDirectory, item.video),
+        verifyPreparedAsset(input.outputDirectory, item.poster)
+      ])
+      if (!video || !poster) {
+        throw new AppError(
+          'AUTHORIZED_MEDIA_PREPARED_INTEGRITY_MISMATCH',
+          'Existing prepared media failed integrity validation',
+          { status: 409, details: { videoId: item.itemId } }
+        )
+      }
+      const probed = await this.probe.probe(video.filePath)
+      if (!metadataMatches(probed, item.video)) {
+        throw new AppError(
+          'AUTHORIZED_MEDIA_PREPARED_METADATA_MISMATCH',
+          'Existing prepared media failed codec or duration validation',
+          { status: 409, details: { videoId: item.itemId } }
+        )
+      }
+    })
+    if (legacyProfile) {
+      const manifestPath = path.join(input.outputDirectory, 'prepared-manifest.json')
+      const temporaryPath = `${manifestPath}.tmp-${randomUUID()}`
+      await writeFile(
+        temporaryPath,
+        `${JSON.stringify({ ...prepared, preparationProfile: input.preparationProfile }, null, 2)}\n`,
+        { flag: 'wx' }
+      )
+      await rename(temporaryPath, manifestPath)
+    }
+    return legacyProfile
   }
 }

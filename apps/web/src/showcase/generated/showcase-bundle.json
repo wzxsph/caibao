@@ -484,7 +484,7 @@
     {
       "experienceId": "finance-showcase-7664748624454192393",
       "videoId": "7664748624454192393",
-      "contentVersion": "showcase-mock@2026.07.23.1",
+      "contentVersion": "showcase-mock@2026.07.23.2",
       "mediaFingerprint": "a75cb3f796e0f96d3574d3d0b210cf3276de3fe8cf8382def76b1a0edc0cb464",
       "publishStatus": "internal_poc",
       "approvalScope": "internal_poc",
@@ -492,11 +492,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "大家看的是比赛，FIFA看的是生意 #世界杯花式看球指南#真财实学计划#零距离看懂财经#世界杯",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕赛事注意力与商业变现，解释全球赛事吸引注意力如何经由转化为转播、赞助与授权议价能力影响赛事组织获得商业收入。",
+        "viewpointNotice": "内容包含作者对“关注度高就一定更赚钱吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "赛事组织获得商业收入可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "全球赛事吸引注意力通过转化为转播、赞助与授权议价能力把个体事件传导到更广泛的公共环境。",
+          "response": "关注全球观看规模、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "赛事组织获得商业收入可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "转化为转播、赞助与授权议价能力会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“主办成本和组织风险同步上升”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "赛事组织获得商业收入可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "b52ff5c46d0a5ecb001e67e7c65f1f9c52b0ebd0befd10ffd6aa85515f6db15d",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -536,6 +563,12 @@
             "body": "赛事注意力：观众投入的时间与讨论热度。商业变现：版权、赞助和授权带来的收入。",
             "keyPoint": "赛事注意力描述起点，商业变现描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7664748624454192393-cue-1",
           "startMs": 17371,
@@ -577,6 +610,14 @@
             ],
             "feedback": "别急着下结论，先检查全球观看规模。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查全球观看规模。"
+          },
           "triggerId": "7664748624454192393-cue-2",
           "startMs": 63693,
           "endMs": 69693,
@@ -608,6 +649,14 @@
             "correctOption": "转化为转播、赞助与授权议价能力",
             "feedback": "更完整的链条是：全球赛事吸引注意力 → 转化为转播、赞助与授权议价能力 → 赛事组织获得商业收入。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "转化为转播、赞助与授权议价能力"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“转化为转播、赞助与授权议价能力”。"
+          },
           "triggerId": "7664748624454192393-cue-3",
           "startMs": 110015,
           "endMs": 116015,
@@ -632,21 +681,27 @@
             "variable": "全球观看规模",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“转化为转播、赞助与授权议价能力”这条路径会减弱。"
+                "id": "supportive",
+                "label": "全球观看规模改善",
+                "result": "全球观看规模改善时，转化为转播、赞助与授权议价能力受到的约束减轻，赛事组织获得商业收入更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "全球观看规模变化有限",
+                "result": "条件没有明显变化时，仍需沿着“全球赛事吸引注意力→转化为转播、赞助与授权议价能力→赛事组织获得商业收入”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“转化为转播、赞助与授权议价能力”这条路径会增强。"
+                "id": "restrictive",
+                "label": "全球观看规模恶化",
+                "result": "全球观看规模恶化会压制“转化为转播、赞助与授权议价能力”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7664748624454192393-cue-4",
           "startMs": 156337,
@@ -667,7 +722,7 @@
     {
       "experienceId": "finance-showcase-7660817965343870248",
       "videoId": "7660817965343870248",
-      "contentVersion": "showcase-mock@2026.07.23.1",
+      "contentVersion": "showcase-mock@2026.07.23.2",
       "mediaFingerprint": "c2b1f2cd1fdb948142c3c2ec5978b97e70a7e24e2af07482b245e83d48495e52",
       "publishStatus": "internal_poc",
       "approvalScope": "internal_poc",
@@ -675,11 +730,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "电，怎么卡住了AI的脖子？ #AI#电力#ABB#EngineeredtoOutrun#工诚臻远",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕算力需求与电力约束，解释数据中心扩张如何经由持续抬升用电负荷和并网需求影响电网与电源成为扩张约束。",
+        "viewpointNotice": "内容包含作者对“有算力芯片就能无限扩建吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "电网与电源成为扩张约束可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "数据中心扩张通过持续抬升用电负荷和并网需求把个体事件传导到更广泛的公共环境。",
+          "response": "关注单位算力能效、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "电网与电源成为扩张约束可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "持续抬升用电负荷和并网需求会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“芯片和冷却效率改善会缓解用电压力”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "电网与电源成为扩张约束可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "e0b7d35a24845b51733a5184b79700b1a02f85cbee3c0bdbf2aa30e18dd61bbc",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -719,6 +801,12 @@
             "body": "算力需求：模型训练和推理消耗的计算资源。电力约束：发电、电网和并网能力形成的边界。",
             "keyPoint": "算力需求描述起点，电力约束描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7660817965343870248-cue-1",
           "startMs": 34126,
@@ -760,6 +848,14 @@
             ],
             "feedback": "别急着下结论，先检查单位算力能效。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查单位算力能效。"
+          },
           "triggerId": "7660817965343870248-cue-2",
           "startMs": 88728,
           "endMs": 94728,
@@ -784,21 +880,27 @@
             "variable": "单位算力能效",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“持续抬升用电负荷和并网需求”这条路径会减弱。"
+                "id": "supportive",
+                "label": "单位算力能效改善",
+                "result": "单位算力能效改善时，持续抬升用电负荷和并网需求受到的约束减轻，电网与电源成为扩张约束更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "单位算力能效变化有限",
+                "result": "条件没有明显变化时，仍需沿着“数据中心扩张→持续抬升用电负荷和并网需求→电网与电源成为扩张约束”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“持续抬升用电负荷和并网需求”这条路径会增强。"
+                "id": "restrictive",
+                "label": "单位算力能效恶化",
+                "result": "单位算力能效恶化会压制“持续抬升用电负荷和并网需求”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7660817965343870248-cue-3",
           "startMs": 143330,
@@ -841,6 +943,14 @@
             ],
             "feedback": "反例提醒：芯片和冷却效率改善会缓解用电压力。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“芯片和冷却效率改善会缓解用电压力”能够直接检验原主张的边界。"
+          },
           "triggerId": "7660817965343870248-cue-4",
           "startMs": 197932,
           "endMs": 203932,
@@ -871,6 +981,12 @@
               "description": "发电、电网和并网能力形成的边界"
             },
             "keyDistinction": "算力需求与电力约束处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7660817965343870248-cue-5",
           "startMs": 252534,
@@ -903,6 +1019,14 @@
             "correctOption": "持续抬升用电负荷和并网需求",
             "feedback": "更完整的链条是：数据中心扩张 → 持续抬升用电负荷和并网需求 → 电网与电源成为扩张约束。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "持续抬升用电负荷和并网需求"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“持续抬升用电负荷和并网需求”。"
+          },
           "triggerId": "7660817965343870248-cue-6",
           "startMs": 307136,
           "endMs": 313136,
@@ -922,7 +1046,7 @@
     {
       "experienceId": "finance-showcase-7660177158400216347",
       "videoId": "7660177158400216347",
-      "contentVersion": "showcase-mock@2026.07.23.1",
+      "contentVersion": "showcase-mock@2026.07.23.2",
       "mediaFingerprint": "fd5729d1e4b98b87c911d832d26c659aa138102f3364db869b46e9a6af26d878",
       "publishStatus": "internal_poc",
       "approvalScope": "internal_poc",
@@ -930,11 +1054,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "港股自动驾驶or物理AI IPO？揭开了它赚钱的商业机密... #自动驾驶",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕技术能力与商业化能力，解释自动驾驶能力进步如何经由降低部分运营成本并扩大应用范围影响商业模式出现扩张机会。",
+        "viewpointNotice": "内容包含作者对“L4能力等于商业成功吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "商业模式出现扩张机会可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "自动驾驶能力进步通过降低部分运营成本并扩大应用范围把个体事件传导到更广泛的公共环境。",
+          "response": "关注监管和事故责任边界、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "商业模式出现扩张机会可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "降低部分运营成本并扩大应用范围会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“技术领先不等于订单、牌照和利润同步出现”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "商业模式出现扩张机会可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "63a86d6cd08ecba15295e9547f029e475d847237a8b6c597bc0035ace17ef97d",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -975,6 +1126,12 @@
             "keyPoint": "技术能力描述起点，商业化能力描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
+          },
           "triggerId": "7660177158400216347-cue-1",
           "startMs": 35448,
           "endMs": 41448,
@@ -1014,6 +1171,14 @@
               }
             ],
             "feedback": "别急着下结论，先检查监管和事故责任边界。"
+          },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查监管和事故责任边界。"
           },
           "triggerId": "7660177158400216347-cue-2",
           "startMs": 92164,
@@ -1056,6 +1221,14 @@
             ],
             "feedback": "反例提醒：技术领先不等于订单、牌照和利润同步出现。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“技术领先不等于订单、牌照和利润同步出现”能够直接检验原主张的边界。"
+          },
           "triggerId": "7660177158400216347-cue-3",
           "startMs": 148880,
           "endMs": 154880,
@@ -1086,6 +1259,12 @@
               "description": "产品能否合规、规模化并形成现金流"
             },
             "keyDistinction": "技术能力与商业化能力处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7660177158400216347-cue-4",
           "startMs": 205596,
@@ -1118,6 +1297,14 @@
             "correctOption": "降低部分运营成本并扩大应用范围",
             "feedback": "更完整的链条是：自动驾驶能力进步 → 降低部分运营成本并扩大应用范围 → 商业模式出现扩张机会。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "降低部分运营成本并扩大应用范围"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“降低部分运营成本并扩大应用范围”。"
+          },
           "triggerId": "7660177158400216347-cue-5",
           "startMs": 262312,
           "endMs": 268312,
@@ -1142,21 +1329,27 @@
             "variable": "监管和事故责任边界",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“降低部分运营成本并扩大应用范围”这条路径会减弱。"
+                "id": "supportive",
+                "label": "监管和事故责任边界改善",
+                "result": "监管和事故责任边界改善时，降低部分运营成本并扩大应用范围受到的约束减轻，商业模式出现扩张机会更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "监管和事故责任边界变化有限",
+                "result": "条件没有明显变化时，仍需沿着“自动驾驶能力进步→降低部分运营成本并扩大应用范围→商业模式出现扩张机会”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“降低部分运营成本并扩大应用范围”这条路径会增强。"
+                "id": "restrictive",
+                "label": "监管和事故责任边界恶化",
+                "result": "监管和事故责任边界恶化会压制“降低部分运营成本并扩大应用范围”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7660177158400216347-cue-6",
           "startMs": 319028,
@@ -1177,7 +1370,7 @@
     {
       "experienceId": "finance-showcase-7659728419487337747",
       "videoId": "7659728419487337747",
-      "contentVersion": "showcase-mock@2026.07.23.1",
+      "contentVersion": "showcase-mock@2026.07.23.2",
       "mediaFingerprint": "460b582fedb5dcec4c775ee295f245b7f93e5a3874164354bfe3a9b86ea14fca",
       "publishStatus": "internal_poc",
       "approvalScope": "internal_poc",
@@ -1185,11 +1378,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "美国AI资本牌桌上的斗争，你觉得我这么说合理吗？ #真财实学计划#零距离看懂财经#AI",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕模型竞争与资本开支，解释AI竞赛加速如何经由推高算力与研发投入并改变合作关系影响资本与产业格局重新分配。",
+        "viewpointNotice": "内容包含作者对“投入越多就一定越领先吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "资本与产业格局重新分配可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "AI竞赛加速通过推高算力与研发投入并改变合作关系把个体事件传导到更广泛的公共环境。",
+          "response": "关注商业收入兑现速度、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "资本与产业格局重新分配可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "推高算力与研发投入并改变合作关系会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“高投入若缺少收入会放大现金流压力”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "资本与产业格局重新分配可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "1e3e02050a3e5290860220e771aa220c1c57716682fa90ee9a494d7a74dceb97",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -1229,6 +1449,12 @@
             "body": "模型竞争：产品能力、用户和生态之间的竞争。资本开支：算力、人才和基础设施的持续投入。",
             "keyPoint": "模型竞争描述起点，资本开支描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7659728419487337747-cue-1",
           "startMs": 23348,
@@ -1270,6 +1496,14 @@
             ],
             "feedback": "别急着下结论，先检查商业收入兑现速度。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查商业收入兑现速度。"
+          },
           "triggerId": "7659728419487337747-cue-2",
           "startMs": 70043,
           "endMs": 76043,
@@ -1300,6 +1534,12 @@
               "description": "算力、人才和基础设施的持续投入"
             },
             "keyDistinction": "模型竞争与资本开支处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7659728419487337747-cue-3",
           "startMs": 116738,
@@ -1332,6 +1572,14 @@
             "correctOption": "推高算力与研发投入并改变合作关系",
             "feedback": "更完整的链条是：AI竞赛加速 → 推高算力与研发投入并改变合作关系 → 资本与产业格局重新分配。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "推高算力与研发投入并改变合作关系"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“推高算力与研发投入并改变合作关系”。"
+          },
           "triggerId": "7659728419487337747-cue-4",
           "startMs": 163433,
           "endMs": 169433,
@@ -1356,21 +1604,27 @@
             "variable": "商业收入兑现速度",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“推高算力与研发投入并改变合作关系”这条路径会减弱。"
+                "id": "supportive",
+                "label": "商业收入兑现速度改善",
+                "result": "商业收入兑现速度改善时，推高算力与研发投入并改变合作关系受到的约束减轻，资本与产业格局重新分配更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "商业收入兑现速度变化有限",
+                "result": "条件没有明显变化时，仍需沿着“AI竞赛加速→推高算力与研发投入并改变合作关系→资本与产业格局重新分配”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“推高算力与研发投入并改变合作关系”这条路径会增强。"
+                "id": "restrictive",
+                "label": "商业收入兑现速度恶化",
+                "result": "商业收入兑现速度恶化会压制“推高算力与研发投入并改变合作关系”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7659728419487337747-cue-5",
           "startMs": 210128,
@@ -1391,7 +1645,7 @@
     {
       "experienceId": "finance-showcase-7631441410851360041",
       "videoId": "7631441410851360041",
-      "contentVersion": "showcase-mock@2026.07.23.1",
+      "contentVersion": "showcase-mock@2026.07.23.2",
       "mediaFingerprint": "310385b8a1c1a0f262ad95af41319cec3f099be924670a54f68841a5d441452b",
       "publishStatus": "internal_poc",
       "approvalScope": "internal_poc",
@@ -1399,11 +1653,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "私募信贷接连暴雷，释放了什么信号？ #零距离看懂财经 #抖音精选让我装到了 #抖音精选",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕私募信贷与流动性错配，解释借款人偿付能力走弱如何经由违约增加并降低贷款资产可交易性影响资金赎回和估值压力上升。",
+        "viewpointNotice": "内容包含作者对“个别违约等于系统性风险吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "资金赎回和估值压力上升可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "借款人偿付能力走弱通过违约增加并降低贷款资产可交易性把个体事件传导到更广泛的公共环境。",
+          "response": "关注抵押物质量与回收率、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "资金赎回和估值压力上升可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "违约增加并降低贷款资产可交易性会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“单个案例不必然代表整个信贷市场失灵”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "资金赎回和估值压力上升可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "f5ade6efa5e335dab3dd9f8e03ab2a4fb02be6e39c5f10439e9ed32fb0a14a5f",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -1443,6 +1724,12 @@
             "body": "私募信贷：非公开市场中的企业借贷安排。流动性错配：资产回收慢但资金退出要求更快。",
             "keyPoint": "私募信贷描述起点，流动性错配描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7631441410851360041-cue-1",
           "startMs": 39648,
@@ -1484,6 +1771,14 @@
             ],
             "feedback": "别急着下结论，先检查抵押物质量与回收率。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查抵押物质量与回收率。"
+          },
           "triggerId": "7631441410851360041-cue-2",
           "startMs": 103084,
           "endMs": 109084,
@@ -1515,6 +1810,14 @@
             "correctOption": "违约增加并降低贷款资产可交易性",
             "feedback": "更完整的链条是：借款人偿付能力走弱 → 违约增加并降低贷款资产可交易性 → 资金赎回和估值压力上升。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "违约增加并降低贷款资产可交易性"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“违约增加并降低贷款资产可交易性”。"
+          },
           "triggerId": "7631441410851360041-cue-3",
           "startMs": 166520,
           "endMs": 172520,
@@ -1539,21 +1842,27 @@
             "variable": "抵押物质量与回收率",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“违约增加并降低贷款资产可交易性”这条路径会减弱。"
+                "id": "supportive",
+                "label": "抵押物质量与回收率改善",
+                "result": "抵押物质量与回收率改善时，违约增加并降低贷款资产可交易性受到的约束减轻，资金赎回和估值压力上升更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "抵押物质量与回收率变化有限",
+                "result": "条件没有明显变化时，仍需沿着“借款人偿付能力走弱→违约增加并降低贷款资产可交易性→资金赎回和估值压力上升”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“违约增加并降低贷款资产可交易性”这条路径会增强。"
+                "id": "restrictive",
+                "label": "抵押物质量与回收率恶化",
+                "result": "抵押物质量与回收率恶化会压制“违约增加并降低贷款资产可交易性”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7631441410851360041-cue-4",
           "startMs": 229956,
@@ -1596,6 +1905,14 @@
             ],
             "feedback": "反例提醒：单个案例不必然代表整个信贷市场失灵。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“单个案例不必然代表整个信贷市场失灵”能够直接检验原主张的边界。"
+          },
           "triggerId": "7631441410851360041-cue-5",
           "startMs": 293392,
           "endMs": 299392,
@@ -1627,6 +1944,12 @@
             },
             "keyDistinction": "私募信贷与流动性错配处在因果链的不同位置。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
+          },
           "triggerId": "7631441410851360041-cue-6",
           "startMs": 356828,
           "endMs": 362828,
@@ -1654,11 +1977,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "集体被罚35亿，大厂们对外卖做了什么…？ #零距离看懂财经",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕平台竞争与监管成本，解释竞争手段越过规则边界如何经由触发监管调查与经营方式整改影响短期获客优势被合规成本抵消。",
+        "viewpointNotice": "内容包含作者对“低价竞争只会伤害市场吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "短期获客优势被合规成本抵消可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "竞争手段越过规则边界通过触发监管调查与经营方式整改把个体事件传导到更广泛的公共环境。",
+          "response": "关注补贴强度与商户承受能力、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "短期获客优势被合规成本抵消可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "触发监管调查与经营方式整改会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“竞争激烈也可能通过改善效率创造用户价值”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "短期获客优势被合规成本抵消可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "f3efa273e3d6988ed413c90e0d9a4d46b6bebc0b9fdba40d54b29338cd3bef45",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -1698,6 +2048,12 @@
             "body": "平台竞争：平台通过补贴、流量和服务争夺用户。监管成本：合规整改、罚款和规则变化带来的成本。",
             "keyPoint": "平台竞争描述起点，监管成本描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7633235465029684526-cue-1",
           "startMs": 28066,
@@ -1739,6 +2095,14 @@
             ],
             "feedback": "别急着下结论，先检查补贴强度与商户承受能力。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查补贴强度与商户承受能力。"
+          },
           "triggerId": "7633235465029684526-cue-2",
           "startMs": 84198,
           "endMs": 90198,
@@ -1763,21 +2127,27 @@
             "variable": "补贴强度与商户承受能力",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“触发监管调查与经营方式整改”这条路径会减弱。"
+                "id": "supportive",
+                "label": "补贴强度与商户承受能力改善",
+                "result": "补贴强度与商户承受能力改善时，触发监管调查与经营方式整改受到的约束减轻，短期获客优势被合规成本抵消更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "补贴强度与商户承受能力变化有限",
+                "result": "条件没有明显变化时，仍需沿着“竞争手段越过规则边界→触发监管调查与经营方式整改→短期获客优势被合规成本抵消”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“触发监管调查与经营方式整改”这条路径会增强。"
+                "id": "restrictive",
+                "label": "补贴强度与商户承受能力恶化",
+                "result": "补贴强度与商户承受能力恶化会压制“触发监管调查与经营方式整改”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7633235465029684526-cue-3",
           "startMs": 140330,
@@ -1820,6 +2190,14 @@
             ],
             "feedback": "反例提醒：竞争激烈也可能通过改善效率创造用户价值。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“竞争激烈也可能通过改善效率创造用户价值”能够直接检验原主张的边界。"
+          },
           "triggerId": "7633235465029684526-cue-4",
           "startMs": 196462,
           "endMs": 202462,
@@ -1851,6 +2229,12 @@
             },
             "keyDistinction": "平台竞争与监管成本处在因果链的不同位置。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
+          },
           "triggerId": "7633235465029684526-cue-5",
           "startMs": 252594,
           "endMs": 258594,
@@ -1878,11 +2262,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "老乡鸡\"自曝\"，太敢玩了吧？ #老乡鸡#老乡鸡溯源报告",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕信息披露与品牌信任，解释企业公开更多经营细节如何经由降低信息差并接受外部核验影响信任可能增强也可能暴露问题。",
+        "viewpointNotice": "内容包含作者对“主动披露就代表没有风险吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "信任可能增强也可能暴露问题可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "企业公开更多经营细节通过降低信息差并接受外部核验把个体事件传导到更广泛的公共环境。",
+          "response": "关注披露内容的可验证程度、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "信任可能增强也可能暴露问题可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "降低信息差并接受外部核验会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“披露很多不等于披露完整或结论可靠”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "信任可能增强也可能暴露问题可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "6a5ea020e5636d15f7896464ab3a741c17ddd2516954bf63590c3b9a41c5488d",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -1923,6 +2334,12 @@
             "keyPoint": "信息披露描述起点，品牌信任描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
+          },
           "triggerId": "7645142738215652644-cue-1",
           "startMs": 33014,
           "endMs": 39014,
@@ -1962,6 +2379,14 @@
               }
             ],
             "feedback": "别急着下结论，先检查披露内容的可验证程度。"
+          },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查披露内容的可验证程度。"
           },
           "triggerId": "7645142738215652644-cue-2",
           "startMs": 85836,
@@ -2004,6 +2429,14 @@
             ],
             "feedback": "反例提醒：披露很多不等于披露完整或结论可靠。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“披露很多不等于披露完整或结论可靠”能够直接检验原主张的边界。"
+          },
           "triggerId": "7645142738215652644-cue-3",
           "startMs": 138658,
           "endMs": 144658,
@@ -2034,6 +2467,12 @@
               "description": "消费者对品牌承诺可验证性的判断"
             },
             "keyDistinction": "信息披露与品牌信任处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7645142738215652644-cue-4",
           "startMs": 191480,
@@ -2066,6 +2505,14 @@
             "correctOption": "降低信息差并接受外部核验",
             "feedback": "更完整的链条是：企业公开更多经营细节 → 降低信息差并接受外部核验 → 信任可能增强也可能暴露问题。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "降低信息差并接受外部核验"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“降低信息差并接受外部核验”。"
+          },
           "triggerId": "7645142738215652644-cue-5",
           "startMs": 244302,
           "endMs": 250302,
@@ -2090,21 +2537,27 @@
             "variable": "披露内容的可验证程度",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“降低信息差并接受外部核验”这条路径会减弱。"
+                "id": "supportive",
+                "label": "披露内容的可验证程度改善",
+                "result": "披露内容的可验证程度改善时，降低信息差并接受外部核验受到的约束减轻，信任可能增强也可能暴露问题更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "披露内容的可验证程度变化有限",
+                "result": "条件没有明显变化时，仍需沿着“企业公开更多经营细节→降低信息差并接受外部核验→信任可能增强也可能暴露问题”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“降低信息差并接受外部核验”这条路径会增强。"
+                "id": "restrictive",
+                "label": "披露内容的可验证程度恶化",
+                "result": "披露内容的可验证程度恶化会压制“降低信息差并接受外部核验”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7645142738215652644-cue-6",
           "startMs": 297124,
@@ -2133,11 +2586,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "AI短剧野蛮疯长，谁吃到了这波红利？抢了谁的饭碗？ #商业分析#小云雀AI#小云雀短剧Agent2全面升级",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕生产成本与注意力分配，解释生成工具降低制作门槛如何经由内容供给激增并加剧注意力竞争影响收益向平台、工具和头部内容重新分配。",
+        "viewpointNotice": "内容包含作者对“制作更便宜就一定更赚钱吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "收益向平台、工具和头部内容重新分配可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "生成工具降低制作门槛通过内容供给激增并加剧注意力竞争把个体事件传导到更广泛的公共环境。",
+          "response": "关注平台分发规则、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "收益向平台、工具和头部内容重新分配可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "内容供给激增并加剧注意力竞争会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“供给增加不保证用户时长或付费同步增长”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "收益向平台、工具和头部内容重新分配可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "96b868ff33f75fd6b22f66c68c1030027b1e4abe300007c32f87ea662f117a12",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -2177,6 +2657,12 @@
             "body": "生产成本：完成一部内容所需的人力与工具成本。注意力分配：平台把流量分给不同内容的机制。",
             "keyPoint": "生产成本描述起点，注意力分配描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7644774425983864070-cue-1",
           "startMs": 31252,
@@ -2218,6 +2704,14 @@
             ],
             "feedback": "别急着下结论，先检查平台分发规则。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查平台分发规则。"
+          },
           "triggerId": "7644774425983864070-cue-2",
           "startMs": 81254,
           "endMs": 87254,
@@ -2248,6 +2742,12 @@
               "description": "平台把流量分给不同内容的机制"
             },
             "keyDistinction": "生产成本与注意力分配处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7644774425983864070-cue-3",
           "startMs": 131256,
@@ -2280,6 +2780,14 @@
             "correctOption": "内容供给激增并加剧注意力竞争",
             "feedback": "更完整的链条是：生成工具降低制作门槛 → 内容供给激增并加剧注意力竞争 → 收益向平台、工具和头部内容重新分配。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "内容供给激增并加剧注意力竞争"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“内容供给激增并加剧注意力竞争”。"
+          },
           "triggerId": "7644774425983864070-cue-4",
           "startMs": 181258,
           "endMs": 187258,
@@ -2304,21 +2812,27 @@
             "variable": "平台分发规则",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“内容供给激增并加剧注意力竞争”这条路径会减弱。"
+                "id": "supportive",
+                "label": "平台分发规则改善",
+                "result": "平台分发规则改善时，内容供给激增并加剧注意力竞争受到的约束减轻，收益向平台、工具和头部内容重新分配更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "平台分发规则变化有限",
+                "result": "条件没有明显变化时，仍需沿着“生成工具降低制作门槛→内容供给激增并加剧注意力竞争→收益向平台、工具和头部内容重新分配”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“内容供给激增并加剧注意力竞争”这条路径会增强。"
+                "id": "restrictive",
+                "label": "平台分发规则恶化",
+                "result": "平台分发规则恶化会压制“内容供给激增并加剧注意力竞争”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7644774425983864070-cue-5",
           "startMs": 231260,
@@ -2361,6 +2875,14 @@
             ],
             "feedback": "反例提醒：供给增加不保证用户时长或付费同步增长。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“供给增加不保证用户时长或付费同步增长”能够直接检验原主张的边界。"
+          },
           "triggerId": "7644774425983864070-cue-6",
           "startMs": 281262,
           "endMs": 287262,
@@ -2388,11 +2910,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "从巴黎的小跟班，到时尚圈大霸主，米兰凭什么？ #allbirds #allbirds天丝鞋",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕产业集群与时尚中心，解释制造与设计资源长期聚集如何经由形成专业网络和品牌协同影响城市获得更强的时尚话语权。",
+        "viewpointNotice": "内容包含作者对“办大秀就能成为时尚中心吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "城市获得更强的时尚话语权可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "制造与设计资源长期聚集通过形成专业网络和品牌协同把个体事件传导到更广泛的公共环境。",
+          "response": "关注国际渠道和人才流动、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "城市获得更强的时尚话语权可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "形成专业网络和品牌协同会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“一次活动热度不能替代完整产业基础”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "城市获得更强的时尚话语权可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "d07a23bb285758d76cc21bae7f1f7ab606458a4de21572d4918bd169c6eac579",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -2432,6 +2981,12 @@
             "body": "产业集群：设计、制造、渠道和人才的地理聚集。时尚中心：能够持续定义趋势并连接全球市场的城市。",
             "keyPoint": "产业集群描述起点，时尚中心描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7611478554081037578-cue-1",
           "startMs": 37479,
@@ -2473,6 +3028,14 @@
             ],
             "feedback": "别急着下结论，先检查国际渠道和人才流动。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查国际渠道和人才流动。"
+          },
           "triggerId": "7611478554081037578-cue-2",
           "startMs": 97445,
           "endMs": 103445,
@@ -2504,6 +3067,14 @@
             "correctOption": "形成专业网络和品牌协同",
             "feedback": "更完整的链条是：制造与设计资源长期聚集 → 形成专业网络和品牌协同 → 城市获得更强的时尚话语权。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "形成专业网络和品牌协同"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“形成专业网络和品牌协同”。"
+          },
           "triggerId": "7611478554081037578-cue-3",
           "startMs": 157411,
           "endMs": 163411,
@@ -2528,21 +3099,27 @@
             "variable": "国际渠道和人才流动",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“形成专业网络和品牌协同”这条路径会减弱。"
+                "id": "supportive",
+                "label": "国际渠道和人才流动改善",
+                "result": "国际渠道和人才流动改善时，形成专业网络和品牌协同受到的约束减轻，城市获得更强的时尚话语权更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "国际渠道和人才流动变化有限",
+                "result": "条件没有明显变化时，仍需沿着“制造与设计资源长期聚集→形成专业网络和品牌协同→城市获得更强的时尚话语权”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“形成专业网络和品牌协同”这条路径会增强。"
+                "id": "restrictive",
+                "label": "国际渠道和人才流动恶化",
+                "result": "国际渠道和人才流动恶化会压制“形成专业网络和品牌协同”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7611478554081037578-cue-4",
           "startMs": 217377,
@@ -2585,6 +3162,14 @@
             ],
             "feedback": "反例提醒：一次活动热度不能替代完整产业基础。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“一次活动热度不能替代完整产业基础”能够直接检验原主张的边界。"
+          },
           "triggerId": "7611478554081037578-cue-5",
           "startMs": 277343,
           "endMs": 283343,
@@ -2616,6 +3201,12 @@
             },
             "keyDistinction": "产业集群与时尚中心处在因果链的不同位置。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
+          },
           "triggerId": "7611478554081037578-cue-6",
           "startMs": 337309,
           "endMs": 343309,
@@ -2643,11 +3234,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "不想卖枕头的酒店，不是好图书馆？ #商业分析 #亚朵",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕场景零售与酒店收入，解释用户在酒店真实体验商品如何经由降低试用成本并连接后续购买影响住宿之外出现零售收入。",
+        "viewpointNotice": "内容包含作者对“多卖商品就一定提升酒店价值吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "住宿之外出现零售收入可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "用户在酒店真实体验商品通过降低试用成本并连接后续购买把个体事件传导到更广泛的公共环境。",
+          "response": "关注体验转化率与复购率、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "住宿之外出现零售收入可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "降低试用成本并连接后续购买会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“陈列商品过多可能干扰核心住宿体验”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "住宿之外出现零售收入可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "53d78e1e62050376eea3c3bc952964f0e18d59aa926fecb2648e2c8714698280",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -2687,6 +3305,12 @@
             "body": "场景零售：在住宿等场景中展示并销售商品。酒店收入：客房、会员和零售共同形成的收入结构。",
             "keyPoint": "场景零售描述起点，酒店收入描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7632518301003828507-cue-1",
           "startMs": 36641,
@@ -2728,6 +3352,14 @@
             ],
             "feedback": "别急着下结论，先检查体验转化率与复购率。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查体验转化率与复购率。"
+          },
           "triggerId": "7632518301003828507-cue-2",
           "startMs": 95266,
           "endMs": 101266,
@@ -2752,21 +3384,27 @@
             "variable": "体验转化率与复购率",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“降低试用成本并连接后续购买”这条路径会减弱。"
+                "id": "supportive",
+                "label": "体验转化率与复购率改善",
+                "result": "体验转化率与复购率改善时，降低试用成本并连接后续购买受到的约束减轻，住宿之外出现零售收入更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "体验转化率与复购率变化有限",
+                "result": "条件没有明显变化时，仍需沿着“用户在酒店真实体验商品→降低试用成本并连接后续购买→住宿之外出现零售收入”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“降低试用成本并连接后续购买”这条路径会增强。"
+                "id": "restrictive",
+                "label": "体验转化率与复购率恶化",
+                "result": "体验转化率与复购率恶化会压制“降低试用成本并连接后续购买”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7632518301003828507-cue-3",
           "startMs": 153891,
@@ -2809,6 +3447,14 @@
             ],
             "feedback": "反例提醒：陈列商品过多可能干扰核心住宿体验。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“陈列商品过多可能干扰核心住宿体验”能够直接检验原主张的边界。"
+          },
           "triggerId": "7632518301003828507-cue-4",
           "startMs": 212516,
           "endMs": 218516,
@@ -2839,6 +3485,12 @@
               "description": "客房、会员和零售共同形成的收入结构"
             },
             "keyDistinction": "场景零售与酒店收入处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7632518301003828507-cue-5",
           "startMs": 271141,
@@ -2871,6 +3523,14 @@
             "correctOption": "降低试用成本并连接后续购买",
             "feedback": "更完整的链条是：用户在酒店真实体验商品 → 降低试用成本并连接后续购买 → 住宿之外出现零售收入。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "降低试用成本并连接后续购买"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“降低试用成本并连接后续购买”。"
+          },
           "triggerId": "7632518301003828507-cue-6",
           "startMs": 329766,
           "endMs": 335766,
@@ -2898,11 +3558,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "第2集 | 伊朗战争，美国的底线是什么? #零距离看懂财经 #能源",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕战略目标与升级成本，解释各方试探对手底线如何经由通过有限行动传递威慑和谈判信号影响冲突可能受控也可能误判升级。",
+        "viewpointNotice": "内容包含作者对“行动更强硬就一定走向全面冲突吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "冲突可能受控也可能误判升级可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "各方试探对手底线通过通过有限行动传递威慑和谈判信号把个体事件传导到更广泛的公共环境。",
+          "response": "关注沟通渠道与报复强度、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "冲突可能受控也可能误判升级可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "通过有限行动传递威慑和谈判信号会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“强硬表态不必然代表准备无限升级”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "冲突可能受控也可能误判升级可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "648e11d3975e6501ca17d1b485e539122eac5672d6e127b3d38ca371c7819efd",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -2943,6 +3630,12 @@
             "keyPoint": "战略目标描述起点，升级成本描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
+          },
           "triggerId": "7620609117891136822-cue-1",
           "startMs": 26852,
           "endMs": 32852,
@@ -2982,6 +3675,14 @@
               }
             ],
             "feedback": "别急着下结论，先检查沟通渠道与报复强度。"
+          },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查沟通渠道与报复强度。"
           },
           "triggerId": "7620609117891136822-cue-2",
           "startMs": 80554,
@@ -3024,6 +3725,14 @@
             ],
             "feedback": "反例提醒：强硬表态不必然代表准备无限升级。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“强硬表态不必然代表准备无限升级”能够直接检验原主张的边界。"
+          },
           "triggerId": "7620609117891136822-cue-3",
           "startMs": 134256,
           "endMs": 140256,
@@ -3054,6 +3763,12 @@
               "description": "冲突扩大带来的军事、经济与政治代价"
             },
             "keyDistinction": "战略目标与升级成本处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7620609117891136822-cue-4",
           "startMs": 187958,
@@ -3086,6 +3801,14 @@
             "correctOption": "通过有限行动传递威慑和谈判信号",
             "feedback": "更完整的链条是：各方试探对手底线 → 通过有限行动传递威慑和谈判信号 → 冲突可能受控也可能误判升级。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "通过有限行动传递威慑和谈判信号"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“通过有限行动传递威慑和谈判信号”。"
+          },
           "triggerId": "7620609117891136822-cue-5",
           "startMs": 241660,
           "endMs": 247660,
@@ -3113,11 +3836,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "从卖硬件到卖生态，它葫芦里卖的什么药？ #暗影精灵 #HyperX暗影精灵#CES #游戏本",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕硬件收入与生态收入，解释设备用户规模扩大如何经由带动服务、内容和配件的交叉使用影响收入从单次销售延伸到生命周期。",
+        "viewpointNotice": "内容包含作者对“用户多就一定能建成生态吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "收入从单次销售延伸到生命周期可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "设备用户规模扩大通过带动服务、内容和配件的交叉使用把个体事件传导到更广泛的公共环境。",
+          "response": "关注用户留存和服务使用率、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "收入从单次销售延伸到生命周期可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "带动服务、内容和配件的交叉使用会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“封闭生态可能提高迁移成本并降低用户接受度”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "收入从单次销售延伸到生命周期可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "522676cb36526d278aadf1a0d16b74596b339a469bf24fc46b5b683af46e853e",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -3157,6 +3907,12 @@
             "body": "硬件收入：销售设备获得的一次性收入。生态收入：软件、服务和配件形成的持续收入。",
             "keyPoint": "硬件收入描述起点，生态收入描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7600709478131977481-cue-1",
           "startMs": 33023,
@@ -3198,6 +3954,14 @@
             ],
             "feedback": "别急着下结论，先检查用户留存和服务使用率。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查用户留存和服务使用率。"
+          },
           "triggerId": "7600709478131977481-cue-2",
           "startMs": 85860,
           "endMs": 91860,
@@ -3228,6 +3992,12 @@
               "description": "软件、服务和配件形成的持续收入"
             },
             "keyDistinction": "硬件收入与生态收入处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7600709478131977481-cue-3",
           "startMs": 138697,
@@ -3260,6 +4030,14 @@
             "correctOption": "带动服务、内容和配件的交叉使用",
             "feedback": "更完整的链条是：设备用户规模扩大 → 带动服务、内容和配件的交叉使用 → 收入从单次销售延伸到生命周期。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "带动服务、内容和配件的交叉使用"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“带动服务、内容和配件的交叉使用”。"
+          },
           "triggerId": "7600709478131977481-cue-4",
           "startMs": 191534,
           "endMs": 197534,
@@ -3284,21 +4062,27 @@
             "variable": "用户留存和服务使用率",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“带动服务、内容和配件的交叉使用”这条路径会减弱。"
+                "id": "supportive",
+                "label": "用户留存和服务使用率改善",
+                "result": "用户留存和服务使用率改善时，带动服务、内容和配件的交叉使用受到的约束减轻，收入从单次销售延伸到生命周期更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "用户留存和服务使用率变化有限",
+                "result": "条件没有明显变化时，仍需沿着“设备用户规模扩大→带动服务、内容和配件的交叉使用→收入从单次销售延伸到生命周期”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“带动服务、内容和配件的交叉使用”这条路径会增强。"
+                "id": "restrictive",
+                "label": "用户留存和服务使用率恶化",
+                "result": "用户留存和服务使用率恶化会压制“带动服务、内容和配件的交叉使用”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7600709478131977481-cue-5",
           "startMs": 244371,
@@ -3341,6 +4125,14 @@
             ],
             "feedback": "反例提醒：封闭生态可能提高迁移成本并降低用户接受度。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“封闭生态可能提高迁移成本并降低用户接受度”能够直接检验原主张的边界。"
+          },
           "triggerId": "7600709478131977481-cue-6",
           "startMs": 297208,
           "endMs": 303208,
@@ -3368,11 +4160,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "第1集 | 我们来聊聊伊朗战争的焦点 - 霍尔木兹海峡 #零距离看懂财经 #霍尔木兹海峡",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕海上咽喉与能源供应，解释关键航道通行受扰如何经由增加运输时间、保险和绕行成本影响能源供应预期与风险溢价变化。",
+        "viewpointNotice": "内容包含作者对“航道紧张就等于供应已经中断吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "能源供应预期与风险溢价变化可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "关键航道通行受扰通过增加运输时间、保险和绕行成本把个体事件传导到更广泛的公共环境。",
+          "response": "关注中断持续时间与替代路线、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "能源供应预期与风险溢价变化可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "增加运输时间、保险和绕行成本会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“短暂事件若未影响实物流量，价格冲击可能消退”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "能源供应预期与风险溢价变化可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "c68d9a7d74915eec1a9bef1d637bdf3d00a0ccc4613aec45f013bfa4d7dede17",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -3412,6 +4231,12 @@
             "body": "海上咽喉：大量运输必须经过的狭窄通道。能源供应：原油和天然气从产地到市场的流动。",
             "keyPoint": "海上咽喉描述起点，能源供应描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7620607704406576425-cue-1",
           "startMs": 41643,
@@ -3453,6 +4278,14 @@
             ],
             "feedback": "别急着下结论，先检查中断持续时间与替代路线。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查中断持续时间与替代路线。"
+          },
           "triggerId": "7620607704406576425-cue-2",
           "startMs": 108271,
           "endMs": 114271,
@@ -3484,6 +4317,14 @@
             "correctOption": "增加运输时间、保险和绕行成本",
             "feedback": "更完整的链条是：关键航道通行受扰 → 增加运输时间、保险和绕行成本 → 能源供应预期与风险溢价变化。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "增加运输时间、保险和绕行成本"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“增加运输时间、保险和绕行成本”。"
+          },
           "triggerId": "7620607704406576425-cue-3",
           "startMs": 174899,
           "endMs": 180899,
@@ -3508,21 +4349,27 @@
             "variable": "中断持续时间与替代路线",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“增加运输时间、保险和绕行成本”这条路径会减弱。"
+                "id": "supportive",
+                "label": "中断持续时间与替代路线改善",
+                "result": "中断持续时间与替代路线改善时，增加运输时间、保险和绕行成本受到的约束减轻，能源供应预期与风险溢价变化更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "中断持续时间与替代路线变化有限",
+                "result": "条件没有明显变化时，仍需沿着“关键航道通行受扰→增加运输时间、保险和绕行成本→能源供应预期与风险溢价变化”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“增加运输时间、保险和绕行成本”这条路径会增强。"
+                "id": "restrictive",
+                "label": "中断持续时间与替代路线恶化",
+                "result": "中断持续时间与替代路线恶化会压制“增加运输时间、保险和绕行成本”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7620607704406576425-cue-4",
           "startMs": 241527,
@@ -3565,6 +4412,14 @@
             ],
             "feedback": "反例提醒：短暂事件若未影响实物流量，价格冲击可能消退。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“短暂事件若未影响实物流量，价格冲击可能消退”能够直接检验原主张的边界。"
+          },
           "triggerId": "7620607704406576425-cue-5",
           "startMs": 308155,
           "endMs": 314155,
@@ -3596,6 +4451,12 @@
             },
             "keyDistinction": "海上咽喉与能源供应处在因果链的不同位置。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
+          },
           "triggerId": "7620607704406576425-cue-6",
           "startMs": 374783,
           "endMs": 380783,
@@ -3623,11 +4484,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "英伟达市值破 4 万亿，凭啥登顶全球最值钱公司？ #英伟达#黄仁勋#市值",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕盈利预期与公司估值，解释AI需求提升盈利预期如何经由改变未来现金流估计和估值倍数影响公司市值快速变化。",
+        "viewpointNotice": "内容包含作者对“市值最高等于公司风险最低吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "公司市值快速变化可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "AI需求提升盈利预期通过改变未来现金流估计和估值倍数把个体事件传导到更广泛的公共环境。",
+          "response": "关注增长兑现与竞争强度、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "公司市值快速变化可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "改变未来现金流估计和估值倍数会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“业务优秀也可能因预期过高出现估值压力”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "公司市值快速变化可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "ffa371583455724aa49db0a2a2cbad7d1321706384aea3f92e01a125f0188ed5",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -3667,6 +4555,12 @@
             "body": "盈利预期：市场对未来收入和利润的估计。公司估值：对未来现金流和风险折现后的判断。",
             "keyPoint": "盈利预期描述起点，公司估值描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7536509338895011081-cue-1",
           "startMs": 30732,
@@ -3708,6 +4602,14 @@
             ],
             "feedback": "别急着下结论，先检查增长兑现与竞争强度。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查增长兑现与竞争强度。"
+          },
           "triggerId": "7536509338895011081-cue-2",
           "startMs": 79902,
           "endMs": 85902,
@@ -3732,21 +4634,27 @@
             "variable": "增长兑现与竞争强度",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“改变未来现金流估计和估值倍数”这条路径会减弱。"
+                "id": "supportive",
+                "label": "增长兑现与竞争强度改善",
+                "result": "增长兑现与竞争强度改善时，改变未来现金流估计和估值倍数受到的约束减轻，公司市值快速变化更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "增长兑现与竞争强度变化有限",
+                "result": "条件没有明显变化时，仍需沿着“AI需求提升盈利预期→改变未来现金流估计和估值倍数→公司市值快速变化”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“改变未来现金流估计和估值倍数”这条路径会增强。"
+                "id": "restrictive",
+                "label": "增长兑现与竞争强度恶化",
+                "result": "增长兑现与竞争强度恶化会压制“改变未来现金流估计和估值倍数”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7536509338895011081-cue-3",
           "startMs": 129072,
@@ -3789,6 +4697,14 @@
             ],
             "feedback": "反例提醒：业务优秀也可能因预期过高出现估值压力。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“业务优秀也可能因预期过高出现估值压力”能够直接检验原主张的边界。"
+          },
           "triggerId": "7536509338895011081-cue-4",
           "startMs": 178242,
           "endMs": 184242,
@@ -3819,6 +4735,12 @@
               "description": "对未来现金流和风险折现后的判断"
             },
             "keyDistinction": "盈利预期与公司估值处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7536509338895011081-cue-5",
           "startMs": 227412,
@@ -3851,6 +4773,14 @@
             "correctOption": "改变未来现金流估计和估值倍数",
             "feedback": "更完整的链条是：AI需求提升盈利预期 → 改变未来现金流估计和估值倍数 → 公司市值快速变化。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "改变未来现金流估计和估值倍数"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“改变未来现金流估计和估值倍数”。"
+          },
           "triggerId": "7536509338895011081-cue-6",
           "startMs": 276582,
           "endMs": 282582,
@@ -3878,11 +4808,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "日本的长期国债最近为什么崩了？ #掘金计划2025#经济学知识看世界",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕债券价格与债券收益率，解释长期利率预期上升如何经由旧债固定现金流相对吸引力下降影响长期债券价格承压。",
+        "viewpointNotice": "内容包含作者对“收益率上升时债券价格也会上升吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "长期债券价格承压可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "长期利率预期上升通过旧债固定现金流相对吸引力下降把个体事件传导到更广泛的公共环境。",
+          "response": "关注通胀与财政供给预期、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "长期债券价格承压可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "旧债固定现金流相对吸引力下降会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“避险需求上升时可能部分抵消利率压力”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "长期债券价格承压可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "a4c0544b79f2faf23545556da8c7f91e1884ed3992263cc2ad28b6b7d43dcf64",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -3923,6 +4880,12 @@
             "keyPoint": "债券价格描述起点，债券收益率描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
+          },
           "triggerId": "7507542741346176296-cue-1",
           "startMs": 16410,
           "endMs": 22410,
@@ -3962,6 +4925,14 @@
               }
             ],
             "feedback": "别急着下结论，先检查通胀与财政供给预期。"
+          },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查通胀与财政供给预期。"
           },
           "triggerId": "7507542741346176296-cue-2",
           "startMs": 82048,
@@ -4004,6 +4975,14 @@
             ],
             "feedback": "反例提醒：避险需求上升时可能部分抵消利率压力。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“避险需求上升时可能部分抵消利率压力”能够直接检验原主张的边界。"
+          },
           "triggerId": "7507542741346176296-cue-3",
           "startMs": 147686,
           "endMs": 153686,
@@ -4023,7 +5002,7 @@
     {
       "experienceId": "finance-showcase-7638141580495614437",
       "videoId": "7638141580495614437",
-      "contentVersion": "showcase-mock@2026.07.23.1",
+      "contentVersion": "showcase-mock@2026.07.23.2",
       "mediaFingerprint": "086875b12470716690a35b2067f44f3423f21d0ea258a5e3122ebadb8d0047f0",
       "publishStatus": "internal_poc",
       "approvalScope": "internal_poc",
@@ -4031,11 +5010,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "喜临门，爆大雷… #喜临门#陈阿裕#家居#内容启发搜索 #掘金计划2025",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕担保风险与公司治理，解释关联交易或担保缺少约束如何经由把外部债务风险传导到上市公司影响现金流与市场信任受到影响。",
+        "viewpointNotice": "内容包含作者对“出现担保事项就等于公司已经亏损吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "现金流与市场信任受到影响可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "关联交易或担保缺少约束通过把外部债务风险传导到上市公司把个体事件传导到更广泛的公共环境。",
+          "response": "关注担保规模与追偿能力、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "现金流与市场信任受到影响可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "把外部债务风险传导到上市公司会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“公告风险不等于损失已经全部实现”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "现金流与市场信任受到影响可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "a7f50a9842319a60e8552f7432f422e8be3608a514d59fc19587312c63156ff1",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -4075,6 +5081,12 @@
             "body": "担保风险：企业为关联方债务承担的潜在责任。公司治理：决策、监督和利益约束的制度安排。",
             "keyPoint": "担保风险描述起点，公司治理描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7638141580495614437-cue-1",
           "startMs": 28965,
@@ -4116,6 +5128,14 @@
             ],
             "feedback": "别急着下结论，先检查担保规模与追偿能力。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查担保规模与追偿能力。"
+          },
           "triggerId": "7638141580495614437-cue-2",
           "startMs": 75308,
           "endMs": 81308,
@@ -4146,6 +5166,12 @@
               "description": "决策、监督和利益约束的制度安排"
             },
             "keyDistinction": "担保风险与公司治理处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7638141580495614437-cue-3",
           "startMs": 121651,
@@ -4178,6 +5204,14 @@
             "correctOption": "把外部债务风险传导到上市公司",
             "feedback": "更完整的链条是：关联交易或担保缺少约束 → 把外部债务风险传导到上市公司 → 现金流与市场信任受到影响。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "把外部债务风险传导到上市公司"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“把外部债务风险传导到上市公司”。"
+          },
           "triggerId": "7638141580495614437-cue-4",
           "startMs": 167994,
           "endMs": 173994,
@@ -4202,21 +5236,27 @@
             "variable": "担保规模与追偿能力",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“把外部债务风险传导到上市公司”这条路径会减弱。"
+                "id": "supportive",
+                "label": "担保规模与追偿能力改善",
+                "result": "担保规模与追偿能力改善时，把外部债务风险传导到上市公司受到的约束减轻，现金流与市场信任受到影响更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "担保规模与追偿能力变化有限",
+                "result": "条件没有明显变化时，仍需沿着“关联交易或担保缺少约束→把外部债务风险传导到上市公司→现金流与市场信任受到影响”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“把外部债务风险传导到上市公司”这条路径会增强。"
+                "id": "restrictive",
+                "label": "担保规模与追偿能力恶化",
+                "result": "担保规模与追偿能力恶化会压制“把外部债务风险传导到上市公司”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7638141580495614437-cue-5",
           "startMs": 214337,
@@ -4259,6 +5299,14 @@
             ],
             "feedback": "反例提醒：公告风险不等于损失已经全部实现。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“公告风险不等于损失已经全部实现”能够直接检验原主张的边界。"
+          },
           "triggerId": "7638141580495614437-cue-6",
           "startMs": 260680,
           "endMs": 266680,
@@ -4278,7 +5326,7 @@
     {
       "experienceId": "finance-showcase-7664831270933284217",
       "videoId": "7664831270933284217",
-      "contentVersion": "showcase-mock@2026.07.23.1",
+      "contentVersion": "showcase-mock@2026.07.23.2",
       "mediaFingerprint": "5ccf2706b81faa8b649254d1b288d3b3267e14465dfb8d8f533b46f788ab8418",
       "publishStatus": "internal_poc",
       "approvalScope": "internal_poc",
@@ -4286,11 +5334,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "海兰信内幕交易… #海兰信#资本市场#上市公司#内容启发搜索 #掘金计划2025",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕内幕信息与市场公平，解释特定主体提前掌握重大信息如何经由形成不对称决策优势并破坏公平影响触发监管调查和信任损失。",
+        "viewpointNotice": "内容包含作者对“交易时点巧合就能证明内幕交易吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "触发监管调查和信任损失可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "特定主体提前掌握重大信息通过形成不对称决策优势并破坏公平把个体事件传导到更广泛的公共环境。",
+          "response": "关注信息重大性与交易关联、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "触发监管调查和信任损失可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "形成不对称决策优势并破坏公平会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“时间接近并不能单独证明信息已被非法使用”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "触发监管调查和信任损失可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "3a850e6acbeb53de90ed5a6f0dc289f916c3022271c23f77584ff0125fd0ddd9",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -4330,6 +5405,12 @@
             "body": "内幕信息：尚未公开且可能显著影响判断的信息。市场公平：参与者在公开规则下平等获取信息。",
             "keyPoint": "内幕信息描述起点，市场公平描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7664831270933284217-cue-1",
           "startMs": 33869,
@@ -4371,6 +5452,14 @@
             ],
             "feedback": "别急着下结论，先检查信息重大性与交易关联。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查信息重大性与交易关联。"
+          },
           "triggerId": "7664831270933284217-cue-2",
           "startMs": 88058,
           "endMs": 94058,
@@ -4402,6 +5491,14 @@
             "correctOption": "形成不对称决策优势并破坏公平",
             "feedback": "更完整的链条是：特定主体提前掌握重大信息 → 形成不对称决策优势并破坏公平 → 触发监管调查和信任损失。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "形成不对称决策优势并破坏公平"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“形成不对称决策优势并破坏公平”。"
+          },
           "triggerId": "7664831270933284217-cue-3",
           "startMs": 142247,
           "endMs": 148247,
@@ -4426,21 +5523,27 @@
             "variable": "信息重大性与交易关联",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“形成不对称决策优势并破坏公平”这条路径会减弱。"
+                "id": "supportive",
+                "label": "信息重大性与交易关联改善",
+                "result": "信息重大性与交易关联改善时，形成不对称决策优势并破坏公平受到的约束减轻，触发监管调查和信任损失更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "信息重大性与交易关联变化有限",
+                "result": "条件没有明显变化时，仍需沿着“特定主体提前掌握重大信息→形成不对称决策优势并破坏公平→触发监管调查和信任损失”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“形成不对称决策优势并破坏公平”这条路径会增强。"
+                "id": "restrictive",
+                "label": "信息重大性与交易关联恶化",
+                "result": "信息重大性与交易关联恶化会压制“形成不对称决策优势并破坏公平”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7664831270933284217-cue-4",
           "startMs": 196436,
@@ -4483,6 +5586,14 @@
             ],
             "feedback": "反例提醒：时间接近并不能单独证明信息已被非法使用。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“时间接近并不能单独证明信息已被非法使用”能够直接检验原主张的边界。"
+          },
           "triggerId": "7664831270933284217-cue-5",
           "startMs": 250625,
           "endMs": 256625,
@@ -4514,6 +5625,12 @@
             },
             "keyDistinction": "内幕信息与市场公平处在因果链的不同位置。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
+          },
           "triggerId": "7664831270933284217-cue-6",
           "startMs": 304814,
           "endMs": 310814,
@@ -4533,7 +5650,7 @@
     {
       "experienceId": "finance-showcase-7664151518648828581",
       "videoId": "7664151518648828581",
-      "contentVersion": "showcase-mock@2026.07.23.1",
+      "contentVersion": "showcase-mock@2026.07.23.2",
       "mediaFingerprint": "903b0be3cb9ddad8bc76209dcd8baf83676b5cdf83d0db101776f89323e25e94",
       "publishStatus": "internal_poc",
       "approvalScope": "internal_poc",
@@ -4541,11 +5658,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "天价离婚背后的真相 #资本市场#上市公司#内容启发搜索 #掘金计划2025 #婚姻",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕个人安排与控制权变化，解释大额股权发生分割或转移如何经由改变持股结构和潜在表决安排影响市场重新评估控制权稳定性。",
+        "viewpointNotice": "内容包含作者对“大额股权变动就等于控制权易主吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "市场重新评估控制权稳定性可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "大额股权发生分割或转移通过改变持股结构和潜在表决安排把个体事件传导到更广泛的公共环境。",
+          "response": "关注表决权协议和锁定安排、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "市场重新评估控制权稳定性可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "改变持股结构和潜在表决安排会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“股权转移不必然导致实际控制人变化”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "市场重新评估控制权稳定性可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "3713fabbeded61c0d162112bced9af4a52d00175714724a1a3c091a7f5ccbbea",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -4585,6 +5729,12 @@
             "body": "个人安排：婚姻与财产关系中的个人法律安排。控制权变化：表决权和公司决策影响力的改变。",
             "keyPoint": "个人安排描述起点，控制权变化描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7664151518648828581-cue-1",
           "startMs": 28338,
@@ -4626,6 +5776,14 @@
             ],
             "feedback": "别急着下结论，先检查表决权协议和锁定安排。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查表决权协议和锁定安排。"
+          },
           "triggerId": "7664151518648828581-cue-2",
           "startMs": 73678,
           "endMs": 79678,
@@ -4650,21 +5808,27 @@
             "variable": "表决权协议和锁定安排",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“改变持股结构和潜在表决安排”这条路径会减弱。"
+                "id": "supportive",
+                "label": "表决权协议和锁定安排改善",
+                "result": "表决权协议和锁定安排改善时，改变持股结构和潜在表决安排受到的约束减轻，市场重新评估控制权稳定性更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "表决权协议和锁定安排变化有限",
+                "result": "条件没有明显变化时，仍需沿着“大额股权发生分割或转移→改变持股结构和潜在表决安排→市场重新评估控制权稳定性”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“改变持股结构和潜在表决安排”这条路径会增强。"
+                "id": "restrictive",
+                "label": "表决权协议和锁定安排恶化",
+                "result": "表决权协议和锁定安排恶化会压制“改变持股结构和潜在表决安排”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7664151518648828581-cue-3",
           "startMs": 119018,
@@ -4707,6 +5871,14 @@
             ],
             "feedback": "反例提醒：股权转移不必然导致实际控制人变化。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“股权转移不必然导致实际控制人变化”能够直接检验原主张的边界。"
+          },
           "triggerId": "7664151518648828581-cue-4",
           "startMs": 164358,
           "endMs": 170358,
@@ -4737,6 +5909,12 @@
               "description": "表决权和公司决策影响力的改变"
             },
             "keyDistinction": "个人安排与控制权变化处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7664151518648828581-cue-5",
           "startMs": 209698,
@@ -4769,6 +5947,14 @@
             "correctOption": "改变持股结构和潜在表决安排",
             "feedback": "更完整的链条是：大额股权发生分割或转移 → 改变持股结构和潜在表决安排 → 市场重新评估控制权稳定性。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "改变持股结构和潜在表决安排"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“改变持股结构和潜在表决安排”。"
+          },
           "triggerId": "7664151518648828581-cue-6",
           "startMs": 255038,
           "endMs": 261038,
@@ -4788,7 +5974,7 @@
     {
       "experienceId": "finance-showcase-7656039421858309242",
       "videoId": "7656039421858309242",
-      "contentVersion": "showcase-mock@2026.07.23.1",
+      "contentVersion": "showcase-mock@2026.07.23.2",
       "mediaFingerprint": "580cf43153ce29cb8d3478e5445d4d86dd05fbbef4020d620b77a2b4bd6222ca",
       "publishStatus": "internal_poc",
       "approvalScope": "internal_poc",
@@ -4796,11 +5982,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "与马化腾齐名的广州前首富终审被判无期 #雪松#雪松控股#张劲#内容启发搜索 #掘金计划2025",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕个人责任与公司经营，解释核心人物面临法律风险如何经由影响决策、融资和合作方信心影响公司经营不确定性上升。",
+        "viewpointNotice": "内容包含作者对“创始人出事就等于公司立即停止经营吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "公司经营不确定性上升可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "核心人物面临法律风险通过影响决策、融资和合作方信心把个体事件传导到更广泛的公共环境。",
+          "response": "关注公司治理独立性、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "公司经营不确定性上升可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "影响决策、融资和合作方信心会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“个人被追责不等于所有公司资产同时失效”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "公司经营不确定性上升可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "3acbbfb25fdb088411d12366ec047f6e597b730af1f9aded127fbd89ed243191",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -4841,6 +6054,12 @@
             "keyPoint": "个人责任描述起点，公司经营描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
+          },
           "triggerId": "7656039421858309242-cue-1",
           "startMs": 31772,
           "endMs": 37772,
@@ -4880,6 +6099,14 @@
               }
             ],
             "feedback": "别急着下结论，先检查公司治理独立性。"
+          },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查公司治理独立性。"
           },
           "triggerId": "7656039421858309242-cue-2",
           "startMs": 82607,
@@ -4922,6 +6149,14 @@
             ],
             "feedback": "反例提醒：个人被追责不等于所有公司资产同时失效。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“个人被追责不等于所有公司资产同时失效”能够直接检验原主张的边界。"
+          },
           "triggerId": "7656039421858309242-cue-3",
           "startMs": 133442,
           "endMs": 139442,
@@ -4952,6 +6187,12 @@
               "description": "企业资产、团队和业务的持续运转"
             },
             "keyDistinction": "个人责任与公司经营处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7656039421858309242-cue-4",
           "startMs": 184277,
@@ -4984,6 +6225,14 @@
             "correctOption": "影响决策、融资和合作方信心",
             "feedback": "更完整的链条是：核心人物面临法律风险 → 影响决策、融资和合作方信心 → 公司经营不确定性上升。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "影响决策、融资和合作方信心"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“影响决策、融资和合作方信心”。"
+          },
           "triggerId": "7656039421858309242-cue-5",
           "startMs": 235112,
           "endMs": 241112,
@@ -5008,21 +6257,27 @@
             "variable": "公司治理独立性",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“影响决策、融资和合作方信心”这条路径会减弱。"
+                "id": "supportive",
+                "label": "公司治理独立性改善",
+                "result": "公司治理独立性改善时，影响决策、融资和合作方信心受到的约束减轻，公司经营不确定性上升更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "公司治理独立性变化有限",
+                "result": "条件没有明显变化时，仍需沿着“核心人物面临法律风险→影响决策、融资和合作方信心→公司经营不确定性上升”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“影响决策、融资和合作方信心”这条路径会增强。"
+                "id": "restrictive",
+                "label": "公司治理独立性恶化",
+                "result": "公司治理独立性恶化会压制“影响决策、融资和合作方信心”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7656039421858309242-cue-6",
           "startMs": 285947,
@@ -5043,7 +6298,7 @@
     {
       "experienceId": "finance-showcase-7664981604339829114",
       "videoId": "7664981604339829114",
-      "contentVersion": "showcase-mock@2026.07.23.1",
+      "contentVersion": "showcase-mock@2026.07.23.2",
       "mediaFingerprint": "90e5df009ce56c138df2d0dca41e991d11fd91c15547669cc5fe6027fb9a8086",
       "publishStatus": "internal_poc",
       "approvalScope": "internal_poc",
@@ -5051,11 +6306,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "半导体教父和他背后的女人 #紫光#紫光集团#清华#内容启发搜索 赵伟国",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕技术资产与治理结构，解释技术资产与资本快速集中如何经由提高扩张效率也放大治理依赖影响产业影响力和控制风险同时上升。",
+        "viewpointNotice": "内容包含作者对“行业领军者等于治理结构稳健吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "产业影响力和控制风险同时上升可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "技术资产与资本快速集中通过提高扩张效率也放大治理依赖把个体事件传导到更广泛的公共环境。",
+          "response": "关注监督机制与债务约束、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "产业影响力和控制风险同时上升可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "提高扩张效率也放大治理依赖会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“个人影响力强不等于组织能力完全由一人构成”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "产业影响力和控制风险同时上升可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "e5d62c6dbde82b9a17b276d9562f852e3ce02b0af9fb6fe14df5b8c167f128ce",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -5095,6 +6377,12 @@
             "body": "技术资产：专利、人才和研发组织形成的能力。治理结构：所有权、管理权与监督权的安排。",
             "keyPoint": "技术资产描述起点，治理结构描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7664981604339829114-cue-1",
           "startMs": 32898,
@@ -5136,6 +6424,14 @@
             ],
             "feedback": "别急着下结论，先检查监督机制与债务约束。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查监督机制与债务约束。"
+          },
           "triggerId": "7664981604339829114-cue-2",
           "startMs": 85534,
           "endMs": 91534,
@@ -5166,6 +6462,12 @@
               "description": "所有权、管理权与监督权的安排"
             },
             "keyDistinction": "技术资产与治理结构处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7664981604339829114-cue-3",
           "startMs": 138170,
@@ -5198,6 +6500,14 @@
             "correctOption": "提高扩张效率也放大治理依赖",
             "feedback": "更完整的链条是：技术资产与资本快速集中 → 提高扩张效率也放大治理依赖 → 产业影响力和控制风险同时上升。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "提高扩张效率也放大治理依赖"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“提高扩张效率也放大治理依赖”。"
+          },
           "triggerId": "7664981604339829114-cue-4",
           "startMs": 190806,
           "endMs": 196806,
@@ -5222,21 +6532,27 @@
             "variable": "监督机制与债务约束",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“提高扩张效率也放大治理依赖”这条路径会减弱。"
+                "id": "supportive",
+                "label": "监督机制与债务约束改善",
+                "result": "监督机制与债务约束改善时，提高扩张效率也放大治理依赖受到的约束减轻，产业影响力和控制风险同时上升更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "监督机制与债务约束变化有限",
+                "result": "条件没有明显变化时，仍需沿着“技术资产与资本快速集中→提高扩张效率也放大治理依赖→产业影响力和控制风险同时上升”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“提高扩张效率也放大治理依赖”这条路径会增强。"
+                "id": "restrictive",
+                "label": "监督机制与债务约束恶化",
+                "result": "监督机制与债务约束恶化会压制“提高扩张效率也放大治理依赖”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7664981604339829114-cue-5",
           "startMs": 243442,
@@ -5279,6 +6595,14 @@
             ],
             "feedback": "反例提醒：个人影响力强不等于组织能力完全由一人构成。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“个人影响力强不等于组织能力完全由一人构成”能够直接检验原主张的边界。"
+          },
           "triggerId": "7664981604339829114-cue-6",
           "startMs": 296078,
           "endMs": 302078,
@@ -5306,11 +6630,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "绵阳女首富，财富资本之路 #东材科技#熊海涛#资本市场#内容启发搜索 #掘金计划2025",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕产业成长与资本扩张，解释产业机会与资本工具结合如何经由加快产能、并购和控制范围扩大影响财富与企业规模快速变化。",
+        "viewpointNotice": "内容包含作者对“资本扩张越快越好吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "财富与企业规模快速变化可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "产业机会与资本工具结合通过加快产能、并购和控制范围扩大把个体事件传导到更广泛的公共环境。",
+          "response": "关注经营现金流与负债水平、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "财富与企业规模快速变化可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "加快产能、并购和控制范围扩大会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“财富增长不等于所有扩张项目都创造价值”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "财富与企业规模快速变化可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "c0fc20c86f53e2f648f83c850d2fc708b1a1d97a952b0e28b6ec16712582cab0",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -5350,6 +6701,12 @@
             "body": "产业成长：产品、产能和客户需求带来的扩张。资本扩张：融资、并购和股权安排推动的扩张。",
             "keyPoint": "产业成长描述起点，资本扩张描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7652299373405069425-cue-1",
           "startMs": 29264,
@@ -5391,6 +6748,14 @@
             ],
             "feedback": "别急着下结论，先检查经营现金流与负债水平。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查经营现金流与负债水平。"
+          },
           "triggerId": "7652299373405069425-cue-2",
           "startMs": 76086,
           "endMs": 82086,
@@ -5422,6 +6787,14 @@
             "correctOption": "加快产能、并购和控制范围扩大",
             "feedback": "更完整的链条是：产业机会与资本工具结合 → 加快产能、并购和控制范围扩大 → 财富与企业规模快速变化。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "加快产能、并购和控制范围扩大"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“加快产能、并购和控制范围扩大”。"
+          },
           "triggerId": "7652299373405069425-cue-3",
           "startMs": 122908,
           "endMs": 128908,
@@ -5446,21 +6819,27 @@
             "variable": "经营现金流与负债水平",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“加快产能、并购和控制范围扩大”这条路径会减弱。"
+                "id": "supportive",
+                "label": "经营现金流与负债水平改善",
+                "result": "经营现金流与负债水平改善时，加快产能、并购和控制范围扩大受到的约束减轻，财富与企业规模快速变化更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "经营现金流与负债水平变化有限",
+                "result": "条件没有明显变化时，仍需沿着“产业机会与资本工具结合→加快产能、并购和控制范围扩大→财富与企业规模快速变化”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“加快产能、并购和控制范围扩大”这条路径会增强。"
+                "id": "restrictive",
+                "label": "经营现金流与负债水平恶化",
+                "result": "经营现金流与负债水平恶化会压制“加快产能、并购和控制范围扩大”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7652299373405069425-cue-4",
           "startMs": 169730,
@@ -5503,6 +6882,14 @@
             ],
             "feedback": "反例提醒：财富增长不等于所有扩张项目都创造价值。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“财富增长不等于所有扩张项目都创造价值”能够直接检验原主张的边界。"
+          },
           "triggerId": "7652299373405069425-cue-5",
           "startMs": 216552,
           "endMs": 222552,
@@ -5534,6 +6921,12 @@
             },
             "keyDistinction": "产业成长与资本扩张处在因果链的不同位置。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
+          },
           "triggerId": "7652299373405069425-cue-6",
           "startMs": 263374,
           "endMs": 269374,
@@ -5561,11 +6954,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "奥精医疗之母女反目 #奥精医疗#资本市场#上市公司#内容启发搜索 #掘金计划2025",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕家族控制与治理冲突，解释家族内部利益和角色发生变化如何经由通过股权、董事会和诉讼传导冲突影响经营决策和外部信任受扰。",
+        "viewpointNotice": "内容包含作者对“家族冲突一定会让企业失去经营能力吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "经营决策和外部信任受扰可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "家族内部利益和角色发生变化通过通过股权、董事会和诉讼传导冲突把个体事件传导到更广泛的公共环境。",
+          "response": "关注董事会独立性与制度约束、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "经营决策和外部信任受扰可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "通过股权、董事会和诉讼传导冲突会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“家庭矛盾不一定改变公司的日常经营能力”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "经营决策和外部信任受扰可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "06e11c19da0e61e061b0ae6e1ea28dcb978f86c99d718ea61afe9c38aec018c8",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -5605,6 +7025,12 @@
             "body": "家族控制：家族成员通过股权和职位影响企业。治理冲突：不同利益方对决策和资源产生分歧。",
             "keyPoint": "家族控制描述起点，治理冲突描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7665270901798578873-cue-1",
           "startMs": 29004,
@@ -5646,6 +7072,14 @@
             ],
             "feedback": "别急着下结论，先检查董事会独立性与制度约束。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查董事会独立性与制度约束。"
+          },
           "triggerId": "7665270901798578873-cue-2",
           "startMs": 75410,
           "endMs": 81410,
@@ -5670,21 +7104,27 @@
             "variable": "董事会独立性与制度约束",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“通过股权、董事会和诉讼传导冲突”这条路径会减弱。"
+                "id": "supportive",
+                "label": "董事会独立性与制度约束改善",
+                "result": "董事会独立性与制度约束改善时，通过股权、董事会和诉讼传导冲突受到的约束减轻，经营决策和外部信任受扰更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "董事会独立性与制度约束变化有限",
+                "result": "条件没有明显变化时，仍需沿着“家族内部利益和角色发生变化→通过股权、董事会和诉讼传导冲突→经营决策和外部信任受扰”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“通过股权、董事会和诉讼传导冲突”这条路径会增强。"
+                "id": "restrictive",
+                "label": "董事会独立性与制度约束恶化",
+                "result": "董事会独立性与制度约束恶化会压制“通过股权、董事会和诉讼传导冲突”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7665270901798578873-cue-3",
           "startMs": 121816,
@@ -5727,6 +7167,14 @@
             ],
             "feedback": "反例提醒：家庭矛盾不一定改变公司的日常经营能力。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“家庭矛盾不一定改变公司的日常经营能力”能够直接检验原主张的边界。"
+          },
           "triggerId": "7665270901798578873-cue-4",
           "startMs": 168222,
           "endMs": 174222,
@@ -5757,6 +7205,12 @@
               "description": "不同利益方对决策和资源产生分歧"
             },
             "keyDistinction": "家族控制与治理冲突处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7665270901798578873-cue-5",
           "startMs": 214628,
@@ -5789,6 +7243,14 @@
             "correctOption": "通过股权、董事会和诉讼传导冲突",
             "feedback": "更完整的链条是：家族内部利益和角色发生变化 → 通过股权、董事会和诉讼传导冲突 → 经营决策和外部信任受扰。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "通过股权、董事会和诉讼传导冲突"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“通过股权、董事会和诉讼传导冲突”。"
+          },
           "triggerId": "7665270901798578873-cue-6",
           "startMs": 261034,
           "endMs": 267034,
@@ -5816,11 +7278,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "知名女企业家被刑事拘留 #华恒生物#郭恒华#资本市场#内容启发搜索 #掘金计划2025",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕关键人物风险与组织韧性，解释关键管理者无法履职如何经由影响授权、沟通和合作方预期影响治理与经营不确定性上升。",
+        "viewpointNotice": "内容包含作者对“关键人物缺席就等于业务停摆吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "治理与经营不确定性上升可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "关键管理者无法履职通过影响授权、沟通和合作方预期把个体事件传导到更广泛的公共环境。",
+          "response": "关注接班机制和管理团队完整性、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "治理与经营不确定性上升可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "影响授权、沟通和合作方预期会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“成熟团队可能降低单一人物事件的影响”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "治理与经营不确定性上升可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "d4131f11f2599143a2dd09814ed80312cd4339a99ce7facf45df4db50c576075",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -5861,6 +7350,12 @@
             "keyPoint": "关键人物风险描述起点，组织韧性描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
           },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
+          },
           "triggerId": "7655332588454594939-cue-1",
           "startMs": 30023,
           "endMs": 36023,
@@ -5900,6 +7395,14 @@
               }
             ],
             "feedback": "别急着下结论，先检查接班机制和管理团队完整性。"
+          },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查接班机制和管理团队完整性。"
           },
           "triggerId": "7655332588454594939-cue-2",
           "startMs": 78060,
@@ -5942,6 +7445,14 @@
             ],
             "feedback": "反例提醒：成熟团队可能降低单一人物事件的影响。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“成熟团队可能降低单一人物事件的影响”能够直接检验原主张的边界。"
+          },
           "triggerId": "7655332588454594939-cue-3",
           "startMs": 126097,
           "endMs": 132097,
@@ -5972,6 +7483,12 @@
               "description": "组织在人员变化后继续运转的能力"
             },
             "keyDistinction": "关键人物风险与组织韧性处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7655332588454594939-cue-4",
           "startMs": 174134,
@@ -6004,6 +7521,14 @@
             "correctOption": "影响授权、沟通和合作方预期",
             "feedback": "更完整的链条是：关键管理者无法履职 → 影响授权、沟通和合作方预期 → 治理与经营不确定性上升。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "影响授权、沟通和合作方预期"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“影响授权、沟通和合作方预期”。"
+          },
           "triggerId": "7655332588454594939-cue-5",
           "startMs": 222171,
           "endMs": 228171,
@@ -6028,21 +7553,27 @@
             "variable": "接班机制和管理团队完整性",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“影响授权、沟通和合作方预期”这条路径会减弱。"
+                "id": "supportive",
+                "label": "接班机制和管理团队完整性改善",
+                "result": "接班机制和管理团队完整性改善时，影响授权、沟通和合作方预期受到的约束减轻，治理与经营不确定性上升更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "接班机制和管理团队完整性变化有限",
+                "result": "条件没有明显变化时，仍需沿着“关键管理者无法履职→影响授权、沟通和合作方预期→治理与经营不确定性上升”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“影响授权、沟通和合作方预期”这条路径会增强。"
+                "id": "restrictive",
+                "label": "接班机制和管理团队完整性恶化",
+                "result": "接班机制和管理团队完整性恶化会压制“影响授权、沟通和合作方预期”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7655332588454594939-cue-6",
           "startMs": 270208,
@@ -6071,11 +7602,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "厦门大学父子仨的上市公司财务造假 #红相股份#资本市场#内容启发搜索 #财务造假#掘金计划2025",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕收入确认与审计证据，解释业绩压力推动不当会计处理如何经由虚构或提前确认交易改善报表影响财务信息失真并触发监管责任。",
+        "viewpointNotice": "内容包含作者对“财务更正就一定等于主观造假吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "财务信息失真并触发监管责任可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "业绩压力推动不当会计处理通过虚构或提前确认交易改善报表把个体事件传导到更广泛的公共环境。",
+          "response": "关注内部控制和审计独立性、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "财务信息失真并触发监管责任可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "虚构或提前确认交易改善报表会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“报表差错与故意造假需要不同证据判断”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "财务信息失真并触发监管责任可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "d9604beb317997ce4431c422c4484fb3bc8b06c5ca3ea9a08c1876f4b39e303c",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -6115,6 +7673,12 @@
             "body": "收入确认：企业在何时把交易计入收入。审计证据：支持财务数据真实完整的可验证材料。",
             "keyPoint": "收入确认描述起点，审计证据描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7646697433079458545-cue-1",
           "startMs": 30479,
@@ -6156,6 +7720,14 @@
             ],
             "feedback": "别急着下结论，先检查内部控制和审计独立性。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查内部控制和审计独立性。"
+          },
           "triggerId": "7646697433079458545-cue-2",
           "startMs": 79244,
           "endMs": 85244,
@@ -6186,6 +7758,12 @@
               "description": "支持财务数据真实完整的可验证材料"
             },
             "keyDistinction": "收入确认与审计证据处在因果链的不同位置。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "概念对照用于建立区别，不设置唯一正确答案。"
           },
           "triggerId": "7646697433079458545-cue-3",
           "startMs": 128009,
@@ -6218,6 +7796,14 @@
             "correctOption": "虚构或提前确认交易改善报表",
             "feedback": "更完整的链条是：业绩压力推动不当会计处理 → 虚构或提前确认交易改善报表 → 财务信息失真并触发监管责任。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "虚构或提前确认交易改善报表"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“虚构或提前确认交易改善报表”。"
+          },
           "triggerId": "7646697433079458545-cue-4",
           "startMs": 176774,
           "endMs": 182774,
@@ -6242,21 +7828,27 @@
             "variable": "内部控制和审计独立性",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“虚构或提前确认交易改善报表”这条路径会减弱。"
+                "id": "supportive",
+                "label": "内部控制和审计独立性改善",
+                "result": "内部控制和审计独立性改善时，虚构或提前确认交易改善报表受到的约束减轻，财务信息失真并触发监管责任更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "内部控制和审计独立性变化有限",
+                "result": "条件没有明显变化时，仍需沿着“业绩压力推动不当会计处理→虚构或提前确认交易改善报表→财务信息失真并触发监管责任”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“虚构或提前确认交易改善报表”这条路径会增强。"
+                "id": "restrictive",
+                "label": "内部控制和审计独立性恶化",
+                "result": "内部控制和审计独立性恶化会压制“虚构或提前确认交易改善报表”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7646697433079458545-cue-5",
           "startMs": 225539,
@@ -6299,6 +7891,14 @@
             ],
             "feedback": "反例提醒：报表差错与故意造假需要不同证据判断。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“报表差错与故意造假需要不同证据判断”能够直接检验原主张的边界。"
+          },
           "triggerId": "7646697433079458545-cue-6",
           "startMs": 274304,
           "endMs": 280304,
@@ -6326,11 +7926,38 @@
       "timecodeQuality": "estimated_mock",
       "title": "资本市场一个大笑话… #甬金股份#曹佩凤#资本市场#内容启发#掘金计划2025",
       "notice": "LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。",
+      "openingBrief": {
+        "contentType": "财经知识科普与案例分析",
+        "summary": "本视频围绕市场叙事与经营基本面，解释热门叙事吸引集中关注如何经由放大预期并弱化短期事实权重影响市场判断与经营现实可能背离。",
+        "viewpointNotice": "内容包含作者对“故事讲得好就等于基本面改善吗？”的分析表达，应把可核查事实与观点判断分开。",
+        "verificationBoundary": "当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。"
+      },
+      "reportPerspectives": [
+        {
+          "audience": "国家与公共部门",
+          "impact": "市场判断与经营现实可能背离可能影响公共规则、基础设施安排与风险处置。",
+          "reason": "热门叙事吸引集中关注通过放大预期并弱化短期事实权重把个体事件传导到更广泛的公共环境。",
+          "response": "关注信息披露与业绩兑现、公开数据与规则变化，不把单一案例直接外推为整体结论。"
+        },
+        {
+          "audience": "企业",
+          "impact": "市场判断与经营现实可能背离可能改变企业成本、融资、治理或竞争预期。",
+          "reason": "放大预期并弱化短期事实权重会把外部变化传导到经营决策和合作方信心。",
+          "response": "核对现金流、治理和信息披露，并用“叙事并非都虚假，关键是能否被事实持续验证”检查判断边界。"
+        },
+        {
+          "audience": "居民",
+          "impact": "市场判断与经营现实可能背离可能间接影响就业、消费选择、公共服务或日常预期。",
+          "reason": "宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。",
+          "response": "区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。"
+        }
+      ],
       "generation": {
         "mode": "mock",
         "provider": "deterministic_llm_mock",
         "model": "caibao-deterministic-llm-mock-v1",
         "promptVersion": "showcase-mock-prompt/1.0.0",
+        "generationKey": "e73b7f65a7b5ad8495bc5098be6aad98fde03379aa6c26d7e547e611c5280479",
         "generatedAt": "2026-07-22T19:00:00.000Z",
         "evidenceBasis": "title_and_manifest_metadata_only"
       },
@@ -6370,6 +7997,12 @@
             "body": "市场叙事：参与者用故事解释公司与行业前景。经营基本面：收入、现金流和竞争能力等经营事实。",
             "keyPoint": "市场叙事描述起点，经营基本面描述结果或约束。",
             "feedback": "先把概念分开，再判断视频中的因果关系。"
+          },
+          "evaluation": {
+            "mode": "acknowledgement",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是一张概念背景卡，不设置唯一正确答案。"
           },
           "triggerId": "7657748592710397797-cue-1",
           "startMs": 23134,
@@ -6411,6 +8044,14 @@
             ],
             "feedback": "别急着下结论，先检查信息披露与业绩兑现。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "no"
+            ],
+            "rewardCoins": 1,
+            "explanation": "题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查信息披露与业绩兑现。"
+          },
           "triggerId": "7657748592710397797-cue-2",
           "startMs": 69402,
           "endMs": 75402,
@@ -6442,6 +8083,14 @@
             "correctOption": "放大预期并弱化短期事实权重",
             "feedback": "更完整的链条是：热门叙事吸引集中关注 → 放大预期并弱化短期事实权重 → 市场判断与经营现实可能背离。"
           },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "放大预期并弱化短期事实权重"
+            ],
+            "rewardCoins": 1,
+            "explanation": "中间机制是“放大预期并弱化短期事实权重”。"
+          },
           "triggerId": "7657748592710397797-cue-3",
           "startMs": 115670,
           "endMs": 121670,
@@ -6466,21 +8115,27 @@
             "variable": "信息披露与业绩兑现",
             "options": [
               {
-                "id": "weak",
-                "label": "走弱",
-                "result": "“放大预期并弱化短期事实权重”这条路径会减弱。"
+                "id": "supportive",
+                "label": "信息披露与业绩兑现改善",
+                "result": "信息披露与业绩兑现改善时，放大预期并弱化短期事实权重受到的约束减轻，市场判断与经营现实可能背离更容易出现。"
               },
               {
-                "id": "base",
-                "label": "维持",
-                "result": "当前证据不足以改变主路径判断。"
+                "id": "unchanged",
+                "label": "信息披露与业绩兑现变化有限",
+                "result": "条件没有明显变化时，仍需沿着“热门叙事吸引集中关注→放大预期并弱化短期事实权重→市场判断与经营现实可能背离”继续核对证据。"
               },
               {
-                "id": "strong",
-                "label": "走强",
-                "result": "“放大预期并弱化短期事实权重”这条路径会增强。"
+                "id": "restrictive",
+                "label": "信息披露与业绩兑现恶化",
+                "result": "信息披露与业绩兑现恶化会压制“放大预期并弱化短期事实权重”这条路径，原结论可能减弱或转为信息不足。"
               }
             ]
+          },
+          "evaluation": {
+            "mode": "exploratory",
+            "correctOptionIds": [],
+            "rewardCoins": 0,
+            "explanation": "这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。"
           },
           "triggerId": "7657748592710397797-cue-4",
           "startMs": 161938,
@@ -6522,6 +8177,14 @@
               }
             ],
             "feedback": "反例提醒：叙事并非都虚假，关键是能否被事实持续验证。"
+          },
+          "evaluation": {
+            "mode": "objective",
+            "correctOptionIds": [
+              "counter"
+            ],
+            "rewardCoins": 1,
+            "explanation": "“叙事并非都虚假，关键是能否被事实持续验证”能够直接检验原主张的边界。"
           },
           "triggerId": "7657748592710397797-cue-5",
           "startMs": 208206,

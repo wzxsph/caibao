@@ -66,6 +66,7 @@ const contextPayload: AuthoredPayload['payload'] = {
 
 describe('AnalysisPipeline (staged)', () => {
   it('produces a human-review draft plus a coverage report', async () => {
+    let now = 0
     const pipeline = new AnalysisPipeline({
       media: { prepare: async () => preparedMedia },
       asr: { transcribePreparedAudio: async () => transcript },
@@ -74,10 +75,14 @@ describe('AnalysisPipeline (staged)', () => {
         extract: async () => conceptGraph(),
         repair: async () => conceptGraph()
       },
-      payloadAuthor: { author: async () => ({ payload: contextPayload }) }
+      payloadAuthor: { author: async () => ({ payload: contextPayload }) },
+      nowMs: () => {
+        now += 5
+        return now
+      }
     })
 
-    const { draft, coverageReport } = await pipeline.run({
+    const { draft, coverageReport, timings } = await pipeline.run({
       jobId: 'job-1',
       asset,
       title: '测试视频'
@@ -97,6 +102,17 @@ describe('AnalysisPipeline (staged)', () => {
     expect(coverageReport.versions.weightTableVersion).toBe('cue-weights.v1')
     expect(coverageReport.versions.ruleEngineVersion).toBe('direction-rules.v1')
     expect(coverageReport.kindBalance.context_card).toBe(1)
+    expect(timings.totalMs).toBeGreaterThan(0)
+    expect(timings.stages.map((item) => item.stage)).toEqual([
+      'media_prepare',
+      'evidence_extract',
+      'semantic_extract',
+      'validate_repair',
+      'plan',
+      'payload_author',
+      'assemble'
+    ])
+    expect(timings.stages.every((item) => item.elapsedMs >= 0)).toBe(true)
   })
 
   it('uses the first valid semantic extraction without retrying', async () => {

@@ -1,5 +1,11 @@
+import { createHash } from 'node:crypto'
 import { z } from 'zod'
-import { CUE_KINDS, payloadSchemaByKind, type CueKind } from '../domain/payload-contracts.js'
+import {
+  CUE_KINDS,
+  payloadSchemaByKind,
+  type CueEvaluation,
+  type CueKind
+} from '../domain/payload-contracts.js'
 import { planCueCandidates } from '../pipeline/cue-planner.js'
 import {
   findShowcaseSeed,
@@ -70,6 +76,7 @@ export interface MockCueDraft {
   prompt: string
   learningObjective: string
   payload: unknown
+  evaluation: CueEvaluation
 }
 
 export interface ShowcaseLlmMock {
@@ -91,11 +98,24 @@ export interface ShowcaseExperience {
   timecodeQuality: 'estimated_mock'
   title: string
   notice: string
+  openingBrief: {
+    contentType: string
+    summary: string
+    viewpointNotice: string
+    verificationBoundary: string
+  }
+  reportPerspectives: Array<{
+    audience: '国家与公共部门' | '企业' | '居民'
+    impact: string
+    reason: string
+    response: string
+  }>
   generation: {
     mode: 'mock'
     provider: 'deterministic_llm_mock'
     model: string
     promptVersion: string
+    generationKey: string
     generatedAt: string
     evidenceBasis: 'title_and_manifest_metadata_only'
   }
@@ -170,10 +190,36 @@ export interface ShowcaseBundle {
 
 const MOCK_MODEL = 'caibao-deterministic-llm-mock-v1'
 const MOCK_PROMPT_VERSION = 'showcase-mock-prompt/1.0.0'
-const CONTENT_VERSION = 'showcase-mock@2026.07.23.1'
+const LEGACY_CONTENT_VERSION = 'showcase-mock@2026.07.23.1'
+const PUBLIC_CONTENT_VERSION = 'showcase-mock@2026.07.23.2'
+const PUBLIC_VIDEO_IDS = new Set([
+  '7664748624454192393',
+  '7660817965343870248',
+  '7660177158400216347',
+  '7659728419487337747',
+  '7631441410851360041',
+  '7638141580495614437',
+  '7664831270933284217',
+  '7664151518648828581',
+  '7656039421858309242',
+  '7664981604339829114'
+])
 
 function choice(id: string, label: string, result: string) {
   return { id, label, result }
+}
+
+function evaluation(
+  mode: CueEvaluation['mode'],
+  explanation: string,
+  correctOptionIds: string[] = []
+): CueEvaluation {
+  return {
+    mode,
+    correctOptionIds,
+    rewardCoins: mode === 'objective' ? 1 : 0,
+    explanation
+  }
 }
 
 function payloadForKind(kind: CueKind, seed: ShowcaseContentSeed): MockCueDraft {
@@ -189,7 +235,8 @@ function payloadForKind(kind: CueKind, seed: ShowcaseContentSeed): MockCueDraft 
           body: `${seed.conceptA}：${seed.conceptADescription}。${seed.conceptB}：${seed.conceptBDescription}。`,
           keyPoint: `${seed.conceptA}描述起点，${seed.conceptB}描述结果或约束。`,
           feedback: '先把概念分开，再判断视频中的因果关系。'
-        }
+        },
+        evaluation: evaluation('acknowledgement', '这是一张概念背景卡，不设置唯一正确答案。')
       }
     case 'quick_judgment':
       return {
@@ -205,7 +252,12 @@ function payloadForKind(kind: CueKind, seed: ShowcaseContentSeed): MockCueDraft 
             choice('insufficient', '信息不足', '仅凭标题与单一片段不能确认。')
           ],
           feedback: `别急着下结论，先检查${seed.conditionVariable}。`
-        }
+        },
+        evaluation: evaluation(
+          'objective',
+          `题干包含绝对化判断，仅凭当前信息不能直接成立，还需要检查${seed.conditionVariable}。`,
+          ['no']
+        )
       }
     case 'condition_slider':
       return {
@@ -217,11 +269,27 @@ function payloadForKind(kind: CueKind, seed: ShowcaseContentSeed): MockCueDraft 
           title: '只改变一个条件',
           variable: seed.conditionVariable,
           options: [
-            choice('weak', '走弱', `“${seed.mechanism}”这条路径会减弱。`),
-            choice('base', '维持', '当前证据不足以改变主路径判断。'),
-            choice('strong', '走强', `“${seed.mechanism}”这条路径会增强。`)
+            choice(
+              'supportive',
+              `${seed.conditionVariable}改善`,
+              `${seed.conditionVariable}改善时，${seed.mechanism}受到的约束减轻，${seed.outcome}更容易出现。`
+            ),
+            choice(
+              'unchanged',
+              `${seed.conditionVariable}变化有限`,
+              `条件没有明显变化时，仍需沿着“${seed.cause}→${seed.mechanism}→${seed.outcome}”继续核对证据。`
+            ),
+            choice(
+              'restrictive',
+              `${seed.conditionVariable}恶化`,
+              `${seed.conditionVariable}恶化会压制“${seed.mechanism}”这条路径，原结论可能减弱或转为信息不足。`
+            )
           ]
-        }
+        },
+        evaluation: evaluation(
+          'exploratory',
+          '这是条件推演，三个选项用于比较路径变化，不设置唯一正确答案。'
+        )
       }
     case 'causal_stitch':
       return {
@@ -236,7 +304,8 @@ function payloadForKind(kind: CueKind, seed: ShowcaseContentSeed): MockCueDraft 
           options: [seed.mechanism, '只靠情绪直接发生', '与中间机制无关'],
           correctOption: seed.mechanism,
           feedback: `更完整的链条是：${seed.cause} → ${seed.mechanism} → ${seed.outcome}。`
-        }
+        },
+        evaluation: evaluation('objective', `中间机制是“${seed.mechanism}”。`, [seed.mechanism])
       }
     case 'counterexample_flip':
       return {
@@ -253,7 +322,10 @@ function payloadForKind(kind: CueKind, seed: ShowcaseContentSeed): MockCueDraft 
             choice('unknown', '暂不确定', '需要更多视频证据才能判断路径强弱。')
           ],
           feedback: `反例提醒：${seed.counterexample}。`
-        }
+        },
+        evaluation: evaluation('objective', `“${seed.counterexample}”能够直接检验原主张的边界。`, [
+          'counter'
+        ])
       }
     case 'concept_compare':
       return {
@@ -266,9 +338,63 @@ function payloadForKind(kind: CueKind, seed: ShowcaseContentSeed): MockCueDraft 
           left: { term: seed.conceptA, description: seed.conceptADescription },
           right: { term: seed.conceptB, description: seed.conceptBDescription },
           keyDistinction: `${seed.conceptA}与${seed.conceptB}处在因果链的不同位置。`
-        }
+        },
+        evaluation: evaluation('acknowledgement', '概念对照用于建立区别，不设置唯一正确答案。')
       }
   }
+}
+
+function openingBrief(seed: ShowcaseContentSeed) {
+  return {
+    contentType: '财经知识科普与案例分析',
+    summary: `本视频围绕${seed.conceptA}与${seed.conceptB}，解释${seed.cause}如何经由${seed.mechanism}影响${seed.outcome}。`,
+    viewpointNotice: `内容包含作者对“${seed.judgmentQuestion}”的分析表达，应把可核查事实与观点判断分开。`,
+    verificationBoundary:
+      '当前导读仅依据标题和清单元数据生成，未完成最终 ASR/OCR、事实核验或财经人审。'
+  }
+}
+
+function reportPerspectives(seed: ShowcaseContentSeed): ShowcaseExperience['reportPerspectives'] {
+  return [
+    {
+      audience: '国家与公共部门',
+      impact: `${seed.outcome}可能影响公共规则、基础设施安排与风险处置。`,
+      reason: `${seed.cause}通过${seed.mechanism}把个体事件传导到更广泛的公共环境。`,
+      response: `关注${seed.conditionVariable}、公开数据与规则变化，不把单一案例直接外推为整体结论。`
+    },
+    {
+      audience: '企业',
+      impact: `${seed.outcome}可能改变企业成本、融资、治理或竞争预期。`,
+      reason: `${seed.mechanism}会把外部变化传导到经营决策和合作方信心。`,
+      response: `核对现金流、治理和信息披露，并用“${seed.counterexample}”检查判断边界。`
+    },
+    {
+      audience: '居民',
+      impact: `${seed.outcome}可能间接影响就业、消费选择、公共服务或日常预期。`,
+      reason: `宏观与企业变化通常经价格、收入和信心渠道逐步传导，并非即时等比例发生。`,
+      response: `区分事实与作者观点，优先查看来源和条件，不把科普内容当作具体交易建议。`
+    }
+  ]
+}
+
+function contentVersionFor(itemId: string): string {
+  return PUBLIC_VIDEO_IDS.has(itemId) ? PUBLIC_CONTENT_VERSION : LEGACY_CONTENT_VERSION
+}
+
+function generationKeyFor(item: SourceItem, seed: ShowcaseContentSeed, kinds: CueKind[]): string {
+  return createHash('sha256')
+    .update(
+      JSON.stringify({
+        sourceSha256: item.sha256,
+        durationSeconds: item.durationSeconds,
+        contentVersion: contentVersionFor(item.itemId),
+        promptVersion: MOCK_PROMPT_VERSION,
+        model: MOCK_MODEL,
+        kinds,
+        seed
+      })
+    )
+    .digest('hex')
 }
 
 export class DeterministicShowcaseLlmMock implements ShowcaseLlmMock {
@@ -338,6 +464,8 @@ export async function generateShowcaseBundle(input: {
   preparedManifest?: unknown
   llm?: ShowcaseLlmMock
   generatedAt?: string
+  existingBundle?: ShowcaseBundle
+  onItem?: (status: 'reused' | 'regenerated', itemId: string) => void
 }): Promise<ShowcaseBundle> {
   const manifest = showcaseSourceManifestSchema.parse(input.manifest)
   const prepared = input.preparedManifest
@@ -349,6 +477,9 @@ export async function generateShowcaseBundle(input: {
   assertCatalogCoverage(manifest)
   const llm = input.llm ?? new DeterministicShowcaseLlmMock()
   const generatedAt = new Date(input.generatedAt ?? Date.now()).toISOString()
+  const existingExperienceByVideoId = new Map(
+    (input.existingBundle?.experiences ?? []).map((experience) => [experience.videoId, experience])
+  )
 
   const experiences: ShowcaseExperience[] = []
   const catalog: ShowcaseCatalogItem[] = []
@@ -356,6 +487,44 @@ export async function generateShowcaseBundle(input: {
     const seed = findShowcaseSeed(item.itemId)
     if (!seed) throw new Error(`Missing showcase seed for ${item.itemId}`)
     const kinds = cueKindsForItem(item, index)
+    const generationKey = generationKeyFor(item, seed, kinds)
+    const contentVersion = contentVersionFor(item.itemId)
+    const preparedItem = prepared?.items.find((entry) => entry.itemId === item.itemId)
+    if (preparedItem && preparedItem.sourceSha256 !== item.sha256) {
+      throw new Error(`Prepared media is stale for ${item.itemId}`)
+    }
+    const experienceId = SHOWCASE_EXPERIENCE_BY_VIDEO_ID[item.itemId]
+    catalog.push({
+      videoId: item.itemId,
+      financeExperienceId: experienceId,
+      title: item.title,
+      author: item.author,
+      authorSlug: authorSlug(item.author),
+      sourceUrl: item.sourceUrl,
+      publishedAtObserved: item.publishedAtObserved,
+      aiGeneratedDisclosureObserved: item.aiGeneratedDisclosureObserved,
+      durationMs: Math.round((preparedItem?.video.durationSeconds ?? item.durationSeconds) * 1000),
+      width: preparedItem?.video.width ?? item.width,
+      height: preparedItem?.video.height ?? item.height,
+      sourceSha256: item.sha256,
+      derivativeSha256: preparedItem?.video.sha256 ?? null,
+      derivativeBytes: preparedItem?.video.bytes ?? null,
+      mediaFile: `${item.itemId}.mp4`,
+      posterFile: `${item.itemId}.jpg`
+    })
+
+    const existingExperience = existingExperienceByVideoId.get(item.itemId)
+    if (
+      existingExperience?.experienceId === experienceId &&
+      existingExperience.contentVersion === contentVersion &&
+      existingExperience.mediaFingerprint === item.sha256 &&
+      existingExperience.generation.generationKey === generationKey
+    ) {
+      experiences.push(existingExperience)
+      input.onItem?.('reused', item.itemId)
+      continue
+    }
+
     const drafts = await llm.generate({ item, seed, kinds })
     if (drafts.length !== kinds.length) {
       throw new Error(`LLM mock returned an unexpected cue count for ${item.itemId}`)
@@ -407,11 +576,10 @@ export async function generateShowcaseBundle(input: {
       delivery: 'automatic' as const
     }))
 
-    const experienceId = SHOWCASE_EXPERIENCE_BY_VIDEO_ID[item.itemId]
     experiences.push({
       experienceId,
       videoId: item.itemId,
-      contentVersion: CONTENT_VERSION,
+      contentVersion,
       mediaFingerprint: item.sha256,
       publishStatus: 'internal_poc',
       approvalScope: 'internal_poc',
@@ -419,11 +587,14 @@ export async function generateShowcaseBundle(input: {
       timecodeQuality: 'estimated_mock',
       title: item.title,
       notice: 'LLM Mock：仅根据标题和清单元数据生成，未使用 ASR/OCR，未经财经审核。',
+      openingBrief: openingBrief(seed),
+      reportPerspectives: reportPerspectives(seed),
       generation: {
         mode: 'mock',
         provider: 'deterministic_llm_mock',
         model: MOCK_MODEL,
         promptVersion: MOCK_PROMPT_VERSION,
+        generationKey,
         generatedAt,
         evidenceBasis: 'title_and_manifest_metadata_only'
       },
@@ -442,29 +613,7 @@ export async function generateShowcaseBundle(input: {
       ],
       triggers
     })
-
-    const preparedItem = prepared?.items.find((entry) => entry.itemId === item.itemId)
-    if (preparedItem && preparedItem.sourceSha256 !== item.sha256) {
-      throw new Error(`Prepared media is stale for ${item.itemId}`)
-    }
-    catalog.push({
-      videoId: item.itemId,
-      financeExperienceId: experienceId,
-      title: item.title,
-      author: item.author,
-      authorSlug: authorSlug(item.author),
-      sourceUrl: item.sourceUrl,
-      publishedAtObserved: item.publishedAtObserved,
-      aiGeneratedDisclosureObserved: item.aiGeneratedDisclosureObserved,
-      durationMs: Math.round((preparedItem?.video.durationSeconds ?? item.durationSeconds) * 1000),
-      width: preparedItem?.video.width ?? item.width,
-      height: preparedItem?.video.height ?? item.height,
-      sourceSha256: item.sha256,
-      derivativeSha256: preparedItem?.video.sha256 ?? null,
-      derivativeBytes: preparedItem?.video.bytes ?? null,
-      mediaFile: `${item.itemId}.mp4`,
-      posterFile: `${item.itemId}.jpg`
-    })
+    input.onItem?.('regenerated', item.itemId)
   }
 
   const authors = [...new Set(catalog.map((item) => item.author))].map((name) => ({

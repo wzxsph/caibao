@@ -1,6 +1,7 @@
 import { readFile, mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { generateShowcaseBundle } from '../showcase/mock-content-generator.js'
+import { performance } from 'node:perf_hooks'
+import { generateShowcaseBundle, type ShowcaseBundle } from '../showcase/mock-content-generator.js'
 
 const manifestPath = path.resolve(
   process.env.AUTHORIZED_DOUYIN_MANIFEST ??
@@ -26,14 +27,37 @@ try {
   preparedManifest = undefined
 }
 
+let existingBundle: ShowcaseBundle | undefined
+try {
+  existingBundle = JSON.parse(await readFile(outputPath, 'utf8')) as ShowcaseBundle
+} catch {
+  existingBundle = undefined
+}
+
+const startedAt = performance.now()
+let reused = 0
+let regenerated = 0
+
 const bundle = await generateShowcaseBundle({
   manifest,
   preparedManifest,
+  existingBundle,
+  onItem(status) {
+    if (status === 'reused') reused += 1
+    else regenerated += 1
+  },
   generatedAt:
     process.env.SHOWCASE_GENERATED_AT ?? manifest.finalizedAt ?? manifest.createdAt ?? undefined
 })
 await mkdir(path.dirname(outputPath), { recursive: true })
 await writeFile(outputPath, `${JSON.stringify(bundle, null, 2)}\n`)
 process.stdout.write(
-  `${JSON.stringify({ outputPath, items: bundle.catalog.length, experiences: bundle.experiences.length })}\n`
+  `${JSON.stringify({
+    outputPath,
+    items: bundle.catalog.length,
+    experiences: bundle.experiences.length,
+    reused,
+    regenerated,
+    elapsedMs: Math.round(performance.now() - startedAt)
+  })}\n`
 )

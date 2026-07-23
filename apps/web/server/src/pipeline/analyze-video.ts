@@ -69,11 +69,27 @@ export interface AnalysisPipelineDependencies {
       evidenceContext: string
     }): Promise<{ payload: AuthoredPayload['payload'] } | { rejected: string; detail: string }>
   }
+  nowMs?: () => number
+}
+
+export type AnalysisStageName =
+  | 'media_prepare'
+  | 'evidence_extract'
+  | 'semantic_extract'
+  | 'validate_repair'
+  | 'plan'
+  | 'payload_author'
+  | 'assemble'
+
+export interface AnalysisPipelineTimings {
+  totalMs: number
+  stages: Array<{ stage: AnalysisStageName; elapsedMs: number }>
 }
 
 export interface AnalysisPipelineResult {
   draft: DraftExperience
   coverageReport: CoverageReport
+  timings: AnalysisPipelineTimings
 }
 
 const MAX_REPAIR_ITERS = 2
@@ -204,9 +220,19 @@ export class AnalysisPipeline {
       )
     }
     const asset = mediaAssetSchema.parse(input.asset)
+    const nowMs = this.dependencies.nowMs ?? Date.now
+    const pipelineStartedAt = nowMs()
+    let stageStartedAt = pipelineStartedAt
+    const stages: AnalysisPipelineTimings['stages'] = []
+    const completeStage = (stage: AnalysisStageName) => {
+      const completedAt = nowMs()
+      stages.push({ stage, elapsedMs: Math.max(0, completedAt - stageStartedAt) })
+      stageStartedAt = completedAt
+    }
 
     // Stage 0 — media preparation.
     const prepared = await this.dependencies.media.prepare(asset.localPath, input.jobId)
+    completeStage('media_prepare')
 
     // Stage 1 — ASR + OCR + deterministic timeline scaffold.
     const transcript = transcriptSchema.parse(
@@ -243,6 +269,7 @@ export class AnalysisPipeline {
       startMs,
       endMs
     }))
+    completeStage('evidence_extract')
 
     // Stage 2 — semantic extraction. Real models occasionally emit output that
     // fails the strict graph schema; re-ask a bounded number of times before the
@@ -254,6 +281,7 @@ export class AnalysisPipeline {
       durationMs: prepared.durationMs,
       windows
     })
+    completeStage('semantic_extract')
 
     // Stage 3 — deterministic validation.
     let failed = validateGraph(graph, knownEvidenceIds, prepared.durationMs)
@@ -286,6 +314,7 @@ export class AnalysisPipeline {
     }
     const repairExhausted = [...failed]
     if (failed.length) graph = pruneFailed(graph, failed)
+    completeStage('validate_repair')
 
     // Stage 6 — deterministic scorer → planner.
     const scored = scoreEvents(graph.semanticEvents, timeline)
@@ -302,6 +331,7 @@ export class AnalysisPipeline {
     const directionByCandidate = new Map(
       directionResolutions.map((resolution) => [resolution.candidateId, resolution])
     )
+    completeStage('plan')
 
     // Stage 8 — payload authoring for renderable kinds only.
     const authoredCandidates: TriggerCandidate[] = []
@@ -366,6 +396,7 @@ export class AnalysisPipeline {
         payload: result.payload
       })
     }
+    completeStage('payload_author')
 
     // Stage 9 — assemble draft + coverage report.
     const contentVersion = `draft.${prepared.fingerprint.replace(/^sha256:/, '').slice(0, 12)}`
@@ -405,8 +436,13 @@ export class AnalysisPipeline {
       },
       evidenceConfidenceById: buildEvidenceConfidence(timeline)
     })
+    completeStage('assemble')
 
-    return { draft, coverageReport }
+    return {
+      draft,
+      coverageReport,
+      timings: { totalMs: Math.max(0, nowMs() - pipelineStartedAt), stages }
+    }
   }
 
   /**

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import {
   DeterministicShowcaseLlmMock,
   generateShowcaseBundle,
@@ -108,11 +108,70 @@ describe('showcase LLM mock generation pipeline', () => {
     expect(bundle.experiences.some((experience) => experience.triggers.length > 4)).toBe(true)
   })
 
+  it('authors concrete condition choices plus opening and report guidance for public videos', async () => {
+    const bundle = await generateShowcaseBundle({
+      manifest: manifestFixture(),
+      generatedAt: '2026-07-23T00:00:00.000Z'
+    })
+    const publicIds = new Set([
+      '7664748624454192393',
+      '7660817965343870248',
+      '7660177158400216347',
+      '7659728419487337747',
+      '7631441410851360041',
+      '7638141580495614437',
+      '7664831270933284217',
+      '7664151518648828581',
+      '7656039421858309242',
+      '7664981604339829114'
+    ])
+    const publicExperiences = bundle.experiences.filter((item) => publicIds.has(item.videoId))
+    expect(publicExperiences).toHaveLength(10)
+    expect(publicExperiences.every((item) => item.openingBrief.summary.length >= 20)).toBe(true)
+    expect(
+      publicExperiences.every(
+        (item) =>
+          item.reportPerspectives.map((entry) => entry.audience).join(',') ===
+          '国家与公共部门,企业,居民'
+      )
+    ).toBe(true)
+
+    const conditionCues = publicExperiences.flatMap((item) =>
+      item.triggers.filter((trigger) => trigger.kind === 'condition_slider')
+    )
+    expect(conditionCues.length).toBeGreaterThan(0)
+    for (const cue of conditionCues) {
+      const payload = cue.payload as { options: Array<{ label: string }> }
+      expect(payload.options.map((option) => option.label).join(' ')).not.toMatch(/走弱|维持|走强/)
+      expect(cue.evaluation.mode).toBe('exploratory')
+    }
+  })
+
   it('fails closed when the manifest and curated seed inventory diverge', async () => {
     const manifest = manifestFixture()
     manifest.items = manifest.items.slice(0, 24)
     await expect(generateShowcaseBundle({ manifest })).rejects.toThrow(
       'Every manifest item must have exactly one showcase content seed'
     )
+  })
+
+  it('reuses fingerprint-and-version matched experiences without calling the generator again', async () => {
+    const manifest = manifestFixture()
+    const first = await generateShowcaseBundle({
+      manifest,
+      generatedAt: '2026-07-23T00:00:00.000Z'
+    })
+    const llm: ShowcaseLlmMock = { generate: vi.fn() }
+    const statuses: string[] = []
+    const second = await generateShowcaseBundle({
+      manifest,
+      existingBundle: first,
+      llm,
+      generatedAt: '2026-07-23T00:00:00.000Z',
+      onItem: (status) => statuses.push(status)
+    })
+    expect(llm.generate).not.toHaveBeenCalled()
+    expect(statuses).toEqual(Array(25).fill('reused'))
+    expect(second.experiences).toEqual(first.experiences)
   })
 })

@@ -1,0 +1,45 @@
+{
+  "title": "美联储降息如何影响资产价格（demo transcript）",
+  "durationMs": 90000,
+  "transcript": {
+    "fullText": "美联储降息通过折现率影响估值。降息首先压低折现率，对股票估值形成支撑。其次，在衰退式降息中盈利预期会下修，对估值形成压力。黄金价格则与实际利率反向。",
+    "segments": [
+      {
+        "evidenceId": "asr-demo-0001",
+        "startMs": 0,
+        "endMs": 6000,
+        "text": "美联储降息通常通过折现率影响资产价格。",
+        "confidence": 0.92
+      },
+      {
+        "evidenceId": "asr-demo-0002",
+        "startMs": 6000,
+        "endMs": 20000,
+        "text": "降息压低折现率，对股票估值形成支撑。",
+        "confidence": 0.94
+      },
+      {
+        "evidenceId": "asr-demo-0003",
+        "startMs": 20000,
+        "endMs": 40000,
+        "text": "但如果是衰退式降息，盈利预期会下修，给估值带来压力。",
+        "confidence": 0.89
+      },
+      {
+        "evidenceId": "asr-demo-0004",
+        "startMs": 40000,
+        "endMs": 70000,
+        "text": "实际利率下降时，黄金的机会成本下降，对金价构成支撑。",
+        "confidence": 0.91
+      },
+      {
+        "evidenceId": "asr-demo-0005",
+        "startMs": 70000,
+        "endMs": 90000,
+        "text": "美元强弱要看相对利差，不能只看美国降息本身。",
+        "confidence": 0.86
+      }
+    ]
+  },
+  "ocr": []
+}

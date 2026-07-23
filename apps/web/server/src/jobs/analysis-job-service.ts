@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import type { CoverageReport, DraftExperience, MediaAsset } from '../domain/contracts.js'
 import { AppError, asAppError } from '../domain/errors.js'
 import type { AnalysisPipeline } from '../pipeline/analyze-video.js'
+import type { AnalysisPipelineTimings } from '../pipeline/analyze-video.js'
 
 export type AnalysisJobStatus = 'queued' | 'running' | 'succeeded' | 'failed'
 
@@ -11,6 +12,7 @@ export interface AnalysisJobRecord {
   createdAt: string
   updatedAt: string
   stage: 'queued' | 'analysis' | 'complete'
+  timings?: AnalysisPipelineTimings
   error?: { code: string; message: string }
 }
 export class AnalysisJobService {
@@ -57,7 +59,7 @@ export class AnalysisJobService {
       updatedAt: new Date().toISOString()
     })
     try {
-      const { draft, coverageReport } = await this.pipeline.run({ jobId, ...input })
+      const { draft, coverageReport, timings } = await this.pipeline.run({ jobId, ...input })
       this.drafts.set(jobId, draft)
       this.coverageReports.set(jobId, coverageReport)
       const running = this.jobs.get(jobId)
@@ -66,6 +68,7 @@ export class AnalysisJobService {
         ...running,
         status: 'succeeded',
         stage: 'complete',
+        timings,
         updatedAt: new Date().toISOString()
       })
     } catch (error) {

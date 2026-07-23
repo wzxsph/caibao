@@ -43,6 +43,11 @@ media-import/authorized-douyin/download-manifest.json
 pnpm prepare:showcase
 ```
 
+再次运行时不会只凭文件存在就跳过：命令会核对源 SHA-256、派生文件与封面完整性、H.264/AAC、
+时长、尺寸和转码配置指纹。配置与源均未变化时复用 25 条内容；媒体校验和 FFmpeg 转码最多双并发，
+内容包按 `generationKey` 逐条复用。CLI 输出 `inspectionMs`、`reuseValidationMs`、
+`preparationMs`、`reused` 与 `regenerated`，用于直接定位慢阶段。
+
 命令只写入 `.analysis-work/showcase-media/<batchId>/`，不会覆盖 `public/demo`。源文件、派生文件和
 `.analysis-work` 均被 Git 忽略。清单、权利有效期、路径边界、bytes、SHA-256 或 FFprobe 任一校验
 失败时均 fail closed，不会回退到旧推荐视频。当前 schema v2 清单的 25 个 videoId 必须与
@@ -88,7 +93,43 @@ GET /api/finance/v1/analysis/jobs/:jobId
 GET /api/finance/v1/analysis/jobs/:jobId/draft
 ```
 
+成功的 job 记录额外返回 `timings.totalMs` 及
+`media_prepare`、`evidence_extract`、`semantic_extract`、`validate_repair`、`plan`、
+`payload_author`、`assemble` 七个阶段耗时；它们只记录毫秒数，不记录字幕、提示词或密钥。
+
 草稿固定 `publishStatus=draft`、`approvedTriggers=[]`、`blockers=[HUMAN_REVIEW_REQUIRED]`。下一阶段应建设审核台与发布仓库；在此之前播放器继续使用审核过的静态 fixture。
+
+## 公开财包实时问答（Vercel）
+
+唯一公开写接口是：
+
+```text
+POST /api/finance/v1/chat/stream
+```
+
+Vercel 函数只读取 `src/showcase/public-video-ids.json` 指定的 10 条公开内容及对应 Mock 包，
+不接受客户端上传的“事实库”。它以 SSE 转发 MiniMax OpenAI-compatible 流，系统提示固定区分事实、
+作者观点、机制推演与信息不足，并拒绝买卖、仓位、目标价等交易建议。实现按 MiniMax 官方
+`/v1/chat/completions`、`MiniMax-M2.7`、`reasoning_split=true` 和
+`max_completion_tokens` 契约配置。
+
+在 Vercel 项目中配置以下服务端变量，不要加 `VITE_` 前缀：
+
+```text
+MINIMAX_API_KEY
+MINIMAX_BASE_URL=https://api.minimaxi.com/v1
+MINIMAX_TEXT_MODEL=MiniMax-M2.7
+CHAT_ALLOWED_ORIGIN=https://wzxsph.github.io
+UPSTASH_REDIS_REST_URL
+UPSTASH_REDIS_REST_TOKEN
+CHAT_PER_VIDEO_LIMIT=5
+CHAT_DAILY_LIMIT=20
+```
+
+限额服务不可用时默认 fail closed；若明确不需要限额，可把两项 limit 都设为 `0`，此时无需 Redis。
+函数不记录消息正文。部署后，将 Vercel 公网根地址写入 GitHub 仓库 Actions variable
+`FINANCE_API_BASE_URL`；Pages workflow 只把这个公开地址作为
+`VITE_FINANCE_API_BASE_URL` 注入前端，不会接触模型密钥。
 
 ## 抖音来源
 

@@ -23,6 +23,14 @@ export const CUE_KINDS = [
 export const cueKindSchema = z.enum(CUE_KINDS)
 export type CueKind = z.infer<typeof cueKindSchema>
 
+export const cueEvaluationSchema = z.object({
+  mode: z.enum(['objective', 'exploratory', 'acknowledgement']),
+  correctOptionIds: z.array(z.string().min(1)).default([]),
+  rewardCoins: z.number().int().min(0).max(10).default(0),
+  explanation: z.string().min(1).max(160)
+})
+export type CueEvaluation = z.infer<typeof cueEvaluationSchema>
+
 /**
  * Only kinds with a runtime renderer in InteractionRenderer.vue may be authored
  * into a payload. Since the frontend renderer now covers all six kinds, the set

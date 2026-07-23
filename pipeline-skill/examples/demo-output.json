@@ -1,0 +1,316 @@
+{
+  "draft": {
+    "experienceId": "draft-job-mrwycfpz",
+    "title": "降息如何影响资产价格",
+    "contentVersion": "draft.mock-fingerp",
+    "mediaFingerprint": "sha256:mock-fingerprint",
+    "publishStatus": "draft",
+    "blockers": [
+      "HUMAN_REVIEW_REQUIRED"
+    ],
+    "evidence": [
+      {
+        "evidenceId": "asr-demo-0001",
+        "startMs": 0,
+        "endMs": 6000,
+        "text": "美联储降息通常通过折现率影响资产价格。",
+        "confidence": 0.92
+      },
+      {
+        "evidenceId": "asr-demo-0002",
+        "startMs": 6000,
+        "endMs": 20000,
+        "text": "降息压低折现率，对股票估值形成支撑。",
+        "confidence": 0.94
+      },
+      {
+        "evidenceId": "asr-demo-0003",
+        "startMs": 20000,
+        "endMs": 40000,
+        "text": "但如果是衰退式降息，盈利预期会下修，给估值带来压力。",
+        "confidence": 0.89
+      },
+      {
+        "evidenceId": "asr-demo-0004",
+        "startMs": 40000,
+        "endMs": 70000,
+        "text": "实际利率下降时，黄金的机会成本下降，对金价构成支撑。",
+        "confidence": 0.91
+      },
+      {
+        "evidenceId": "asr-demo-0005",
+        "startMs": 70000,
+        "endMs": 90000,
+        "text": "美元强弱要看相对利差，不能只看美国降息本身。",
+        "confidence": 0.86
+      }
+    ],
+    "concepts": [
+      {
+        "conceptId": "concept-rate-cut",
+        "name": "降息",
+        "firstMentionMs": 0,
+        "isCore": true,
+        "evidenceIds": [
+          "asr-demo-0001"
+        ]
+      },
+      {
+        "conceptId": "concept-valuation",
+        "name": "估值",
+        "firstMentionMs": 20000,
+        "isCore": true,
+        "evidenceIds": [
+          "asr-demo-0003"
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claimId": "claim-cut-supports-equity",
+        "statement": "降息会通过折现率压低对估值形成支撑。",
+        "assetClass": "equity",
+        "assertedDirection": "support_dominant",
+        "evidenceIds": [
+          "asr-demo-0001",
+          "asr-demo-0003"
+        ]
+      }
+    ],
+    "causalEdges": [
+      {
+        "edgeId": "edge-rate-to-valuation",
+        "from": {
+          "nodeType": "concept",
+          "nodeId": "concept-rate-cut"
+        },
+        "to": {
+          "nodeType": "concept",
+          "nodeId": "concept-valuation"
+        },
+        "mechanism": "折现率下降",
+        "omittedIntermediate": false,
+        "evidenceIds": [
+          "asr-demo-0001",
+          "asr-demo-0003"
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "conditionId": "condition-rate-decrease",
+        "variable": "policy_rate",
+        "operator": "decrease",
+        "statement": "政策利率下降",
+        "evidenceIds": [
+          "asr-demo-0001"
+        ]
+      }
+    ],
+    "triggerCandidates": [
+      {
+        "candidateId": "cue-evt-concept-rate-cut",
+        "sourceEventId": "evt-concept-rate-cut",
+        "kind": "context_card",
+        "proposedStartMs": 0,
+        "proposedEndMs": 5000,
+        "windowId": "win-0",
+        "priority": 64,
+        "expectedInteractionMs": 9000,
+        "prompt": "Check point evt-concept-rate-cut",
+        "learningObjective": "Review concept_first_mention at window win-0",
+        "rationale": "首次提及降息概念",
+        "evidenceIds": [
+          "asr-demo-0001"
+        ],
+        "visualLoad": "low",
+        "subSignals": {
+          "learningValue": 0.7,
+          "timeSensitivity": 0.5,
+          "interactionFit": 0.6
+        },
+        "direction": "insufficient",
+        "activatedPaths": [],
+        "payload": {
+          "title": "背景卡：美联储降息通常通过折现率影响资产价格。",
+          "body": "本节围绕“美联储降息通常通过折现率影响资产价格。”展开，强调机制而非结论。",
+          "keyPoint": "机制要点：美联储降息通常通过折现率影响资产价格。",
+          "feedback": "记住机制，不下方向结论。"
+        }
+      },
+      {
+        "candidateId": "cue-evt-direction-claim",
+        "sourceEventId": "evt-direction-claim",
+        "kind": "quick_judgment",
+        "proposedStartMs": 70000,
+        "proposedEndMs": 75000,
+        "windowId": "win-0",
+        "priority": 73,
+        "expectedInteractionMs": 9000,
+        "prompt": "Check point evt-direction-claim",
+        "learningObjective": "Review directional_claim at window win-0",
+        "rationale": "给出方向性结论",
+        "evidenceIds": [
+          "asr-demo-0005"
+        ],
+        "visualLoad": "low",
+        "subSignals": {
+          "learningValue": 0.9,
+          "timeSensitivity": 0.6,
+          "interactionFit": 0.8
+        },
+        "direction": "insufficient",
+        "activatedPaths": [],
+        "payload": {
+          "title": "下列判断哪项最贴近机制？",
+          "options": [
+            {
+              "id": "a",
+              "label": "机制 A：美元强弱要看相对利差，不能只看美国降息本身。",
+              "result": "A 强调机制传导。"
+            },
+            {
+              "id": "b",
+              "label": "机制 B：只看价格走势",
+              "result": "B 缺少机制支撑。"
+            },
+            {
+              "id": "c",
+              "label": "机制 C：宏观背景",
+              "result": "C 是相关背景，非核心机制。"
+            }
+          ],
+          "feedback": "方向未定：当前为insufficient。"
+        }
+      }
+    ],
+    "rejectedTriggerCandidates": [
+      {
+        "candidateId": "cue-evt-causal-rate-valuation",
+        "reason": "MIN_GAP_VIOLATION"
+      }
+    ],
+    "approvedTriggers": []
+  },
+  "coverageReport": {
+    "coverage": {
+      "concepts": {
+        "total": 2,
+        "coveredByAcceptedCue": 1,
+        "uncovered": [
+          "concept-valuation"
+        ]
+      },
+      "causalEdges": {
+        "total": 1,
+        "coveredByAcceptedCue": 1,
+        "uncovered": []
+      },
+      "conditions": {
+        "total": 1,
+        "coveredByAcceptedCue": 1,
+        "uncovered": []
+      }
+    },
+    "evidenceGaps": [
+      {
+        "itemId": "concept-rate-cut",
+        "reason": "single_source"
+      },
+      {
+        "itemId": "concept-valuation",
+        "reason": "single_source"
+      },
+      {
+        "itemId": "condition-rate-decrease",
+        "reason": "single_source"
+      },
+      {
+        "itemId": "edge-rate-to-valuation",
+        "reason": "single_source"
+      }
+    ],
+    "kindBalance": {
+      "context_card": 1,
+      "quick_judgment": 1,
+      "condition_slider": 0,
+      "causal_stitch": 0,
+      "counterexample_flip": 0,
+      "concept_compare": 0
+    },
+    "directionResolutions": [
+      {
+        "candidateId": "cue-evt-concept-rate-cut",
+        "direction": "insufficient",
+        "activatedPaths": [],
+        "evidenceIds": [
+          "asr-demo-0001"
+        ],
+        "insufficientReason": "Cue kind does not assert an asset direction; no rule lookup performed.",
+        "ruleVersion": "direction-rules.v1"
+      },
+      {
+        "candidateId": "cue-evt-direction-claim",
+        "direction": "insufficient",
+        "activatedPaths": [],
+        "evidenceIds": [
+          "asr-demo-0005"
+        ],
+        "insufficientReason": "Candidate references no conditions or claims from the graph; signature is empty.",
+        "ruleVersion": "direction-rules.v1"
+      }
+    ],
+    "rejectedCandidates": [
+      {
+        "candidateId": "cue-evt-causal-rate-valuation",
+        "kind": "causal_stitch",
+        "reason": "MIN_GAP_VIOLATION"
+      }
+    ],
+    "reviewDecisionsRequired": [
+      "方向待裁定：候选 cue-evt-concept-rate-cut（Cue kind does not assert an asset direction; no rule lookup performed.）",
+      "方向待裁定：候选 cue-evt-direction-claim（Candidate references no conditions or claims from the graph; signature is empty.）",
+      "概念未覆盖：concept-valuation"
+    ],
+    "versions": {
+      "contentVersion": "draft.mock-fingerp",
+      "mediaFingerprint": "sha256:mock-fingerprint",
+      "ruleEngineVersion": "direction-rules.v1",
+      "weightTableVersion": "cue-weights.v1",
+      "promptVersion": "payload-author.v1"
+    }
+  },
+  "timings": {
+    "totalMs": 12,
+    "stages": [
+      {
+        "stage": "media_prepare",
+        "elapsedMs": 0
+      },
+      {
+        "stage": "evidence_extract",
+        "elapsedMs": 1
+      },
+      {
+        "stage": "semantic_extract",
+        "elapsedMs": 0
+      },
+      {
+        "stage": "validate_repair",
+        "elapsedMs": 0
+      },
+      {
+        "stage": "plan",
+        "elapsedMs": 1
+      },
+      {
+        "stage": "payload_author",
+        "elapsedMs": 1
+      },
+      {
+        "stage": "assemble",
+        "elapsedMs": 9
+      }
+    ]
+  }
+}

@@ -51,6 +51,7 @@ jobs:
       - name: Build frontend for Pages
         env:
           VITE_SHOWCASE_MEDIA_BASE_URL: ./media/
+          VITE_FINANCE_API_BASE_URL: ${{ vars.FINANCE_API_BASE_URL }}
         run: pnpm build-gp-pages
 
       - name: Stage ten same-origin media items

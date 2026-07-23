@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { mkdtemp, mkdir, readFile, rename, rm, symlink, unlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import request from 'supertest'
 import { createApp } from '../src/app.js'
 import {
@@ -547,6 +547,91 @@ describe('AuthorizedMediaPreparer', () => {
       video: { videoCodec: 'h264', pixelFormat: 'yuv420p', sha256: sha256(DERIVATIVE_BYTES) },
       poster: { sha256: sha256(POSTER_BYTES) }
     })
+    expect(prepared.preparationProfile).toMatchObject({
+      version: 'authorized-browser-media.v1',
+      fingerprint: expect.stringMatching(/^[a-f0-9]{64}$/)
+    })
+  })
+
+  it('reuses a fully verified batch only when source hashes and preparation profile match', async () => {
+    const fixture = await createFixture({
+      includePreparedManifest: false,
+      schemaVersion: 2,
+      includeUnmappedItem: true
+    })
+    const runner = {
+      async run(_command: string, args: string[]) {
+        const output = args.at(-1)
+        if (!output) throw new Error('missing output')
+        await writeFile(output, output.endsWith('.jpg') ? POSTER_BYTES : DERIVATIVE_BYTES)
+        return { stdout: '', stderr: '' }
+      }
+    }
+    const options = {
+      manifestPath: fixture.manifestPath,
+      preparedRoot: fixture.preparedRoot,
+      probe: fakeProbe,
+      now: () => new Date('2026-07-23T01:00:00.000Z'),
+      runner,
+      videoPreset: 'veryfast',
+      videoCrf: 30,
+      maxVideoBitrateKbps: 550,
+      audioBitrate: '48k',
+      reuseExisting: true
+    } as const
+
+    const first = await new AuthorizedMediaPreparer(options).prepare()
+    const secondRunner = { run: vi.fn() }
+    const second = await new AuthorizedMediaPreparer({ ...options, runner: secondRunner }).prepare()
+
+    expect(first.reused).toBe(false)
+    expect(second.reused).toBe(true)
+    expect(second.timings).toMatchObject({
+      inspectionMs: expect.any(Number),
+      reuseValidationMs: expect.any(Number),
+      totalMs: expect.any(Number)
+    })
+    expect(secondRunner.run).not.toHaveBeenCalled()
+
+    await expect(
+      new AuthorizedMediaPreparer({ ...options, runner: secondRunner, videoCrf: 28 }).prepare()
+    ).rejects.toMatchObject({ code: 'AUTHORIZED_MEDIA_PREPARED_PROFILE_MISMATCH' })
+  })
+
+  it('prepares two items concurrently while preserving manifest order', async () => {
+    const fixture = await createFixture({ includePreparedManifest: false, includeSecondItem: true })
+    let active = 0
+    let maxActive = 0
+    const preparer = new AuthorizedMediaPreparer({
+      manifestPath: fixture.manifestPath,
+      preparedRoot: fixture.preparedRoot,
+      probe: fakeProbe,
+      now: () => new Date('2026-07-23T01:00:00.000Z'),
+      concurrency: 2,
+      runner: {
+        async run(_command, args) {
+          active += 1
+          maxActive = Math.max(maxActive, active)
+          await new Promise((resolve) => setTimeout(resolve, 5))
+          const output = args.at(-1)
+          if (!output) throw new Error('missing output')
+          await writeFile(output, output.endsWith('.jpg') ? POSTER_BYTES : DERIVATIVE_BYTES)
+          active -= 1
+          return { stdout: '', stderr: '' }
+        }
+      }
+    })
+
+    const result = await preparer.prepare()
+    const prepared = JSON.parse(
+      await readFile(path.join(result.outputDirectory, 'prepared-manifest.json'), 'utf8')
+    )
+
+    expect(maxActive).toBe(2)
+    expect(prepared.items.map((item: { itemId: string }) => item.itemId)).toEqual([
+      ITEM_ID,
+      SECOND_ITEM_ID
+    ])
   })
 })
 

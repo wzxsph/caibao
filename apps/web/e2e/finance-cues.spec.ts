@@ -11,12 +11,36 @@ const bundle = JSON.parse(
   catalog: Array<{ videoId: string; author: string; title: string; sourceUrl: string }>
   experiences: Array<{
     videoId: string
-    triggers: Array<{ startMs: number; prompt: string }>
+    contentVersion: string
+    triggers: Array<{
+      triggerId: string
+      startMs: number
+      prompt: string
+      kind: string
+      evaluation?: {
+        mode: 'objective' | 'exploratory' | 'acknowledgement'
+        correctOptionIds: string[]
+      }
+      payload: {
+        options?: Array<{ id: string; label: string }> | string[]
+      }
+    }>
   }>
 }
 const firstItem = bundle.catalog[0]
 const firstExperience = bundle.experiences.find((item) => item.videoId === firstItem.videoId)!
 const firstCue = firstExperience.triggers[0]
+const firstObjectiveCue = firstExperience.triggers.find(
+  (trigger) => trigger.evaluation?.mode === 'objective'
+)!
+
+function answerLabel(trigger: (typeof firstExperience.triggers)[number], answerId: string) {
+  const options = trigger.payload.options ?? []
+  const option = options.find((candidate) =>
+    typeof candidate === 'string' ? candidate === answerId : candidate.id === answerId
+  )
+  return typeof option === 'string' ? option : option?.label
+}
 
 test.beforeAll(() => {
   mkdirSync(e2eMediaDirectory, { recursive: true })
@@ -258,6 +282,90 @@ test('进入前已暂停，关闭后保持暂停且不改变位置', async ({ pa
   }))
   expect(result.paused).toBe(true)
   expect(Math.abs(result.time - before)).toBeLessThanOrEqual(0.25)
+})
+
+test('时间轴答题不跳播，答对得币且报告只汇总真实互动', async ({ page }) => {
+  const { video } = await openShowcase(page)
+  const correctId = firstObjectiveCue.evaluation!.correctOptionIds[0]
+  const wrongId = (
+    firstObjectiveCue.payload.options as Array<{ id: string; label: string }>
+  ).find((option) => option.id !== correctId)!.id
+  const correctLabel = answerLabel(firstObjectiveCue, correctId)!
+  const wrongLabel = answerLabel(firstObjectiveCue, wrongId)!
+
+  const beforeRevisit = await video.evaluate((node: HTMLVideoElement) => node.currentTime)
+  await page
+    .getByRole('button', { name: `回看：${firstObjectiveCue.prompt}` })
+    .click()
+  await expect(page.getByTestId('caibao-half-sheet')).toBeVisible()
+  expect(await video.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true)
+  const afterRevisit = await video.evaluate((node: HTMLVideoElement) => node.currentTime)
+  expect(Math.abs(afterRevisit - beforeRevisit)).toBeLessThanOrEqual(0.35)
+
+  await page.getByRole('button', { name: wrongLabel, exact: true }).click()
+  await expect(page.getByTestId('finance-feedback')).toBeVisible()
+  await expect(page.locator('.agent-bar')).toContainText('🪙 0')
+  await page.getByRole('button', { name: '再想一次' }).click()
+  await page.getByRole('button', { name: correctLabel, exact: true }).click()
+  await expect(page.getByTestId('finance-feedback')).toContainText(
+    firstObjectiveCue.evaluation!.mode === 'objective' ? '不能直接成立' : ''
+  )
+  await expect(page.locator('.agent-bar')).toContainText('🪙 1')
+
+  await page.getByRole('button', { name: '收好，继续看' }).click()
+  await page
+    .getByRole('button', { name: `回看：${firstObjectiveCue.prompt}` })
+    .click()
+  await page.getByRole('button', { name: correctLabel, exact: true }).click()
+  await expect(page.locator('.agent-bar')).toContainText('🪙 1')
+  await page.getByRole('button', { name: '收好，继续看' }).click()
+
+  await page.getByTestId('finance-trace-shortcut').click()
+  await page.getByRole('button', { name: '生成完整推演报告与分享卡' }).click()
+  await expect(page).toHaveURL(new RegExp(`#\\/report\\/${firstItem.videoId}$`))
+  const report = page.getByTestId('evidence-report')
+  await expect(report).toBeVisible()
+  await expect(report.locator('.metrics span').filter({ hasText: '正确答题' })).toContainText('1')
+  await expect(report.locator('.metrics span').filter({ hasText: '金币' })).toContainText('1')
+  await expect(report.getByRole('heading', { name: '国家与公共部门' })).toBeVisible()
+  await expect(report.getByRole('heading', { name: '企业', exact: true })).toBeVisible()
+  await expect(report.getByRole('heading', { name: '居民', exact: true })).toBeVisible()
+  await expect(report).not.toContainText('总分')
+})
+
+test('财包聊天按当前视频上下文接收流式回答', async ({ page }) => {
+  let requestBody: Record<string, unknown> | undefined
+  await page.route('**/api/finance/v1/chat/stream', async (route) => {
+    requestBody = route.request().postDataJSON() as Record<string, unknown>
+    await route.fulfill({
+      status: 200,
+      contentType: 'text/event-stream',
+      body: [
+        'data: {"choices":[{"delta":{"content":"这是作者观点；"}}]}',
+        '',
+        'data: {"choices":[{"delta":{"content":"当前公开 Mock 未提供可核查数据。"}}]}',
+        '',
+        'data: [DONE]',
+        ''
+      ].join('\n')
+    })
+  })
+  await openShowcase(page)
+
+  await page.getByRole('button', { name: '问财包' }).click()
+  await page
+    .getByRole('button', { name: '这段内容哪些是事实，哪些是作者观点？' })
+    .click()
+  await expect(page.locator('.message.assistant p')).toHaveText(
+    '这是作者观点；当前公开 Mock 未提供可核查数据。'
+  )
+  expect(requestBody).toMatchObject({
+    videoId: firstItem.videoId,
+    contentVersion: firstExperience.contentVersion
+  })
+  expect(requestBody?.messages).toEqual([
+    { role: 'user', content: '这段内容哪些是事实，哪些是作者观点？' }
+  ])
 })
 
 test('推荐页保留 Mock、非官方、非投资建议和原作品归属', async ({ page }) => {

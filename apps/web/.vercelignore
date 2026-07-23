@@ -1,0 +1,20 @@
+# Vercel hosts the static client plus one allowlisted chat function. Never
+# upload credentials, imported media, generated analysis artifacts, or the
+# local analysis API. Only the two chat support modules are included below.
+.env
+.env.*
+.analysis-work/
+media-import/
+public/demo/
+
+server/*
+!server/src/
+server/src/*
+!server/src/chat/
+!server/src/chat/**
+
+docs/
+e2e/
+coverage/
+test-results/
+playwright-report/
